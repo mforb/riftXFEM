@@ -1,3 +1,5 @@
+![example workflow](https://github.com/github/docs/actions/workflows/ci.yml/badge.svg)
+
 This code is a modification of an XFEM implementation made for academic purposes and distributed at: https://sourceforge.net/projects/xfem/
 The description for the the original code is as follows:
 
