@@ -15,8 +15,8 @@ for i=1:size(sctr,2)
     l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
     phi = (y0-y1)*x + (x1-x0)*y + (x0*y1 - y0*x1) ;
     if abs(phi) < EPS
-        dist(i,1) = 0 ;
+     dist(i) = 0 ;
     else
-        dist(i,1) = phi ;
+     dist(i) = phi ; 
     end
 end

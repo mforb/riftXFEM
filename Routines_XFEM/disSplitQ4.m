@@ -1,6 +1,6 @@
-function [W,Q] = disSplitQ4(order,phi,nsubDiv,intType)
+function [W,Q] = disSplitQ4(order,phi,nodes,nsubDiv,intType)
 
-global elemType
+global elemType plothelp
 
 corner = [1 2 3 4 1] ;
 node = [-1 -1;1 -1;1 1;-1 1] ;
@@ -96,16 +96,18 @@ tri = triangles ;
 
 % % % ---- plot of the triangulation ------------
 % % % -------------------------------------------
-% v=get(0,'ScreenSize');
-% %figure('Color',[1 1 1],'Position', [0 0 0.4*v(1,3) 0.4*v(1,4)])
-% nd=[];
-%    for igp = 1 : size(node,1)
-%         gpnt = node(igp,:);
-%         [N,dNdxi]=lagrange_basis(elemType,gpnt);
-%         Gpnt = N' * nodes; % global GP
-%         nd = [nd;Gpnt];
-%    end
-% triplot(tri, nd(:,1),nd(:,2),'g')
+if plothelp
+ %figure('Color',[1 1 1],'Position', [0 0 0.4*v(1,3) 0.4*v(1,4)])
+ figure(2)
+ nd=[];
+    for igp = 1 : size(node,1)
+         gpnt = node(igp,:);
+         [N,dNdxi]=lagrange_basis(elemType,gpnt);
+         Gpnt = N' * nodes; % global GP
+         nd = [nd;Gpnt];
+    end
+ triplot(tri, nd(:,1),nd(:,2),'g')
+end
 % 
 % % ------------------------------------------
 

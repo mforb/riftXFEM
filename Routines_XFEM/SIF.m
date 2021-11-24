@@ -1,5 +1,5 @@
-function [Knum,theta_inc] = SIF(C,tip,elem_crk,xCr,type_elem,enrich_node,xVertex,pos,u,kk,alpha,...
-    tip_elem,split_elem,vertex_elem)
+function [Knum,theta_inc] = SIF(C,tip,elem_crk,xCr,type_elem,enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,...
+    tip_elem,split_elem,vertex_elem,corner_elem)
 
 global node element elemType E nu
 global iMethod iParam
@@ -53,13 +53,13 @@ for iel = 1 : size(Jdomain,2)
     else
         %choose Gauss quadrature rules for elements
         [W,Q] = gauss_rule(e,enrich_node,elem_crk,...
-            xyTip,xVertex,tip_elem,split_elem,vertex_elem,xCr) ;
+            xyTip,xVertex,tip_elem,split_elem,vertex_elem,corner_elem,xCr) ;
     end
     
     %     compt=compt+1;
     %     plot_GP_new(elemType,q,Q,xCr,W,e,compt,enrich_node,[])
     
-    % -----------------------------
+    % ----------------------------
     % start loop over Gauss points
     % -----------------------------
     for q = 1:size(W,1)
@@ -76,7 +76,7 @@ for iel = 1 : size(Jdomain,2)
         % +++++++++++++++++++++++++
         % need to compute u,x u,y v,x v,y, stored in matrix H
         for k = 1:size(xCr,2)
-            B = [B xfemBmat(pt,e,type_elem,enrich_node(:,k),elem_crk,xVertex,k)];
+            B = [B xfemBmat(pt,e,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_nodes,k)];
         end
 
         leB = size(B,2);

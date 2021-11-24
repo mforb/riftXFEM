@@ -8,18 +8,29 @@ global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes typeProblem
 
 Knum = [ ] ; Theta = [ ] ;
-Enrdomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ;
+Enrdomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
 %loop over number of steps of crack growth
 for ipas = 1:npas
     disp([num2str(toc),'    Crack growth number     ',num2str(ipas)]) ;
 
     disp([num2str(toc),'    Crack processing']) ;
     %find elements within a small region
-    [Enrdomain] = crackDetect(xCrk,ipas,tipElem,splitElem,vertexElem,Enrdomain) ;
+    [Enrdomain] = crackDetect(xCrk,ipas,tipElem,splitElem,vertexElem,cornerElem,Enrdomain) ;
 
     %find type of element: tip, split, vertex
-    [typeElem,elemCrk,tipElem,splitElem,vertexElem,xTip,xVertex,enrichNode]=...
+    [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,xTip,xVertex,enrichNode,crackNode]=...
         nodeDetect(xCrk,Enrdomain) ;
+    % Deal with corner nodes by introducing phantom nodes (1 for each signed distance)
+    if ~isempty(crackNode)
+      warning('Phantom nodes introduced to account for crack going through nodes')
+      [enrichNode, n_red] =  f_phantomNode(crackNode,elemCrk,splitElem,tipElem,vertexElem,enrichNode) ;
+    else
+      n_red = 0;
+    end 
+
+
+    
+
 
         %plot enriched nodes
     if( strcmp(plotmesh,'YES') )
@@ -32,6 +43,7 @@ for ipas = 1:npas
                 plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
                     'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
             end
+            %corner_on_crack
             split_nodes = find(enrichNode(:,k) == 2);
             tip_nodes   = find(enrichNode(:,k) == 1);
             n1 = plot(node(split_nodes,1),node(split_nodes,2),'r*');
@@ -53,18 +65,19 @@ for ipas = 1:npas
     end
 
     ndof = 2 ;
-    totalUnknown = numnode*ndof + split*1*ndof + tip*4*ndof ;
+    totalUnknown = numnode*ndof + split*1*ndof + tip*4*ndof - n_red*1*ndof ;
 
     K = sparse(totalUnknown,totalUnknown) ;
     F = sparse(totalUnknown,1) ;
 
+
     %stiffness matrix computation
-    pos = posi(xCrk,numnode,enrichNode) ;
+    pos = posi(xCrk,numnode,enrichNode,crackNode) ;
 
     disp([num2str(toc),'    Stiffness Matrix Computation']) ;
 
     [K] = KmatXFEM(enrichNode,elemCrk,typeElem,xTip,xVertex,...
-        splitElem,tipElem,vertexElem,pos,xCrk,K) ;
+        splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K) ;
 
     [F] = ForceVector(F) ;
 
@@ -110,18 +123,22 @@ for ipas = 1:npas
 
     [L,U] = lu(K) ;
     y = L\F;
-    u = U\y ;
+    u = U\y;
 
     u = full(u);
     Stdux = u(1:2:2*numnode) ;
     Stduy = u(2:2:2*numnode) ;
 %     
 %     % plot displacement contour
-%     figure
-%     clf
-%     trisurf(element,node(:,1),node(:,2),Stduy)
-%     axis equal; view(2); shading interp; colorbar
-%     title('Displacement from XFEM solution')
+     figure
+     clf
+     trisurf(element,node(:,1),node(:,2),Stduy)
+     axis equal; view(2); shading interp; colorbar
+     title('Displacement from XFEM solution')
+     
+     %save('test.mat','K','F','u')
+
+
     
 %     res = [Stdux Stduy] ;
 %     
@@ -146,14 +163,14 @@ for ipas = 1:npas
     
     
     
-%     figure
-%     hold on
-%     dfac = 10 ;
-%     plotMesh(node+dfac*[u_x u_y],element,elemType,'b-',plotNode)
-%     plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
+     figure
+     hold on
+     dfac = 50 ;
+     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
+     %plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
    
     [Knum,Theta,xCrk] = KcalJint(xCrk,...
-        typeElem,Enrdomain,elemCrk,enrichNode,xVertex,...
-        vertexElem,pos,u,ipas,delta_inc,Knum,Theta,tipElem,splitElem) ;
+        typeElem,Enrdomain,elemCrk,enrichNode,crackNode,xVertex,...
+        vertexElem,pos,u,ipas,delta_inc,Knum,Theta,tipElem,splitElem,cornerElem) ;
 
 end

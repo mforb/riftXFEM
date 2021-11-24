@@ -1,5 +1,5 @@
-function [type_elem,elem_crk,tip_elem,split_elem,vertex_elem...
-    ,xTip,xVertex,enrich_node] = nodeDetect(xCr,elems)
+function [type_elem,elem_crk,tip_elem,split_elem,vertex_elem,corner_elem...
+     xTip,xVertex,enrich_node,crack_node] = nodeDetect(xCr,elems)
 
 global node element
 
@@ -9,9 +9,16 @@ xCr_element = zeros(size(element,1),2) ;
 xTip = zeros(size(element,1),2) ;
 xVertex = zeros(size(element,1),2) ;
 enrich_node = zeros(size(node,1),size(xCr,2)) ;
+crack_node  = [];
 tip_elem = [] ;
 split_elem = [] ;
 vertex_elem = [] ;
+corner_elem = [] ; 
+
+%f = figure()
+%hold on
+%plotMesh(node,element,'T3','b-','no')
+
 
 %select the special elements(tip, vertex, split)    %loop on
 %elems(=elements selected for enrichment)
@@ -20,51 +27,81 @@ for kk = 1:size(xCr,2)
     for iel=1:size(elems,1)                     %loop on elems (=elements selected for enrichment)
         e = elems(iel) ;
         sctr=element(e,:);
+        sctrl = [sctr sctr(1,1)];      
         vv = node(sctr,:);
         crk_int = [];
         intes = 0;
         flag1 = 0;
         flag2 = 0;
+        flag3 = 0;
+        flag4 = 0;
+        flag5 = 0;
         for kj = 1:size(xCr(kk).coor,1)-1       %loop over the elements of the fracture
+            int_points = [];
             q1 = xCr(kk).coor(kj,:); 
             q2 = xCr(kk).coor(kj+1,:);
-            sctrl = [sctr sctr(1,1)];      
             for iedge=1:size(sctr,2)             %loop over the edges of elements
                 nnode1=sctrl(iedge);
                 nnode2=sctrl(iedge+1);
                 p1 = [node(nnode1,:)];
                 p2 = [node(nnode2,:)];
-                intersect=segments_int_2d(p1,p2,q1,q2) ;
+                intersect =segments_int_2d(p1,p2,q1,q2) ;
                 intes = intes + intersect(1);
-                if intersect(1) > 0
-                    crk_int = [crk_int intersect(2) intersect(3)];
-                    flag1 = inhull(xCr(kk).coor(kj,:),vv,[],-1e-8);
-                    flag2 = inhull(xCr(kk).coor(kj+1,:),vv,[],-1e-8);
-                    xCr_element(e,:) = xCr(kk).coor(kj,:) * flag1 + xCr(kk).coor(kj+1,:) * flag2;  % link between crack coordinate and elements  
+                if intersect(1)                
+                  int_points = [ int_points ; intersect(2:3) ];
                 end
-            end %for iedge
+              end
+              
+              if ~isempty(int_points) 
+                flag1 = inhull(q1,vv,[],-1e-8);
+                flag2 = inhull(q2,vv,[],-1e-8);
+                [crk_int,flag3,crack_node] = f_update_crk_int(crk_int,int_points,flag1,flag2,q1,q2,crack_node,sctr);
+                if kj == 1 & flag1
+                  flag4 = 1;
+                end
+                if (kj == size(xCr(kk).coor,1)-1) & flag2
+                  flag5 = 1;
+                end
+                xCr_element(e,:) = xCr(kk).coor(kj,:) * flag1 + xCr(kk).coor(kj+1,:) * flag2;  % link between crack coordinate and elements  
+              end
         end
         
+
+        %figure(f)
+        %pvv = [vv;vv(1,:)] 
+        %celem = plot(pvv(:,1),pvv(:,2),'r--')
+                    %keyboard
+        %delete(celem)
+        
+        % this is now true for all conditions
    %------- let's choose the categorie -------%     
-        if ((intes == 2) & (flag1 == 0) & (flag2 == 0))     % SPLIT
+       if (flag3 == 1)     % CORNER or SPLITCORNER or VERTEX CORNER 
+         elem_crk(e,:) = crk_int;
+         corner_elem = [corner_elem; e];
+       end
+       cond1 = ((intes == 2 ) & flag3 ~= 1 );
+       cond2 = (intes == 3 );
+       if ( cond1 | cond2 ) & (flag1 == 0) & (flag2 == 0)      % SPLIT  
             type_elem(elems(iel),kk) = 2; 
             split_elem = [split_elem; e];
             elem_crk(e,:) = crk_int;
         end
-        if (((flag1 == 1) | flag2==1) & (intes==2))         % VERTEX      
+        if (((flag1 == 1) | flag2==1) & (intes>=2)) & not(flag4 | flag5)        % VERTEX      
             type_elem(e,kk) = 3; 
             vertex_elem = [vertex_elem; e] ;
             elem_crk(e,:) = crk_int;
             xVertex(e,:) = xCr_element(e,:); 
         end
-        if (intes == 1)                                     % TIP
+        if  ( flag4 | flag5 )                                    % TIP
             type_elem(e,kk) = 1;  
             tip_elem = [tip_elem; e] ;
-            xTip(e,:) = xCr_element(e,:);
-            elem_crk(e,:) = [crk_int xTip(e,1) xTip(e,2)];  % coordinates needed for SIF computation           
+            xTip(e,:) = xCr_element(e,:);            
+            elem_crk(e,:) = crk_int;  % coordinates needed for SIF computation           
         end
     end % iel    
 end % kk
+
+crack_node = unique(crack_node);
 
 % select the enriched nodes
 for kk = 1:size(xCr,2)    
@@ -90,6 +127,6 @@ for kk = 1:size(xCr,2)
                     end
                 end
             end  % loop on the nodes
-        end  %if
+        end
     end  %loop on the elements
 end  %loop on cracks

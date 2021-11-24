@@ -5,7 +5,7 @@ function [Aw, Awp] = support_area(pt,e,type_elem,elem_crk,xVertex,kk)
 % pt = is the number of the point 
 % e = number of THE considered element (see node detect) 
 % type_elem = vector which give the type of all elements (1=tip, 2=split,
-%                                               3=vertex,0=normal)
+%                                               3=vertex,4=corner,0=normal)
 % xCr1 = coordinate of all the crack intersection with the mesh
 % kk = index of the crack (for multiple crack)  
 

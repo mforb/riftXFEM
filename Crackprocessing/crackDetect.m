@@ -1,4 +1,4 @@
-function [enrdomain]=crackDetect(Cr,istep,tipElem,splitElem,vertexElem,enrdomain)
+function [enrdomain]=crackDetect(Cr,istep,tipElem,splitElem,vertexElem,cornerElem,enrdomain)
 
 %Purpose
 %identify elements that are in close proximity to the crack tip
@@ -19,7 +19,7 @@ else
         Tip1 = Cr(icrack).coor(size(Cr(icrack).coor,1),:) ;
         Tip2 = Cr(icrack).coor(size(Cr(icrack).coor,1)-1,:) ;
         [enrdomain2,radius] = ENRdomainf(Tip1,Tip2) ;
-        enrdomain = [enrdomain;tipElem;splitElem;vertexElem;enrdomain1;enrdomain2] ;
+        enrdomain = [enrdomain;tipElem;splitElem;vertexElem;cornerElem;enrdomain1;enrdomain2] ;
     end
 end
 

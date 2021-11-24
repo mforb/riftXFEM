@@ -1,4 +1,4 @@
-function [B] = xfemBmat(pt,e,type_elem,enrich_node,xCrl,GVertex,cont)
+function [B] = xfemBmat(pt,e,type_elem,enrich_node,xCrl,GVertex,crack_nodes,cont)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -26,7 +26,13 @@ end
 iwant = [ ] ;
 %switch between non-enriched and enriched elements
 if( any(enrich_node(sctr)) == 0 )
+    if (type_elem(e,cont) == 4 )
+      ref_elem = e;
+      xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
+
+    else
     B = Bfem ;
+  end
 else
     Bxfem = [ ] ;
     %loop on nodes, check is node is enriched........
@@ -55,17 +61,22 @@ else
                     dist = signed_distance(xCre,node(sctr(in),:),0); % nodes are always outside the triangle..easy!
                     Hi  = sign(dist);
                     
-                else %
+                elseif type_elem(e,cont) == 2%
                     % Enrichment function, H(x) at global Gauss point
                     dist = signed_distance(xCre,Gpt,16);
                     Hgp  = sign(dist);
                     % Enrichment function, H(x) at node "in"
-                    dist = signed_distance(xCre,node(sctr(in),:),0);
-                    Hi   = sign(dist);
+                    if ismember(sctr(in),crack_nodes) 
+                      Hi = sign(-1);
+                    else
+                      dist = signed_distance(xCre,node(sctr(in),:),0);
+                      Hi  = sign(dist);
+                    end
+                else 
                 end % is vertex
                 % Bxfem at node "in"
-                BI_enr = [dNdx(in,1)*(Hgp - Hi) 0 ; 0 dNdx(in,2)*(Hgp - Hi) ;
-                    dNdx(in,2)*(Hgp - Hi) dNdx(in,1)*(Hgp - Hi)];
+                BI_enr = [dNdx(in,1)*(Hgp - Hi)/2 0 ; 0 dNdx(in,2)*(Hgp - Hi)/2 ;
+                    dNdx(in,2)*(Hgp - Hi)/2 dNdx(in,1)*(Hgp - Hi)/2];
             else    %if the element is not cut by a crack, the enrichment is always 0
                 BI_enr = [0 0 ; 0 0 ; 0 0];
             end

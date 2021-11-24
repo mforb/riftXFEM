@@ -1,6 +1,6 @@
-function sctrB = assembly(e,enrich_node,pos,cont)
+function sctrB = assembly(e,enrich_node,pos,cont,crack_nodes)
 
-global node element split_elem
+global node element orig_nn
 
 sctr = element(e,:);
 nn   = length(sctr);
@@ -16,7 +16,7 @@ end
 
 if ( any(enrich_node(sctr)) == 0 ) % Non-enriched elements
     sctrB = sctrBfem ;
-    else
+else
     tn = size(find(enrich_node(sctr) == 1),1);
     sn = size(find(enrich_node(sctr) == 2),1);
     ssn = size(find(enrich_node(sctr) == 3),1) ;
@@ -25,8 +25,15 @@ if ( any(enrich_node(sctr)) == 0 ) % Non-enriched elements
     for k = 1 : nn
         if ( enrich_node(sctr(k)) == 2) % split
             cnt = cnt + 1 ;
+            if ismember(sctr(k),crack_nodes)
+            % find positiong in crack_nodes and add that to orig_nn
+              in = find(sctr(k),crack_nodes);
+              sctrBxfem(2*cnt - 1) = 2 *(orig_nn+in) - 1;
+              sctrBxfem(2*cnt    ) = 2 *(orig_nn+in)    ;
+            else
             sctrBxfem(2*cnt - 1) = 2 * pos(sctr(k)) - 1;
             sctrBxfem(2*cnt    ) = 2 * pos(sctr(k))    ;
+            end
         elseif( enrich_node(sctr(k)) == 3)  %split by material
             cnt = cnt + 1 ;
             sctrBxfem(2*cnt - 1) = 2 * pos(sctr(k)) - 1 ;

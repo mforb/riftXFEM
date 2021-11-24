@@ -12,7 +12,7 @@ function flag = segments_int_2d ( p1, p2, q1, q2 )
 %
 %  Modified:
 %
-%    12 May 2005
+%   24 November 2021 (needs to catch points that are close enough)
 %
 %  Author:
 %
@@ -33,7 +33,8 @@ function flag = segments_int_2d ( p1, p2, q1, q2 )
 %    Output, real R(2), an intersection point, if there is one.
 %
   dim_num = 2;
-  tol = 1e-4; %%%%%ATTENTION A LA TOLERANCE ORI 0.001
+  %tol = 1e-8; %%%%%ATTENTION A LA TOLERANCE ORI 0.001
+  tol = 1e-5;
   r=[];
 %
 %  Find the intersection of the two lines of which
