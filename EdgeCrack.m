@@ -35,6 +35,11 @@ global elemType typeMesh typeProblem typeCrack stressState
 global xCr deltaInc numstep numcrack
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
+global plothelp
+global penalty
+
+plothelp = 0;
+penalty  = 0;
 
 %problem flags
 elemType = 'Q4' ;

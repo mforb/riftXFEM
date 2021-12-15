@@ -56,7 +56,7 @@ elseif( ismember(e,vertex_elem) )       %vertex element
     if strcmp(elemType,'Q4') 
       [W,Q] = disTipQ4(IntOrder,phi,nnode,xVertex(e,:),subTriDiv,intType) ;
     else
-      [W,Q] = disTipT3(IntOrder,phi,nnode,xVertex(e,:),subTriDiv,intType) ;
+      [W,Q] = disVertT3(IntOrder,phi,psi,nnode,xVertex(e,:),subTriDiv,intType) ;
     end
 elseif( size(tip_enr,1) > 0 )
     %standard Q4 element with tip sharing nodes

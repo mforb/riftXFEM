@@ -1,4 +1,4 @@
-function [W,Q] = disTipT3(order,phi,psi,nodes,tip,nsubDiv,intType)
+function [W,Q] = disVertT3(order,phi,nodes,tip,nsubDiv,intType)
 
 global elemType
 global plothelp
@@ -7,43 +7,16 @@ epsilon  = 0.000001;
 corner   = [1 2 3 1];
 node     = [0 0; 1 0; 0 1];
 
-ntip = f_naturalpoint(tip,nodes,20,epsilon);
+
+[cutEdge, node] = f_edgedetect(node, corner, phi );
+
+vtip = f_naturalpoint(tip,nodes,20,epsilon);
 
 % loop on element edges 
 % here we have to be carefull about finding where there is an intersection with crack
 
-for i = 1:3
-    n1 = corner(i);
-    n2 = corner(i+1);
-    if phi(n1)*phi(n2) < 0  & ( psi(n1) < 0 | psi(n2) < 0) 
-      l1 = psi(n1);
-      l2 = psi(n2);
-      r1 = phi(n1);
-      r2 = phi(n2);
-      t1 = 0;
-      if (l1 < 0 ) & (l2 < 0)
-        t1 = 1;
-      elseif (l1 < 0 )
-        if abs(l1/r1) > abs(l2/r2)
-          t1 = 1;
-        end
-      else
-        if abs(l2/r2) > abs(l1/r1)
-          t1 = 1;
-        end
-      end
-        
-      if t1
-        r    = r1/(r1-r2);
-        pnt  = (1-r)*node(n1,:)+r*node(n2,:);
-        node = [node;pnt];
-      end
-    end
-    
-end
-
-% insert the tip into the Delaunay triangulation
-node = [node;ntip];
+% insert the tip into the Delaunay triangulation (or in this case vertex)
+node = [node;vtip];
 
 %do delaunay triangulation
 tri = delaunay(node(:,1),node(:,2)) ;

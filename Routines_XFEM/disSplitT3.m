@@ -7,20 +7,7 @@ global orig_nn
 corner = [1 2 3 1] ;
 node = [0 0;1 0;0 1] ;
 
-numEdge = size(node,1) ;
-cutEdge = [ ] ;
-%loop on element edges
-for iedge = 1:numEdge
-    n1 = corner(iedge) ;
-    n2 = corner(iedge+1) ;
-    if( phi(n1)*phi(n2) < 0 ) 
-        r = phi(n1)/(phi(n1)-phi(n2)) ;
-        pnt = (1-r)*node(n1,:)+r*node(n2,:) ;
-        node = [node; pnt] ;
-        %         disp(['Edge is cut by crack     ',num2str(iedg
-        cutEdge = [cutEdge iedge] ;
-    end
-end %end iedge loop
+[cutEdge, node] = f_edgedetect(node, corner,  phi) ;
 
 %check to see if adjacent edges are cut.
 %If adjacent edges are, this would mean one of the sub-element will be a polygon and

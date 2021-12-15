@@ -6,27 +6,35 @@ global L D E nu C P sigmato
 global numcrack xCr deltaInc numstep
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes typeProblem
+global penalty fixedF
+global epsilon
+
+if ~exist('penalty')
+  penalty = 0 ;
+end
+
+epsilon = 1e-8;
 
 Knum = [ ] ; Theta = [ ] ;
-Enrdomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
+enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
 %loop over number of steps of crack growth
 for ipas = 1:npas
     disp([num2str(toc),'    Crack growth number     ',num2str(ipas)]) ;
 
     disp([num2str(toc),'    Crack processing']) ;
     %find elements within a small region
-    [Enrdomain] = crackDetect(xCrk,ipas,tipElem,splitElem,vertexElem,cornerElem,Enrdomain) ;
+    [enrDomain] = crackDetect(xCrk,ipas,tipElem,splitElem,vertexElem,cornerElem,enrDomain) ;
 
     %find type of element: tip, split, vertex
     [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,xTip,xVertex,enrichNode,crackNode]=...
-        nodeDetect(xCrk,Enrdomain) ;
+        nodeDetect(xCrk,enrDomain) ;
     % Deal with corner nodes by introducing phantom nodes (1 for each signed distance)
-    if ~isempty(crackNode)
-      warning('Phantom nodes introduced to account for crack going through nodes')
-      [enrichNode, n_red] =  f_phantomNode(crackNode,elemCrk,splitElem,tipElem,vertexElem,enrichNode) ;
-    else
-      n_red = 0;
-    end 
+    %if ~isempty(crackNode)
+      %warning('Phantom nodes introduced to account for crack going through nodes')
+      %[enrichNode, n_red] =  f_phantomNode(crackNode,elemCrk,splitElem,tipElem,vertexElem,enrichNode) ;
+    %else
+      %n_red = 0;
+    %end 
 
 
     
@@ -65,7 +73,8 @@ for ipas = 1:npas
     end
 
     ndof = 2 ;
-    totalUnknown = numnode*ndof + split*1*ndof + tip*4*ndof - n_red*1*ndof ;
+    %totalUnknown = numnode*ndof + split*1*ndof + tip*4*ndof - n_red*1*ndof ;
+    totalUnknown = numnode*ndof + split*1*ndof + tip*4*ndof ;
 
     K = sparse(totalUnknown,totalUnknown) ;
     F = sparse(totalUnknown,1) ;
@@ -120,6 +129,12 @@ for ipas = 1:npas
     %apply boundary conditions and solve
     
     [K,F] = feaplyc2(K,F,bcdof,bcval) ;
+    if any(fixedF)
+      [crackLips,elems] = f_cracklips( zeros(totalUnknown,1), xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+      Fcrack = zeros(size(F));
+      Fcrack = f_crackforce_fixed(Fcrack,fixedF,crackLips,xCr,elemCrk,xTip,pos,typeElem, enrichNode,splitElem,vertexElem,tipElem);
+      F = F + Fcrack;
+    end
 
     [L,U] = lu(K) ;
     y = L\F;
@@ -128,6 +143,59 @@ for ipas = 1:npas
     u = full(u);
     Stdux = u(1:2:2*numnode) ;
     Stduy = u(2:2:2*numnode) ;
+
+    [crackLips,elems] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+
+    figure
+    hold on
+    dfac = 1 ;
+    plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
+    f_plotCrack(crackLips,1,'r-','g-','k--')
+    
+    
+
+
+    if penalty
+      tol = 1e-8;
+      cont = 0
+      nus = [];
+      while 1 
+        Fcrack = zeros(size(F));
+        [crackLips,elems] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+        Fcrack = f_crackforce_fixed(Fcrack,fixedF,crackLips,xCr,elemCrk,xTip,pos,typeElem, enrichNode,splitElem,vertexElem,tipElem); 
+        % the above function needs to be replaced by f_crackforce that is dependent on displacement (i.e. material property in crack/rift simulating melange)
+        F = F + Fcrack ; 
+        y = L\F;
+        u_n = U\y;
+        nu = f_norm(u, u_n)
+        nus = [nus,nu];
+        u = u_n;
+        cont = cont + 1
+        if nu < tol
+           break
+        elseif cont > 1000
+           warning(['After 1000 iterations nu is still: ',num2str(nu)])
+           break
+        end
+      end
+      keyboard
+
+      u = full(u);
+      Stdux = u(1:2:2*numnode) ;
+      Stduy = u(2:2:2*numnode) ;
+
+      [crackLips,elems] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem)
+
+      figure
+      hold on
+      dfac = 1 ;
+      plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
+      f_plotCrack(crackLips,1,'r-','g-','k--')
+      tol = 1e-12
+
+      figure
+      plot(1:cont,nus)
+    end
 %     
 %     % plot displacement contour
      figure
@@ -170,7 +238,7 @@ for ipas = 1:npas
      %plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
    
     [Knum,Theta,xCrk] = KcalJint(xCrk,...
-        typeElem,Enrdomain,elemCrk,enrichNode,crackNode,xVertex,...
+        typeElem,enrDomain,elemCrk,enrichNode,crackNode,xVertex,...
         vertexElem,pos,u,ipas,delta_inc,Knum,Theta,tipElem,splitElem,cornerElem) ;
 
 end

@@ -21,8 +21,10 @@ global xCr deltaInc numstep numcrack
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
 global plothelp
+global penalty
 plothelp = 0
 
+penalty = 0
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
@@ -49,8 +51,7 @@ end
 
 %crack definition
 deltaInc = 0; numstep = 1;
-xCr(1).coor = [-0.1 0.084764928;0.4 0.084764928] ;
-%xCr(1).coor = [-0.1 0.085;0.4 0.085] ;
+xCr(1).coor = [-0.1 0.0844;0.4 0.0844] ;
 numcrack = size(xCr,2) ;
 
 %plot the mesh before proceeding
@@ -71,12 +72,39 @@ if( strcmp(plotmesh,'YES') )
     end
 end
 
-[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc) 
+[Knum1,ThetaInc1,xCr1] = mainXFEM(xCr,numstep,deltaInc); 
 
-a = 0.3 ;
-D = 1;
-C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
-KAnalytical = C*P*sqrt(pi*a) 
+close all
 
-Knumerical/KAnalytical
+xCr(1).coor = [-0.1 0.084764928;0.4 0.084764928] ;
+plotmesh = 'YES' ; plotNode = 'no' ;
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
 
+[Knum2,ThetaInc2,xCr2] = mainXFEM(xCr,numstep,deltaInc) 
+
+disp(['Results for crack not going through node:'] )
+disp(['K1: ',num2str(Knum1(1))] )
+disp(['K2: ',num2str(Knum1(2))] )
+disp(['Theta: ',num2str(ThetaInc1)] )
+disp(['----------------'])
+
+disp(['Results for crack going through node:'] )
+disp(['K1: ',num2str(Knum2(1))] )
+disp(['K2: ',num2str(Knum2(2))] )
+disp(['Theta: ',num2str(ThetaInc2)] )
+
+disp(['Note the cracks are slightly different'])

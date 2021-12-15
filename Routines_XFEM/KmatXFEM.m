@@ -52,7 +52,11 @@ for iel = 1:numelem
         end
         Ppoint =  N' * node(sctr,:);
         q = [q;Ppoint] ;
-        Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
+        try
+          Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
+        catch
+          keyboard
+        end
 
         
       if plothelp
