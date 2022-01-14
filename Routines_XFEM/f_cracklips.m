@@ -1,4 +1,4 @@
-function [ crack_lips, elems ] = f_cracklips( u, xCr, enr_dom, type_elem, xCrl,xTip,enr_node,crack_node,pos,split_elem, vertex_elem, tip_elem)
+function [ crack_lips, Flag_pen ] = f_cracklips( u, xCr, enr_dom, type_elem, xCrl,xTip,enr_node,crack_node,pos,split_elem, vertex_elem, tip_elem)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Thu Nov 25 11:49:40 NZDT 2021
 global node element elemType
@@ -27,6 +27,7 @@ end
 elems = union(split_elem,vertex_elem);
 elems = union(elems,tip_elem);
 crack_lips = zeros( size(elems,1),6,4,size(xCr,2));
+Flag_pen = 0;
 
 for kk = 1:size(xCr,2) %what's the crack?
     for ii=1:length(elems)
@@ -142,6 +143,11 @@ for kk = 1:size(xCr,2) %what's the crack?
           crack_lips(ii,c_inds,2,kk) = c_plus;
           crack_lips(ii,c_inds,3,kk) = c_down;
           crack_lips(ii,c_inds,4,kk) = cc_m;
+          % check that there is no interpenetration
+          [phi] = f_dista_point( cc_m+c_p, iel, xCrl ); 
+          if phi < 0 & ~(ismember(iel, tip_elem) & gp == 2 )  % crack tips can be a problem for this 
+            Flag_pen = 1;
+          end
         end
     end
 end

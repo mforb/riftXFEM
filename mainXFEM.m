@@ -6,11 +6,21 @@ global L D E nu C P sigmato
 global numcrack xCr deltaInc numstep
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes typeProblem
-global penalty fixedF
+global penalty fixedF contact melange
 global epsilon
 
 if ~exist('penalty')
   penalty = 0 ;
+end
+if ~exist('contact')
+  contact = 0;
+elseif contact
+  penalty = 1 ; % contact is implemented via the penalty method
+end
+if ~exist('melange')
+  melange = 0
+elseif melange
+  penalty = 1; % material properties within the crack are implemented via penalty method
 end
 
 epsilon = 1e-8;
@@ -130,11 +140,12 @@ for ipas = 1:npas
     
     [K,F] = feaplyc2(K,F,bcdof,bcval) ;
     if any(fixedF)
-      [crackLips,elems] = f_cracklips( zeros(totalUnknown,1), xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+      [crackLips,flagP] = f_cracklips( zeros(totalUnknown,1), xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
       Fcrack = zeros(size(F));
       Fcrack = f_crackforce_fixed(Fcrack,fixedF,crackLips,xCr,elemCrk,xTip,pos,typeElem, enrichNode,splitElem,vertexElem,tipElem);
       F = F + Fcrack;
     end
+
 
     [L,U] = lu(K) ;
     y = L\F;
@@ -144,15 +155,24 @@ for ipas = 1:npas
     Stdux = u(1:2:2*numnode) ;
     Stduy = u(2:2:2*numnode) ;
 
-    [crackLips,elems] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
     figure
     hold on
     dfac = 1 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
     f_plotCrack(crackLips,1,'r-','g-','k--')
-    
-    
+
+
+
+    if contact & ~flagP
+      % first we need to find out if there is any interpenetration
+      penalty = 0
+      disp([num2str(toc),'    No contact therefore penalty method was not applied'])
+    end
+
+    keyboard
+
 
 
     if penalty
@@ -160,11 +180,14 @@ for ipas = 1:npas
       cont = 0
       nus = [];
       while 1 
-        Fcrack = zeros(size(F));
+        Fpen = zeros(size(F));
         [crackLips,elems] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-        Fcrack = f_crackforce_fixed(Fcrack,fixedF,crackLips,xCr,elemCrk,xTip,pos,typeElem, enrichNode,splitElem,vertexElem,tipElem); 
-        % the above function needs to be replaced by f_crackforce that is dependent on displacement (i.e. material property in crack/rift simulating melange)
-        F = F + Fcrack ; 
+        if contact 
+          Fpen = f_crackforce_contact(Fpen,kPen,crackLips,xCr,elemCrk,xTip,pos,typeElem,enrichNode,splitElem,vertexElem,tipElem); 
+        elseif melange % material properties within a fictif rift "space" or volume
+          Fpen = f_crackforce_melange();
+        end
+        F = F + Fpen ; 
         y = L\F;
         u_n = U\y;
         nu = f_norm(u, u_n)
