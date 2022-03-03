@@ -173,6 +173,8 @@ for ipas = 1:npas
 
     keyboard
 
+    [KT] = KTmatXFEM(K,enrichNode,elemCrk,typeElem,xTip,xVertex,...
+        splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K) ;
 
 
     if penalty
