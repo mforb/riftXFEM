@@ -43,7 +43,7 @@ element = tricheck(node,element);
 numnode = size(node,1) ;
 numelem = size(element,1) ;
 
-E = 1e3; nu = 0.3; P = 1 ;
+E = 1e2; nu = 0.3; P = 1 ;
 sigmato = -1. ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
@@ -54,7 +54,7 @@ end
 
 %crack definition
 deltaInc = 0; numstep = 1;
-xCr(1).coor = [-0.1 0.084764928;0.4 0.084764928] ;
+xCr(1).coor = [-0.1 0.0;0.5 0.0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];
 

@@ -59,18 +59,18 @@ for iel = 1:numelem
         end
 
         
-      if plothelp
-      figure(2)
-      %plotMesh(node,element(iel,:),'T3','r-','no')
-      %if ismember(iel,split_elem)   
+      %if plothelp
+      %figure(2)
+      %%plotMesh(node,element(iel,:),'T3','r-','no')
+      %%if ismember(iel,split_elem)   
 
-        %ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
-        %%keyboard
-        %delete(ppl)
-      %end
-      plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
+        %%ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
+        %%%keyboard
+        %%delete(ppl)
+      %%end
+      %plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
       
-    end
+    %end
     end
 end
 

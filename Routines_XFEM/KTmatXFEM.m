@@ -1,5 +1,5 @@
-function [KTglobal] = KTmatXFEM(K,enrich_node,elem_crk,type_elem,xTip,xVertex,...
-    split_elem,tip_elem,vertex_elem,corner_elem,crack_nodes,pos,xCrk,Kglobal)
+function [Kglobal,Gint] = KTmatXFEM(E_pen,enr_node,elem_crk,type_elem,xTip,xVertex,...
+    split_elem,tip_elem,vertex_elem,corner_elem,crack_nodes,pos,xCrk,Kglobal,u)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -11,12 +11,32 @@ global plothelp
 global orig_nn
 
 % we are adding the gradient dt/du to K
-KTglobal = K
+if strcmp(elemType,'Q4')
+  corner = [1 2 3 4 1] ;
+  nnode = [-1 -1;1 -1;1 1;-1 1] ;
+elseif strcmp(elemType, 'T3')
+  corner = [1 2 3 1] ;
+  nnode = [0 0;1 0;0 1] ;
+end
 
+if plothelp
+  figure(2)
+  clf
+  hold on
+  split_nodes = find(enr_node == 2);
+  tip_nodes   = find(enr_node == 1);
+  n1 = plot(node(split_nodes,1),node(split_nodes,2),'r*');
+  n2 = plot(node(tip_nodes,1),node(tip_nodes,2),'rs');
+  set(n1,'MarkerSize',5);
+  set(n2,'MarkerSize',5);
+  plotMesh_numbered(node,element,elemType,'b-','no')
+end
 %loop over enriched elements
 elems = union(split_elem,vertex_elem);
+% Gint
+Gint =  zeros(size(u))
 
-for kk = 1:size(xCr,2) %what's the crack?
+for kk = 1:size(xCrk,2) %what's the crack?
   for ii=1:size(elems,1)
     %iel = elems(ii) ;
     %sctr=element(iel,:);
@@ -45,18 +65,31 @@ for kk = 1:size(xCr,2) %what's the crack?
     %end
     iel = elems(ii) ;
     sctr = element(iel,:) ;
-    sctrB = []
-    for nodeI = 1:length(sctr) 
-      AA = [u(2*pos(nodeI)-1);u(2*pos(nodeI))];
-      sctrA = [sctrA; AA]
-    end
+    sctrA = [];
+    skip = 0;
     nn = length(sctr) ;
+    for ni = 1:nn
+      nodeI = sctr(ni); 
+      if (enr_node(nodeI)==1) | (enr_node(nodeI)==0)
+        skip = 1;
+      end
+      AA = [2*pos(nodeI)-1;2*pos(nodeI)];
+      sctrA = [sctrA; AA];
+    end
+    if skip
+      if plothelp
+         disp(['Element Skipped for penalty: different enrichments found iel = ',num2str(iel)])
+      end
+      continue
+    end
+
+
     vv = node(sctr,:);
-    [phi] = dista(iel,xCrl) ;
+    [phi] = dista(iel,elem_crk) ;
     if ismember(iel, tip_elem) % for now we wont deal with this element
       tip = xTip(iel,:);
       ntip = f_naturalpoint(tip,vv,20,epsilon);
-      psi = f_dista2(iel,xCrl,tip);
+      psi = f_dista2(iel,elem_crk,tip);
       [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
       p = [nnodes(end,:); ntip ];
     else 
@@ -86,24 +119,29 @@ for kk = 1:size(xCr,2) %what's the crack?
     [W,Q] = quadrature(2,'GAUSS',1) ;
     [N1,dNdx1]=lagrange_basis('L2',Q(1));
     [N2,dNdx2]=lagrange_basis('L2',Q(2));
-    gpts = [N1'*p; N2'*p]
+    gpts = [N1'*p; N2'*p];
     % find the distance between the two intersects (should be able to do this with det(J)
     x0 = elem_crk(iel,1) ; y0 = elem_crk(iel,2) ;
     x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
-    nv = [(y0-y1),(x1-x0)]./l
-    nnt = n'*n
-
     l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
+    nv = [(y0-y1),(x1-x0)]./l;
+    nnt = nv'*nv;
+
     JO = l/2; % check this isn't in natural
 
     for kk = 1:2
         gpt = gpts(kk,:) ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
+        gn = nv*Nmat*u(sctrA)
+        Ppoint =  N' * node(sctr,:);
+        if gn < 0
         try
-          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + W(kk)*Nmat'*nnt*Nmat*det(JO) ;
+          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(kk)*Nmat'*nnt*Nmat*det(JO) ;
+          Gint(sctrA) = Gint(sctrA) + E_pen*W(kk)*det(JO)*gn*Nmat'*nv';
         catch
           keyboard
+        end
         end
 
         
@@ -117,6 +155,7 @@ for kk = 1:size(xCr,2) %what's the crack?
         %delete(ppl)
       %end
       plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
+      keyboard
       
     end
     end

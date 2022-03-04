@@ -151,9 +151,9 @@ for ipas = 1:npas
     y = L\F;
     u = U\y;
 
-    u = full(u);
-    Stdux = u(1:2:2*numnode) ;
-    Stduy = u(2:2:2*numnode) ;
+    fu = full(u);
+    Stdux = fu(1:2:2*numnode) ;
+    Stduy = fu(2:2:2*numnode) ;
 
     [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
@@ -170,56 +170,53 @@ for ipas = 1:npas
       penalty = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
     end
+    figure
+    clf
+    trisurf(element,node(:,1),node(:,2),Stduy)
+    axis equal; view(2); shading interp; colorbar
+    title('Displacement before Newton solver')
 
-    keyboard
 
-    [KT] = KTmatXFEM(K,enrichNode,elemCrk,typeElem,xTip,xVertex,...
-        splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K) ;
 
 
     if penalty
       tol = 1e-8;
       cont = 0
-      nus = [];
+      Du = zeros(size(u));
+      nu = 1
       while 1 
-        Fpen = zeros(size(F));
-        [crackLips,elems] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-        if contact 
-          Fpen = f_crackforce_contact(Fpen,kPen,crackLips,xCr,elemCrk,xTip,pos,typeElem,enrichNode,splitElem,vertexElem,tipElem); 
-        elseif melange % material properties within a fictif rift "space" or volume
-          Fpen = f_crackforce_melange();
-        end
-        F = F + Fpen ; 
-        y = L\F;
-        u_n = U\y;
-        nu = f_norm(u, u_n)
-        nus = [nus,nu];
-        u = u_n;
-        cont = cont + 1
+        Fint = K*u;
+        Fext = F;
+        Res  = Fext - Fint;
+        [KT,Gint] = KTmatXFEM(1e6,enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K,u);
+        Res  = Fext - Fint - Gint;
+        [L,U] = lu(KT) ;
+        y = L\Res;
+        Du = U\y;
+        u = u + Du;
+        cont = cont + 1;
+        fu = full(u);
+        Stdux = fu(1:2:2*numnode) ;
+        Stduy = fu(2:2:2*numnode) ;
+
+        [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+
+        figure
+        hold on
+        dfac = 1 ;
+        plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
+        f_plotCrack(crackLips,1,'r-','g-','k--')
+        keyboard
+
+
+
         if nu < tol
            break
-        elseif cont > 1000
-           warning(['After 1000 iterations nu is still: ',num2str(nu)])
+        elseif cont > 10
+           warning(['After 10 iterations nu is still: ',num2str(nu)])
            break
         end
       end
-      keyboard
-
-      u = full(u);
-      Stdux = u(1:2:2*numnode) ;
-      Stduy = u(2:2:2*numnode) ;
-
-      [crackLips,elems] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem)
-
-      figure
-      hold on
-      dfac = 1 ;
-      plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
-      f_plotCrack(crackLips,1,'r-','g-','k--')
-      tol = 1e-12
-
-      figure
-      plot(1:cont,nus)
     end
 %     
 %     % plot displacement contour
@@ -227,7 +224,8 @@ for ipas = 1:npas
      clf
      trisurf(element,node(:,1),node(:,2),Stduy)
      axis equal; view(2); shading interp; colorbar
-     title('Displacement from XFEM solution')
+     title('Displacement after Newton solver (10 iterations)')
+     keyboard
      
      %save('test.mat','K','F','u')
 
