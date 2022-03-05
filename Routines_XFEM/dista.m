@@ -1,10 +1,10 @@
 function [dist] = dista(iel,elem_crk)
 
-global node element
+global node element epsilon 
 
 sctr = element(iel,:) ;
 
-EPS = 1e-08 ;
+EPS = epsilon ;
 
 x0 = elem_crk(iel,1) ; y0 = elem_crk(iel,2) ;
 x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;

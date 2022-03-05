@@ -6,7 +6,7 @@ global L D E nu C P sigmato
 global numcrack xCr deltaInc numstep
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes typeProblem
-global penalty fixedF contact melange
+global penalty fixedF contact melange Kpen
 global epsilon
 
 if ~exist('penalty')
@@ -104,7 +104,7 @@ for ipas = 1:npas
     %----- Imposing Essential boundary conditions
     disp([num2str(toc),'    Imposing Essential boundary conditions'])
     
-    if strcmp(typeProblem,'eCrkTen')
+    if (strcmp(typeProblem,'eCrkTen') || strcmp(typeProblem,'dispFriction'))
         
         dispNodes = unique([bcNodes{1}]) ;
         bcdof = [ ]; bcval = [ ];
@@ -114,6 +114,13 @@ for ipas = 1:npas
         end
         bcdof = [bcdof 2*dispNodes(1)-1] ;
         bcval = [bcval 0];
+        if strcmp(typeProblem,'dispFriction')
+          dispNodes = unique([bcNodes{3}]) ; % the top nodes
+          for i=1:length(dispNodes)
+              bcdof = [bcdof 2*dispNodes(i)] ;
+              bcval = [bcval -0.1] ;
+          end
+        end
     else
         %boundary condition
         cracklength = 100 ;
@@ -157,11 +164,13 @@ for ipas = 1:npas
 
     [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
-    figure
+    
+    f = figure('visible','on');
     hold on
     dfac = 1 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
     f_plotCrack(crackLips,1,'r-','g-','k--')
+    print('original_crack','-dpng')
 
 
 
@@ -170,26 +179,37 @@ for ipas = 1:npas
       penalty = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
     end
-    figure
+    f = figure('visible','on');
     clf
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
-    title('Displacement before Newton solver')
+    title('Y displacement before Newton solver')
+    print('original_disp','-dpng')
+    keyboard
 
 
 
 
     if penalty
       tol = 1e-8;
-      cont = 0
+      cont = 1
       Du = zeros(size(u));
       nu = 1
       while 1 
+        disp(['Newton step ',num2str(cont)])
+        disp(['---------------------------------------------'])
         Fint = K*u;
         Fext = F;
-        Res  = Fext - Fint;
-        [KT,Gint] = KTmatXFEM(1e6,enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K,u);
+        [KT,Gint] = KTmatXFEM(Kpen,enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K,u);
         Res  = Fext - Fint - Gint;
+        nr = norm(Res,2);
+        if cont == 1
+          nr0  = nr;
+        end
+        rnr = nr/nr0;
+        disp(['L2 norm of the residual, R =  ',num2str(nr)])
+        disp(['Relative to R0 : ',num2str(rnr)])
+
         [L,U] = lu(KT) ;
         y = L\Res;
         Du = U\y;
@@ -201,19 +221,21 @@ for ipas = 1:npas
 
         [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
-        figure
+        f = figure('visible','on');
+        clf
         hold on
         dfac = 1 ;
         plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
         f_plotCrack(crackLips,1,'r-','g-','k--')
+        print(['crack_iter',num2str(cont)],'-dpng','-r300')
         keyboard
 
 
-
-        if nu < tol
+        if rnr < tol
+           disp(['Converged at step : ',num2str(cont)])
            break
         elseif cont > 10
-           warning(['After 10 iterations nu is still: ',num2str(nu)])
+           warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
            break
         end
       end
@@ -224,7 +246,7 @@ for ipas = 1:npas
      clf
      trisurf(element,node(:,1),node(:,2),Stduy)
      axis equal; view(2); shading interp; colorbar
-     title('Displacement after Newton solver (10 iterations)')
+     title(['Y displacement after Newton solver (',num2str(cont) ,' iterations)'])
      keyboard
      
      %save('test.mat','K','F','u')

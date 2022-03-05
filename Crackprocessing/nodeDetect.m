@@ -1,7 +1,7 @@
 function [type_elem,elem_crk,tip_elem,split_elem,vertex_elem,corner_elem...
      xTip,xVertex,enrich_node,crack_node] = nodeDetect(xCr,elems)
 
-global node element
+global node element epsilon
 
 type_elem = zeros(size(element,1),size(xCr,2)) ;
 elem_crk = zeros(size(element,1),4) ;
@@ -53,8 +53,8 @@ for kk = 1:size(xCr,2)
               end
               
               if ~isempty(int_points) 
-                flag1 = inhull(q1,vv,[],-1e-8);
-                flag2 = inhull(q2,vv,[],-1e-8);
+                flag1 = inhull(q1,vv,[],-1*epsilon);
+                flag2 = inhull(q2,vv,[],-1*epsilon);
                 [crk_int,flag3,crack_node] = f_update_crk_int(crk_int,int_points,flag1,flag2,q1,q2,crack_node,sctr);
                 if kj == 1 & flag1
                   flag4 = 1;
@@ -63,6 +63,9 @@ for kk = 1:size(xCr,2)
                   flag5 = 1;
                 end
                 xCr_element(e,:) = xCr(kk).coor(kj,:) * flag1 + xCr(kk).coor(kj+1,:) * flag2;  % link between crack coordinate and elements  
+              end
+              if iel == 3401
+                keyboard
               end
         end
         

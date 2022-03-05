@@ -9,6 +9,9 @@ global plotmesh plotNode
 global gporder numtri
 global plothelp
 global orig_nn
+global frictionB friction_mu
+
+mu = friction_mu;
 
 % we are adding the gradient dt/du to K
 if strcmp(elemType,'Q4')
@@ -34,7 +37,7 @@ end
 %loop over enriched elements
 elems = union(split_elem,vertex_elem);
 % Gint
-Gint =  zeros(size(u))
+Gint =  zeros(size(u));
 
 for kk = 1:size(xCrk,2) %what's the crack?
   for ii=1:size(elems,1)
@@ -125,17 +128,29 @@ for kk = 1:size(xCrk,2) %what's the crack?
     x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
     l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
     nv = [(y0-y1),(x1-x0)]./l;
+    mv = [(x1-x0),(y1 - y0)]./l;
     nnt = nv'*nv;
+    nmt = mv'*nv; 
 
-    JO = l/2; % check this isn't in natural
+    JO = l/2;
+
 
     for kk = 1:2
         gpt = gpts(kk,:) ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
-        gn = nv*Nmat*u(sctrA)
-        Ppoint =  N' * node(sctr,:);
+        gn = nv*Nmat*u(sctrA);
         if gn < 0
+        if frictionB
+        try
+          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(kk)*Nmat'*(nnt - nmt*mu)*Nmat*det(JO) ;
+          Gint(sctrA) = Gint(sctrA) + E_pen*W(kk)*det(JO)*gn*Nmat'*nv';
+          Gint(sctrA) = Gint(sctrA) + E_pen*W(kk)*det(JO)*mu*gn*Nmat'*mv';
+        catch
+          keyboard
+        end
+
+        else
         try
           Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(kk)*Nmat'*nnt*Nmat*det(JO) ;
           Gint(sctrA) = Gint(sctrA) + E_pen*W(kk)*det(JO)*gn*Nmat'*nv';
@@ -143,19 +158,34 @@ for kk = 1:size(xCrk,2) %what's the crack?
           keyboard
         end
         end
+        end
+
 
         
       if plothelp
-      figure(2)
-      %plotMesh(node,element(iel,:),'T3','r-','no')
-      %if ismember(iel,split_elem)   
+        Ppoint =  N' * node(sctr,:);
+        Pvect = -1*det(JO)*nv;
+        Fvect = -1*det(JO)*mu*mv;
+        Np = node(sctr,:);
+        Nvect = -1*det(JO)*N*nv;
+        NFvect = -1*det(JO)*N*mv;
 
-        %ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
-        %%keyboard
-        %delete(ppl)
-      %end
-      plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
-      keyboard
+        figure(2)
+        %plotMesh(node,element(iel,:),'T3','r-','no')
+        %if ismember(iel,split_elem)   
+
+          %ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
+          %%keyboard
+          %delete(ppl)
+        %end
+        plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
+        quiver(Ppoint(1),Ppoint(2),Pvect(1),Pvect(2),'r')
+        quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
+        quiver(Np(:,1),Np(:,2),Nvect(:,1),Nvect(:,2),'g')
+        quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
+        keyboard
+
+
       
     end
     end

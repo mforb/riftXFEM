@@ -75,7 +75,11 @@ elseif( ismember(e,split_elem) )
             if strcmp(elemType,'Q4')
             [W,Q] = disSplitQ4(IntOrder,phi,nnode,subTriDiv,intType) ;
             else
+              try 
             [W,Q] = disSplitT3(IntOrder,phi,nnode,subTriDiv,intType,ismember(e,corner_elem)) ;
+              catch
+               keyboard
+              end
             end
             
         end

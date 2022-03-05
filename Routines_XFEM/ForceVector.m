@@ -23,7 +23,7 @@ if( strcmp(typeProblem,'eCrkTen') || strcmp(typeProblem,'cCrkTen') ...
             f(sctry) = f(sctry) + N*sigmato*det(J0)*wt ;
         end
     end
-elseif( strcmp(typeProblem,'Griffith') )
+elseif( strcmp(typeProblem,'Griffith') || strcmp(typeProblem,'dispfriction'))
     f = f ;
 elseif( strcmp(typeProblem,'eCrkShear') )
     topEdge = edgNodes{3} ;
