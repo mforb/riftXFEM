@@ -1,5 +1,7 @@
 function flag = segments_int_2d ( p1, p2, q1, q2 )
 
+global epsilon
+
 % SEGMENTS_INT_2D computes the intersection of two line segments in 2D.
 %
 %  Discussion:
@@ -34,7 +36,7 @@ function flag = segments_int_2d ( p1, p2, q1, q2 )
 %
   dim_num = 2;
   %tol = 1e-8; %%%%%ATTENTION A LA TOLERANCE ORI 0.001
-  tol = 1e-5;
+  tol = epsilon;
   r=[];
 %
 %  Find the intersection of the two lines of which

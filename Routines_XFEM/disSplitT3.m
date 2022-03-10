@@ -14,7 +14,6 @@ node = [0 0;1 0;0 1] ;
 %the other a triangle. Other option is that a corner is split this means that both sides are triangles  
 nEdge = length(cutEdge) ;
 
-
 if ~hascorner
   if( ismember(cutEdge(1),[1 2]) & ismember(cutEdge(2),[1,2]) )   %side 1 and 2
       tempNode = [node(1,:);node(4,:);node(5,:);node(3,:)] ;
@@ -47,7 +46,6 @@ else
     tri = tricheck(node,tri) ;
   end
 end
-
 
 
 if( nsubDiv == 0)

@@ -1,5 +1,5 @@
 function [Kglobal,Gint] = KTmatXFEM(E_pen,enr_node,elem_crk,type_elem,xTip,xVertex,...
-    split_elem,tip_elem,vertex_elem,corner_elem,crack_nodes,pos,xCrk,Kglobal,u)
+    split_elem,tip_elem,vertex_elem,corner_elem,crack_node,pos,xCrk,Kglobal,u)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -183,7 +183,6 @@ for kk = 1:size(xCrk,2) %what's the crack?
         quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
         quiver(Np(:,1),Np(:,2),Nvect(:,1),Nvect(:,2),'g')
         quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
-        keyboard
 
 
       

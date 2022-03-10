@@ -2,14 +2,19 @@ function [ dist ] = f_dista2(iel,elem_crk,tip)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Thu Nov 11 16:12:12 NZDT 2021
 
-global node element
+global node element epsilon
 
 sctr = element(iel,:) ;
 
-EPS = 1e-08 ;
+EPS = epsilon ;
 
-x0 = elem_crk(iel,1) ; y0 = elem_crk(iel,2) ;
-x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
+if size(elem_crk,1)==1
+  x0 = elem_crk(1) ; y0 = elem_crk(2) ;
+  x1 = elem_crk(3) ; y1 = elem_crk(4) ;
+else
+  x0 = elem_crk(iel,1) ; y0 = elem_crk(iel,2) ;
+  x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
+end
 
 if points_same_2d(tip,[x0,y0])
   x0 = x1;

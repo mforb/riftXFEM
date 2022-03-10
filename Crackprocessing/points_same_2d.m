@@ -1,5 +1,5 @@
 function flag = points_same_2d( p1, p2 )
-
+global epsilon
 % points_same_2D tests if 2 points in 2D are the same
 %
 %  Parameters:
@@ -10,7 +10,7 @@ function flag = points_same_2d( p1, p2 )
 %    Output, integer FLAG, records the results.
 %    0, the points are not the same 
 %    1, the points are the same 
-tol = 1e-8;
+tol = epsilon;
 flag = 1;
 u = abs(p1(1)-p2(1));
 v = abs(p1(2)-p2(2));

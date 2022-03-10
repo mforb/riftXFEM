@@ -1,11 +1,9 @@
 function [Knum,Theta,xCrk] = mainXFEM(xCrk,npas,delta_inc)
 
-%-- Declare global variables here
-global elemType stressState typeCrack
-global L D E nu C P sigmato
+%-- Declare global variables here global elemType stressState typeCrack global L D E nu C P sigmato
 global numcrack xCr deltaInc numstep
 global plotmesh plotNode
-global node element numnode numelem bcNodes edgNodes typeProblem
+global node element numnode numelem bcNodes edgNodes typeProblem elemType
 global penalty fixedF contact melange Kpen
 global epsilon
 
@@ -23,7 +21,6 @@ elseif melange
   penalty = 1; % material properties within the crack are implemented via penalty method
 end
 
-epsilon = 1e-8;
 
 Knum = [ ] ; Theta = [ ] ;
 enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
@@ -36,10 +33,14 @@ for ipas = 1:npas
     [enrDomain] = crackDetect(xCrk,ipas,tipElem,splitElem,vertexElem,cornerElem,enrDomain) ;
 
     %find type of element: tip, split, vertex
-    [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,xTip,xVertex,enrichNode,crackNode]=...
-        nodeDetect(xCrk,enrDomain) ;
+    [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,tangentElem,xTip,xVertex,enrichNode,crackNode] = nnodeDetect(xCrk,enrDomain) ;
     % Deal with corner nodes by introducing phantom nodes (1 for each signed distance)
-    %if ~isempty(crackNode)
+    keyboard
+    if ~isempty(crackNode)
+      % check that all elements connected to crackNode have been properly enriched
+      
+    
+    end
       %warning('Phantom nodes introduced to account for crack going through nodes')
       %[enrichNode, n_red] =  f_phantomNode(crackNode,elemCrk,splitElem,tipElem,vertexElem,enrichNode) ;
     %else

@@ -23,7 +23,7 @@ global node element numnode numelem bcNodes edgNodes
 global plothelp
 global penalty fixedF contact Kpen
 global frictionB friction_mu epsilon
-epsilon = 1e-8
+epsilon = 1e-7
 frictionB = 1
 friction_mu = 0.1
 plothelp = 0
@@ -57,7 +57,7 @@ end
 
 %crack definition
 deltaInc = 0; numstep = 1;
-xCr(1).coor = [-0.2 -0.2;0.2 0.2] ;
+xCr(1).coor = [-0.2 -0.2;0.2, 0.2] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];
