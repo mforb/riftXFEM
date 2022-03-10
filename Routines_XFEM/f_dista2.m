@@ -25,10 +25,13 @@ elseif ~points_same_2d(tip,[x1,y1])
   error('Tip and elem_crk dont match')
 end
 
+l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
+
 for i=1:size(sctr,2)
     x = node(sctr(i),1) ;
     y = node(sctr(i),2) ;
     psi = (x-x1)*(x1-x0)+(y-y1)*(y1-y0);
+    psi = psi/l;
     if abs(psi) < EPS
      dist(i) = 0;
     else

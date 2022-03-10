@@ -35,7 +35,7 @@ for ipas = 1:npas
     %find type of element: tip, split, vertex
     [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,tangentElem,xTip,xVertex,enrichNode,crackNode] = nnodeDetect(xCrk,enrDomain) ;
     % Deal with corner nodes by introducing phantom nodes (1 for each signed distance)
-    keyboard
+    %keyboard
     if ~isempty(crackNode)
       % check that all elements connected to crackNode have been properly enriched
       
@@ -186,7 +186,7 @@ for ipas = 1:npas
     axis equal; view(2); shading interp; colorbar
     title('Y displacement before Newton solver')
     print('original_disp','-dpng')
-    keyboard
+    %keyboard
 
 
 

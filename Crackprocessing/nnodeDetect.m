@@ -71,7 +71,7 @@ for kk = 1:size(xCr,2)
 
             [ phi  ] = dista(e,[q1,q2]);
             [ psi1 ] = f_dista2(e,[q1,q2],q1);
-            [ psi2 ] = f_dista2(e,[q1,q2],q2);
+            [ psi2 ] = f_dista2(e,[q2,q1],q2);
             lck_n = [];
 
             for nn = 1:length(vv)
@@ -112,7 +112,7 @@ for kk = 1:size(xCr,2)
                   end
               end
                 
-              if ~isempty(int_points) 
+              if ~isempty(int_points)
                 [crk_int] = f_up_crk_int(crk_int,int_points,flag1,flag2,q1,q2,e);
                 flag5 = 1;
               end

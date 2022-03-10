@@ -1,4 +1,4 @@
-function [ ckint_out ] = f_up_crk_int( ckint, intes, f1, f2, q1, q2, crack_nodes, e  )
+function [ ckint_out ] = f_up_crk_int( ckint, intes, f1, f2, q1, q2, crack_nodes, el  )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Nov 12 15:18:31 NZDT 2021
 
@@ -22,7 +22,7 @@ for i = 2:size(intes,1)
 end
 
 if size(ins,1)>2
-  error(['There are more then 2 intersects in element ',num2str(e)])
+  error(['There are more then 2 intersects in element ',num2str(el)])
 end
        
 crk = q2 - q1;
@@ -35,7 +35,9 @@ if isempty(ckint)
   elseif f1
     ckint_out = [ q1, ins ];
   else
-    error(['Crk_int upgrade error, element ',num2str(e)])
+    keyboard
+    msg = ['Crk_int upgrade error, element ',num2str(el)]
+    error(msg)
   end
 end
 

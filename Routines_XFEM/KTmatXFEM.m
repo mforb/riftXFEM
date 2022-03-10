@@ -135,25 +135,25 @@ for kk = 1:size(xCrk,2) %what's the crack?
     JO = l/2;
 
 
-    for kk = 1:2
-        gpt = gpts(kk,:) ;
+    for k_in = 1:2
+        gpt = gpts(k_in,:) ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
         gn = nv*Nmat*u(sctrA);
         if gn < 0
         if frictionB
         try
-          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(kk)*Nmat'*(nnt - nmt*mu)*Nmat*det(JO) ;
-          Gint(sctrA) = Gint(sctrA) + E_pen*W(kk)*det(JO)*gn*Nmat'*nv';
-          Gint(sctrA) = Gint(sctrA) + E_pen*W(kk)*det(JO)*mu*gn*Nmat'*mv';
+          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(k_in)*Nmat'*(nnt - nmt*mu)*Nmat*det(JO) ;
+          Gint(sctrA) = Gint(sctrA) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
+          Gint(sctrA) = Gint(sctrA) + E_pen*W(k_in)*det(JO)*mu*gn*Nmat'*mv';
         catch
           keyboard
         end
 
         else
         try
-          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(kk)*Nmat'*nnt*Nmat*det(JO) ;
-          Gint(sctrA) = Gint(sctrA) + E_pen*W(kk)*det(JO)*gn*Nmat'*nv';
+          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+          Gint(sctrA) = Gint(sctrA) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
         catch
           keyboard
         end
@@ -165,10 +165,8 @@ for kk = 1:size(xCrk,2) %what's the crack?
       if plothelp
         Ppoint =  N' * node(sctr,:);
         Pvect = -1*det(JO)*nv;
-        Fvect = -1*det(JO)*mu*mv;
         Np = node(sctr,:);
         Nvect = -1*det(JO)*N*nv;
-        NFvect = -1*det(JO)*N*mv;
 
         figure(2)
         %plotMesh(node,element(iel,:),'T3','r-','no')
@@ -180,9 +178,13 @@ for kk = 1:size(xCrk,2) %what's the crack?
         %end
         plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
         quiver(Ppoint(1),Ppoint(2),Pvect(1),Pvect(2),'r')
-        quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
         quiver(Np(:,1),Np(:,2),Nvect(:,1),Nvect(:,2),'g')
+        if frictionB
+        Fvect = -1*det(JO)*mu*mv;
+        NFvect = -1*det(JO)*N*mv;
+        quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
         quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
+      end
 
 
       
