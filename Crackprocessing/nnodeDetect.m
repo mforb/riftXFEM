@@ -55,8 +55,13 @@ for kk = 1:size(xCr,2)
         for kj = 1:size(xCr(kk).coor,1)-1       %loop over the elements of the fracture
             q1 = xCr(kk).coor(kj,:); 
             q2 = xCr(kk).coor(kj+1,:);
-            flag1 = inhull(q1,vv,[],-1*epsilon) ;
-            flag2 = inhull(q2,vv,[],-1*epsilon) ;
+            if epsilon > 1e-6
+              in_epsi = 1e-6;
+            else
+              in_epsi = epsilon;
+            end
+            flag1 = inhull(q1,vv,[],-1*in_epsi) ; % we need to detect these in order to run the simulation
+            flag2 = inhull(q2,vv,[],-1*in_epsi) ; % otherwise we might not have end points
             if flag1 | flag2
                xCr_element(e,:) = xCr(kk).coor(kj,:) * flag1 + xCr(kk).coor(kj+1,:) * flag2;  % link between crack coordinate and elements  
             end
@@ -104,7 +109,7 @@ for kk = 1:size(xCr,2)
                   nnode2=sctrl(iedge+1);
                   p1 = [node(nnode1,:)];
                   p2 = [node(nnode2,:)];
-                  intersect =segments_int_2d(p1,p2,q1,q2) ;
+                  intersect = segments_int_2d(p1,p2,q1,q2) ;
                   intes = intes + intersect(1);
                   %edge_track=[edge_track,iedge]
                   if intersect(1)                
@@ -113,7 +118,11 @@ for kk = 1:size(xCr,2)
               end
                 
               if ~isempty(int_points)
+                try 
                 [crk_int] = f_up_crk_int(crk_int,int_points,flag1,flag2,q1,q2,e);
+                catch
+                  keyboard
+                end
                 flag5 = 1;
               end
             else

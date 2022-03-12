@@ -7,7 +7,7 @@ epsilon  = 0.000001;
 corner   = [1 2 3 1];
 node     = [0 0; 1 0; 0 1];
 
-ntip = f_naturalpoint(tip,nodes,20,epsilon);
+ntip = f_naturalpoint(tip,nodes,20,1e-6);
 
 % loop on element edges 
 % here we have to be carefull about finding where there is an intersection with crack

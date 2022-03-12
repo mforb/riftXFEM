@@ -1,5 +1,5 @@
-function plotFieldXfem(xCrk,pos,enrich_node,u,...
-    elem_crk,vertex_elem,split_elem,tip_elem,xVertex,xTip,type_elem,ipas)
+function plotFieldXfem(xCrk,pos,enrich_node,crack_nodes,u,...
+    elem_crk,vertex_elem,corner_elem,split_elem,tip_elem,xVertex,xTip,type_elem,ipas)
 
 %plot stress contour.
 %
@@ -37,7 +37,7 @@ for iel=1:numelem
     
     %choose Gauss quadrature rules for elements
     [W,Q] = gauss_rule(iel,enrich_node,elem_crk,...
-        xTip,xVertex,tip_elem,split_elem,vertex_elem,xCrk) ;
+        xTip,xVertex,tip_elem,split_elem,vertex_elem,corner_elem,xCrk) ;
 
     for kk = 1:size(W,1)
     
@@ -49,7 +49,7 @@ for iel=1:numelem
     Gpnt = N'*node(sctr,:) ;
       
         for k = 1:size(xCrk,2)
-            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,k)] ;
+            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_nodes,k)];
         end
         eps_sub = B*U ;
         

@@ -23,7 +23,7 @@ global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
 global plothelp
 global penalty fixedF contact epsilon Kpen
-plothelp = 1
+plothelp = 0
 contact = 1
 epsilon = 1e-5
 Kpen = 1e7

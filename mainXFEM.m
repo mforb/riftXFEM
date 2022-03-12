@@ -5,7 +5,8 @@ global numcrack xCr deltaInc numstep
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes typeProblem elemType
 global penalty fixedF contact melange Kpen
-global epsilon
+global epsilon loadstress
+global results_path
 
 if ~exist('penalty')
   penalty = 0 ;
@@ -96,10 +97,20 @@ for ipas = 1:npas
 
     disp([num2str(toc),'    Stiffness Matrix Computation']) ;
 
+    if ~exist('loadstress') || ~strcmp(loadstress,'y')
+
     [K] = KmatXFEM(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K) ;
 
     [F] = ForceVector(F) ;
+
+    else
+
+      [K,F] = KmatXFEM3(enrichNode,elemCrk,typeElem,xTip,xVertex,...
+        splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,pos,xCrk,K,F) ;
+
+    end
+
 
     kk1 = K ;
     %----- Imposing Essential boundary conditions
@@ -122,6 +133,10 @@ for ipas = 1:npas
               bcval = [bcval -0.1] ;
           end
         end
+    elseif strcmp(typeProblem,'Test')
+      dispNodes = unique([bcNodes{4}]);
+      bcdof = [2*dispNodes(end)-1 2*dispNodes(end)]; 
+      bcval = [ 0 0 ];
     else
         %boundary condition
         cracklength = 100 ;
@@ -163,13 +178,13 @@ for ipas = 1:npas
     Stdux = fu(1:2:2*numnode) ;
     Stduy = fu(2:2:2*numnode) ;
 
-    [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
     
     f = figure('visible','on');
     hold on
     dfac = 1 ;
-    plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
+    plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
     f_plotCrack(crackLips,1,'r-','g-','k--')
     print('original_crack','-dpng')
 
@@ -226,10 +241,10 @@ for ipas = 1:npas
         clf
         hold on
         dfac = 1 ;
-        plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
+        plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
         f_plotCrack(crackLips,1,'r-','g-','k--')
         print(['crack_iter',num2str(cont)],'-dpng','-r300')
-        keyboard
+        %keyboard
 
 
         if rnr < tol
@@ -243,12 +258,12 @@ for ipas = 1:npas
     end
 %     
 %     % plot displacement contour
-     figure
-     clf
-     trisurf(element,node(:,1),node(:,2),Stduy)
-     axis equal; view(2); shading interp; colorbar
-     title(['Y displacement after Newton solver (',num2str(cont) ,' iterations)'])
-     keyboard
+     %figure
+     %clf
+     %trisurf(element,node(:,1),node(:,2),Stduy)
+     %axis equal; view(2); shading interp; colorbar
+     %title(['Y displacement after Newton solver (',num2str(cont) ,' iterations)'])
+     %keyboard
      
      %save('test.mat','K','F','u')
 
@@ -275,16 +290,28 @@ for ipas = 1:npas
 %     plotFieldXfem(xCrk,pos,enrichNode,u,...
 %         elemCrk,vertexElem,splitElem,tipElem,xVertex,xTip,typeElem) ;
     
+     if strcmp(elemType,'Q4')
+        plotFieldXfem(xCrk,pos,enrichNode,u,...
+            elemCrk,vertexELem,splitElem,tipElem,xVertex,xTip,typeElem,ipas);    
+     else
+       plotFieldXfemT3(xCrk,pos,enrichNode,crackNode,u,...
+         elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,ipas) ;
+     end
+
     
-    
-     figure
+     f = figure();
      hold on
      dfac = 50 ;
-     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode)
-     %plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
+     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
+      %plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
+     figure_name = ['Disp_fact_',num2str(dfac),'_',num2str(ipas)];
+     print([results_path,'/',figure_name],'-dpng','-r300')
+
+
    
     [Knum,Theta,xCrk] = KcalJint(xCrk,...
         typeElem,enrDomain,elemCrk,enrichNode,crackNode,xVertex,...
         vertexElem,pos,u,ipas,delta_inc,Knum,Theta,tipElem,splitElem,cornerElem) ;
 
 end
+save([results_path,'/crack_disp.mat'],'xCrk','Knum','Theta','u','element','node');

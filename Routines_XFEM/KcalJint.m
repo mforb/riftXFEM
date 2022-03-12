@@ -29,15 +29,15 @@ for kk = 1:size(xCr,2) %what's the crack?
             Knumerical = [Knumerical Knum] ;
             ThetaInc = [ThetaInc theta_inc] ;
             inc_x = xCr(kk).coor(1,1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
-            [a,b] = find(node(:,1) == inc_x);
+            %[a,b] = find(node(:,1) == inc_x);
             inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
-            [a] = find(node(a,2) == inc_y);
+            %[a] = find(node(a,2) == inc_y);
             % if a crack increment passes exaclty througha node, let's give
             % a small perturbation...
-            if size(a,1) > 0
-                theta_inc = theta_inc + 0.01;
-                inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
-            end
+            %if size(a,1) > 0
+                %theta_inc = theta_inc + 0.01;
+                %inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
+            %end
             xCr(kk).coornew1= [inc_x inc_y]; %
         end
         flag2 = inhull(xCr(kk).coor(size(xCr(kk).coor,1),:),vv,[],1e-8); % and the right tip!
@@ -50,13 +50,13 @@ for kk = 1:size(xCr,2) %what's the crack?
             Knumerical = [Knumerical Knum] ;
             ThetaInc = [ThetaInc theta_inc] ;
             inc_x = xCr(kk).coor(size(xCr(kk).coor,1),1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
-            [a,b] = find(node(:,1) == inc_x);
+            %[a,b] = find(node(:,1) == inc_x);
             inc_y = xCr(kk).coor(size(xCr(kk).coor,1),2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
-            [a] = find(node(a,2) == inc_y);
-            if size(a,1) > 0
-                theta_inc = theta_inc + 0.01;
-                inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
-            end
+            %[a] = find(node(a,2) == inc_y);
+            %if size(a,1) > 0
+                %theta_inc = theta_inc + 0.01;
+                %inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
+            %end
             xCr(kk).coornew2 = [inc_x inc_y]; %right tip
         end
     end

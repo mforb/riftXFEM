@@ -1,4 +1,4 @@
-function [ crack_lips, Flag_pen ] = f_cracklips( u, xCr, enr_dom, type_elem, xCrl,xTip,enr_node,crack_node,pos,split_elem, vertex_elem, tip_elem)
+function [ crack_lips, Flag_pen ] = f_cracklips( u, xCr, enr_dom, type_elem, xCrl,xTip,xVertex,enr_node,crack_node,pos,split_elem, vertex_elem, tip_elem)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Thu Nov 25 11:49:40 NZDT 2021
 global node element elemType
@@ -39,7 +39,7 @@ for kk = 1:size(xCr,2) %what's the crack?
         [phi] = dista(iel,xCrl) ;
         if ismember(iel, tip_elem)
           tip = xTip(iel,:);
-          ntip = f_naturalpoint(tip,vv,20,epsilon);
+          ntip = f_naturalpoint(tip,vv,20,1e-6);
           psi = f_dista2(iel,xCrl,tip);
           [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
           p = [nnodes(end,:); ntip ];
@@ -59,7 +59,7 @@ for kk = 1:size(xCr,2) %what's the crack?
 
           if ismember(iel,vertex_elem)
             tip = xVertex(iel,:);
-            ntip = f_naturalpoint(tip,vv,20,epsilon);
+            ntip = f_naturalpoint(tip,vv,20,1e-6);
             p = [p(1,:) ; ntip ; p(2,:) ];
           end
         end

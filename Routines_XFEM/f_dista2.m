@@ -6,7 +6,7 @@ global node element epsilon
 
 sctr = element(iel,:) ;
 
-EPS = epsilon ;
+EPS = 1e-8 ;
 
 if size(elem_crk,1)==1
   x0 = elem_crk(1) ; y0 = elem_crk(2) ;
@@ -16,12 +16,12 @@ else
   x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
 end
 
-if points_same_2d(tip,[x0,y0])
+if points_same_2d(tip,[x0,y0],1e-8)
   x0 = x1;
   y0 = y1;
   x1 = tip(1);
   y1 = tip(2);
-elseif ~points_same_2d(tip,[x1,y1])
+elseif ~points_same_2d(tip,[x1,y1],1e-8)
   error('Tip and elem_crk dont match')
 end
 

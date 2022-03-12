@@ -1,4 +1,4 @@
-function plotMesh(X,connect,elem_type,se,pnode)
+function plotMesh(X,connect,elem_type,se,pnode,fig)
 
 global node element elemType
 global plotmesh plotNode
@@ -12,6 +12,8 @@ global plotmesh plotNode
 if ( nargin < 4 )
    se='w-';
 end
+
+figure(fig)
 
 holdState=ishold;
 hold on

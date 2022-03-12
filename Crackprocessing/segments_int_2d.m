@@ -35,8 +35,8 @@ global epsilon
 %    Output, real R(2), an intersection point, if there is one.
 %
   dim_num = 2;
-  %tol = 1e-8; %%%%%ATTENTION A LA TOLERANCE ORI 0.001
-  tol = epsilon;
+  tol = 1e-8; %%%%%ATTENTION A LA TOLERANCE ORI 0.001
+  %tol = epsilon;
   r=[];
 %
 %  Find the intersection of the two lines of which
