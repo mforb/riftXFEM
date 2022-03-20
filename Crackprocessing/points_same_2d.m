@@ -11,13 +11,13 @@ global epsilon
 %    0, the points are not the same 
 %    1, the points are the same 
 if nargin == 2
-tol = epsilon;
+  tol = epsilon; 
 end
 
 flag = 1;
 u = p1(1)-p2(1);
 v = p1(2)-p2(2);
-r = sqrt(u*u+v*v)
+r = sqrt(u*u+v*v);
 if ( r > tol )
   flag = 0;
 end

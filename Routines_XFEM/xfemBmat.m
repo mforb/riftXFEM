@@ -3,6 +3,7 @@ function [B] = xfemBmat(pt,e,type_elem,enrich_node,xCrl,GVertex,crack_node,cont)
 %declare global variables here
 global node element numnode numelem elemType
 global incR xc yc phiN
+global epsilon
 
 sctr = element(e,:);
 nn   = length(sctr);
@@ -26,13 +27,12 @@ end
 iwant = [ ] ;
 %switch between non-enriched and enriched elements
 if( any(enrich_node(sctr)) == 0 ) & isempty(intersect(crack_node,sctr)) 
-    if (type_elem(e,cont) == 4 )
-      ref_elem = e;
-      xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
+    %if (type_elem(e,cont) == 4 )
+      %ref_elem = e;
+      %xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
 
-    else
+    %else
     B = Bfem ;
-  end
 else
     Bxfem = [ ] ;
     %loop on nodes, check is node is enriched........
@@ -48,6 +48,8 @@ else
                 dist = signed_distance(xCre,Gpt,0);
                 Hgp  = sign(dist);
                 if HV * Hgp <= 0 %below or above the line relating the crack intersections?
+                    Hgp = Hgp;
+                elseif abs(distV) < epsilon
                     Hgp = Hgp;
                 else
                     vv = [xCre(1,:); xCre(2,:); GVertex(ref_elem,:)];
@@ -76,6 +78,8 @@ else
             % Bxfem at node "in"
             BI_enr = [dNdx(in,1)*(Hgp - Hi)/2 0 ; 0 dNdx(in,2)*(Hgp - Hi)/2 ;
                 dNdx(in,2)*(Hgp - Hi)/2 dNdx(in,1)*(Hgp - Hi)/2];
+            %BI_enr = [dNdx(in,1)*(Hgp + Hi)/2 0 ; 0 dNdx(in,2)*(Hgp + Hi)/2 ;
+                %dNdx(in,2)*(Hgp + Hi)/2 dNdx(in,1)*(Hgp + Hi)/2];
             %else    %if the element is not cut by a crack, the enrichment is always 0 (NO LONGER TRUE)
                 %BI_enr = [0 0 ; 0 0 ; 0 0];
             %end
@@ -168,3 +172,6 @@ else
     B = [ Bfem Bxfem ];
     clear Bfem; clear Bxfem;
 end              % end of switch between enriched and non-enriched elements
+%if e == 120
+  %keyboard
+%end

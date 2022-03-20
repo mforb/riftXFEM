@@ -1,10 +1,10 @@
-function [p] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,crack_node)
-global node, epsilon
+function [p] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node)
+global node element epsilon
 
 sctr = element(iel,:) ;
 vv = node(sctr,:);
 [phi] = dista(iel,elem_crk) ;
-if ismember(iel, tip_elem) % for now we wont deal with this element
+if ismember(iel, tip_elem) 
   tip = xTip(iel,:);
   ntip = f_naturalpoint(tip,vv,20,1e-6);
   psi = f_dista2(iel,elem_crk,tip);
@@ -24,9 +24,4 @@ else
 
   p = [nnodes(end-1,:);nnodes(end,:)];
 
-  if ismember(iel,vertex_elem) % we are jsut going to draw a ligne across the two intersections
-    tip = xVertex(iel,:);
-    ntip = f_naturalpoint(tip,vv,20,1e-6);
-    %p = [p(1,:) ; ntip ; p(2,:) ];
-  end
 end

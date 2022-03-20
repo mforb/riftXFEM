@@ -1,5 +1,5 @@
 function [Kglobal,Fext] = KmatXFEM(enrich_node,elem_crk,type_elem,xTip,xVertex,...
-    split_elem,tip_elem,vertex_elem,corner_elem,crack_nodes,enr_domain,pos,xCrk,Kglobal,Fext)
+    split_elem,tip_elem,vertex_elem,corner_elem,crack_node,enr_domain,pos,xCrk,Kglobal,Fext)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -9,7 +9,7 @@ global plotmesh plotNode
 global gporder numtri
 global plothelp
 global orig_nn
-global OPT
+global OPT rift_wall_pressure
 
 if plothelp
   figure(2)
@@ -56,7 +56,7 @@ for iel = 1:numelem
 
     sctrB = [ ] ;
     for k = 1:size(xCrk,2)
-        sctrB = [sctrB assembly(iel,enrich_node(:,k),pos(:,k),k,crack_nodes)] ;
+        sctrB = [sctrB assembly(iel,enrich_node(:,k),pos(:,k),k,crack_node)] ;
     end
 
     %loop over Gauss points
@@ -66,7 +66,7 @@ for iel = 1:numelem
         [N,dNdxi] = lagrange_basis(elemType,Gpt) ;
         JO = node(sctr,:)'*dNdxi ;
         for k = 1:size(xCrk,2)
-            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_nodes,k)];
+            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_node,k)];
         end
         Ppoint =  N' * node(sctr,:);
         q = [q;Ppoint] ;
@@ -108,35 +108,6 @@ for iel = 1:numelem
         end
     end
 
-    if exist('rift_wall_pressure') & strcmp(rift_wall_pressure,'y')
-
-      p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,crack_node)
-      
-      Fh = f_getHeightF(iel);
-      
-      [W,Q] = quadrature(2,'GAUSS',1) ;
-      [N1,dNdx1]=lagrange_basis('L2',Q(1));
-      [N2,dNdx2]=lagrange_basis('L2',Q(2));
-      gpts = [N1'*p; N2'*p];
-      % find the distance between the two intersects (should be able to do this with det(J)
-      x0 = elem_crk(iel,1) ; y0 = elem_crk(iel,2) ;
-      x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
-      l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
-      nv = [(y0-y1),(x1-x0)]./l;
-      mv = [(x1-x0),(y1 - y0)]./l;
-      nnt = nv'*nv;
-      nmt = mv'*nv; 
-
-      JO = l/2;
-        
-        
-      for k_in = 1:2
-        gpt = gpts(k_in,:) ;
-        [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-        Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
-        Fext(sctrA) = Fext(sctrA) + Fh*W(k_in)*det(JO)*Nmat'*nv';
-      end
-    end
     %if plothelp
       %figure(2)
       %%plotMesh(node,element(iel,:),'T3','r-','no')
@@ -149,7 +120,6 @@ for iel = 1:numelem
       %plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
       
     %end
-    end
 end
 
 %Plot Gauss points for checking

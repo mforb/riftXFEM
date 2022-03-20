@@ -1,10 +1,11 @@
-function [F] = f_getHeight(iel);
+function [F] = f_getHeightF(iel);
 global  node element max_elem
 global ISSM_xx ISSM_yy ISSM_xy
 global rhow rhoi 
 
-if ~isempty(ISSM_h) 
-  H = [ISSM_xx(iel), ISSM_yy(iel), ISSM_xy(iel)]';
+g = 9.81
+if exist('ISSM_h') 
+  H = ISSM_h(iel);
 else
   % get the centre of each element
   nodes = element(iel,:);
@@ -13,7 +14,7 @@ else
   H = f_extractHeight(xc)';
 end
 
-if ~exist('rhow') | ~exist('rhoi')
+if isempty(rhow) | isempty(rhoi)
   rw = 1027;
   ri = 917;
 else
@@ -21,7 +22,7 @@ else
   ri = rhoi;
 end
 
-F = H*H*rhoi*(rhow-rhoi)/rhow
+F = -1*H*g*ri*(rw-ri)/rw;
 
 end
 

@@ -57,12 +57,6 @@ for e=1:size(connect,1)
    text(xm,ym,zm,int2str(e),'fontsize',8)
 end
 
-for n = 1:length(X)
-   xm = X(n,1);
-   ym = X(n,2);
-   zm = X(n,3);
-   text(xm,ym,zm,int2str(n),'fontsize',7,'color','g')
-end
 
 rotate3d on
 axis equal

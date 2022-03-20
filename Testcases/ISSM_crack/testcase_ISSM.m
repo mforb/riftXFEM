@@ -122,7 +122,7 @@ triplot(TR);
 print([results_path,'/mesh_refinement1'],'-dpng','-r200')
 
 cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,50000)
+in = f_find_points_xCr(cpos,xCr,40000)
 
 
 %indx = find(cpos(:,1)>0e3 & cpos(:,1)<90e3 );
@@ -141,7 +141,7 @@ triplot(TR);
 print([results_path,'/mesh_refinement2'],'-dpng','-r200')
 
 cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,40000)
+in = f_find_points_xCr(cpos,xCr,10000,30000)
 
 
 %indx = find(cpos(:,1)>10e3 & cpos(:,1)<80e3 );
@@ -157,13 +157,34 @@ else
 end
 TR = triangulation(element,node);
 triplot(TR);
-print([results_path,'/mesh_refinement3'],'-dpng','-r200')
+print([results_path,'/mesh_refinement2'],'-dpng','-r200')
+
+cpos = TR.incenter;
+in = f_find_points_xCr(cpos,xCr,8000,25000)
+
+
+%indx = find(cpos(:,1)>10e3 & cpos(:,1)<80e3 );
+%indy = find(cpos(:,2)>-1150e3 & cpos(:,2)<-1110e3 );
+
+%in = intersect(indx,indy);
+[node,element] = TrefineRG(node,element,in);
+
+if Hidden
+  figure('visible','off')
+else
+  figure()
+end
+TR = triangulation(element,node);
+triplot(TR);
+xlim([min(xs)-30000,max(xs)+30000])
+ylim([min(ys)-30000,max(ys)+30000])
+print([results_path,'/mesh_refinement4'],'-dpng','-r200')
 
 cpos = TR.incenter;
 figure()
 patch('faces',element,'vertices',node,'facevertexcdata',FintY(cpos)); shading flat;
 
-in = f_find_points_xCr(cpos,xCr,4000,10000)
+in = f_find_points_xCr(cpos,xCr,4000,21000)
 %indx = find(cpos(:,1)>39e3 & cpos(:,1)<65e3 );
 %indy = find(cpos(:,2)>-1137e3 & cpos(:,2)<-1116e3 );
 
@@ -186,8 +207,8 @@ end
 numelem = size(element,1) 
 TR = triangulation(element,node);
 triplot(TR);
-xlim([min(xs)-10000,max(xs)+10000])
-ylim([min(ys)-10000,max(ys)+10000])
+xlim([min(xs)-20000,max(xs)+20000])
+ylim([min(ys)-20000,max(ys)+20000])
 print([results_path,'/mesh_final'],'-dpng','-r200')
 cpos = TR.incenter;
 %if Hidden 
@@ -214,7 +235,7 @@ x = [ -2,-0.3];
 y = [-400000,-400000];
 
 %%crack definition
-deltaInc = 2000; numstep = 5;
+deltaInc = 1000; numstep = 20;
 %xCr(2).coor = [xs2',ys2'] 
 xCr_orig = xCr;
 typeProblem
@@ -248,3 +269,31 @@ end
 %C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
 %KAnalytical000 = C*P*sqrt(pi*a) 
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+
+t = tiledlayout(2,2,'TileSpacing','Compact');
+% tile 1
+nexttile
+plot([1:length(Knumerical{1,1})],Knumerical{1,1})
+xlabel('step')
+title('SIFs end 1')
+legend({'K1','K2'})
+
+nexttile
+plot([1:length(Knumerical{1,2})],Knumerical{1,2})
+xlabel('step')
+title('SIFs end 2')
+legend({'K1','K2'})
+
+nexttile
+plot([1:length(ThetaInc{1,1})],ThetaInc{1,1})
+title('propagation angle, end 1')
+xlabel('step')
+
+nexttile
+plot([1:length(ThetaInc{1,2})],ThetaInc{1,2})
+title('propagation angle, end 2')
+xlabel('step')
+%plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
+
+figure_name = ['Knum_results'];
+print([results_path,'/',figure_name],'-dpng','-r300')

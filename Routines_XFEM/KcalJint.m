@@ -6,10 +6,24 @@ global node element elemType
 global E nu C sigmato
 global Jint iMethod
 
-% Knumerical = [] ;
 % ThetaInc = [] ;
 for kk = 1:size(xCr,2) %what's the crack?
     disp([num2str(toc),'      Crack n. ',num2str(kk)])
+    if ~isempty(Knumerical) ;
+      K1_num = Knumerical{kk,1};
+      K2_num = Knumerical{kk,2};
+    else
+      K1_num = [];
+      K2_num = [];
+    end
+    if ~isempty(ThetaInc) ;
+      ti1 = ThetaInc{kk,1};
+      ti2 = ThetaInc{kk,2};
+    else
+      ti1 = [];
+      ti2 = [];
+    end
+
     xCr(kk).coornew1 = [];
     xCr(kk).coornew2 = [];
     tip = find(type_elem(:,kk) == 1);
@@ -26,8 +40,8 @@ for kk = 1:size(xCr,2) %what's the crack?
             [Knum,theta_inc] = SIF(C,iel,elem_crk,xCr,type_elem,...
                 enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem) ;
 
-            Knumerical = [Knumerical Knum] ;
-            ThetaInc = [ThetaInc theta_inc] ;
+            K1_num = [K1_num, Knum] ;
+            ti1 = [ti1, theta_inc] ;
             inc_x = xCr(kk).coor(1,1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
             %[a,b] = find(node(:,1) == inc_x);
             inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
@@ -47,8 +61,8 @@ for kk = 1:size(xCr,2) %what's the crack?
 
             [Knum,theta_inc] = SIF(C,iel,elem_crk,xCr,type_elem,...
                 enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem) ;
-            Knumerical = [Knumerical Knum] ;
-            ThetaInc = [ThetaInc theta_inc] ;
+            K2_num = [K2_num, Knum] ;
+            ti2 = [ti2, theta_inc] ;
             inc_x = xCr(kk).coor(size(xCr(kk).coor,1),1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
             %[a,b] = find(node(:,1) == inc_x);
             inc_y = xCr(kk).coor(size(xCr(kk).coor,1),2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
@@ -61,4 +75,8 @@ for kk = 1:size(xCr,2) %what's the crack?
         end
     end
     xCr(kk).coor = [xCr(kk).coornew1;xCr(kk).coor;xCr(kk).coornew2] ;
+    ThetaInc{kk,1} = ti1;
+    ThetaInc{kk,2} = ti2;
+    Knumerical{kk,1} = K1_num;
+    Knumerical{kk,2} = K2_num;
 end %kk

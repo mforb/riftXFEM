@@ -7,6 +7,8 @@ global node element numnode numelem bcNodes edgNodes typeProblem elemType
 global penalty fixedF contact melange Kpen
 global epsilon loadstress
 global results_path
+global rift_wall_pressure
+
 
 if ~exist('penalty')
   penalty = 0 ;
@@ -36,12 +38,7 @@ for ipas = 1:npas
     %find type of element: tip, split, vertex
     [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,tangentElem,xTip,xVertex,enrichNode,crackNode] = nnodeDetect(xCrk,enrDomain) ;
     % Deal with corner nodes by introducing phantom nodes (1 for each signed distance)
-    %keyboard
-    if ~isempty(crackNode)
-      % check that all elements connected to crackNode have been properly enriched
-      
     
-    end
       %warning('Phantom nodes introduced to account for crack going through nodes')
       %[enrichNode, n_red] =  f_phantomNode(crackNode,elemCrk,splitElem,tipElem,vertexElem,enrichNode) ;
     %else
@@ -112,6 +109,14 @@ for ipas = 1:npas
     end
 
 
+    
+    if exist('rift_wall_pressure') & strcmp(rift_wall_pressure,'y')
+      [F] = f_apply_ocean_pressure(enrichNode,elemCrk,typeElem,xTip,xVertex,...
+        splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,pos,xCrk,F) ;
+    end
+
+
+
     kk1 = K ;
     %----- Imposing Essential boundary conditions
     disp([num2str(toc),'    Imposing Essential boundary conditions'])
@@ -162,13 +167,13 @@ for ipas = 1:npas
     %apply boundary conditions and solve
     
     [K,F] = feaplyc2(K,F,bcdof,bcval) ;
+
     if any(fixedF)
       [crackLips,flagP] = f_cracklips( zeros(totalUnknown,1), xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
       Fcrack = zeros(size(F));
       Fcrack = f_crackforce_fixed(Fcrack,fixedF,crackLips,xCr,elemCrk,xTip,pos,typeElem, enrichNode,splitElem,vertexElem,tipElem);
       F = F + Fcrack;
     end
-
 
     [L,U] = lu(K) ;
     y = L\F;
@@ -177,7 +182,6 @@ for ipas = 1:npas
     fu = full(u);
     Stdux = fu(1:2:2*numnode) ;
     Stduy = fu(2:2:2*numnode) ;
-
     [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
     
@@ -186,7 +190,7 @@ for ipas = 1:npas
     dfac = 1 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
     f_plotCrack(crackLips,1,'r-','g-','k--')
-    print('original_crack','-dpng')
+    print([results_path,'/crack_walls',num2str(ipas)],'-dpng','-r300')
 
 
 
@@ -312,6 +316,7 @@ for ipas = 1:npas
     [Knum,Theta,xCrk] = KcalJint(xCrk,...
         typeElem,enrDomain,elemCrk,enrichNode,crackNode,xVertex,...
         vertexElem,pos,u,ipas,delta_inc,Knum,Theta,tipElem,splitElem,cornerElem) ;
+
 
 end
 save([results_path,'/crack_disp.mat'],'xCrk','Knum','Theta','u','element','node');

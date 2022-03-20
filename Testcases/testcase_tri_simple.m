@@ -22,8 +22,14 @@ global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
 global plothelp
 global penalty
+global results_path rift_wall_pressure
+global epsilon
+results_path = './Tri_simple_results';
+mkdir(results_path);
+epsilon = 1e-6
 plothelp = 0
 penalty  = 0 
+rift_wall_pressure = 'n'
 
 %problem flags
 elemType = 'T3' ;
@@ -64,11 +70,11 @@ end
 deltaInc = 0; numstep = 1;
 xCr(1).coor = [-0.1 1 ; 1.1 1] ;
 numcrack = size(xCr,2) ;
-
+f = figure();
 %plot the mesh before proceeding
 plotmesh = 'YES' ; plotNode = 'no' ;
 if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode)
+    plotMesh(node,element,elemType,'b-',plotNode,f)
     
     %crack plot
     for k=1:size(xCr,2)
@@ -84,11 +90,4 @@ if( strcmp(plotmesh,'YES') )
 end
 
 [Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc) 
-
-a = 0.3 ;
-D = 1;
-C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
-KAnalytical = C*P*sqrt(pi*a) 
-
-Knumerical/KAnalytical
 

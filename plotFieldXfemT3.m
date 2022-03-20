@@ -34,7 +34,10 @@ for iel=1:numelem
     for k = 1:size(xCrk,2)
         U = [U; element_disp(iel,pos(:,k),enrich_node(:,k),u,k)];
     end
-    
+    if any(isnan(U))
+      warning(['NaN values in enrichments of element ',num2str(iel)])
+      U(isnan(U)) = 0;
+    end
     %choose Gauss quadrature rules for elements
     [W,Q] = gauss_rule(iel,enrich_node,elem_crk,...
         xTip,xVertex,tip_elem,split_elem,vertex_elem,corner_elem,xCrk) ;
