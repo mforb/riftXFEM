@@ -1,10 +1,14 @@
 function [sigma] = f_extractStress(x)
-global FintXY FintX FintY QT
+global FintXY FintX FintY QT same_coords
 % The applied stress field needs to be previously defined as three matlab interpolants
 % QT is the rotation matrix between the field and model
 
-
-xint = convertModeltoShelf(x);
+if exist('same_coords') & same_coords
+  xint = x;
+  QT = eye(2);
+else
+  xint = convertModeltoShelf(x);
+end
 xy = FintXY(xint); 
 St = [ FintX(xint) xy; xy FintY(xint) ];
 

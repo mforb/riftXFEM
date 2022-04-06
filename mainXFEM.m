@@ -4,10 +4,10 @@ function [Knum,Theta,xCrk] = mainXFEM(xCrk,npas,delta_inc)
 global numcrack xCr deltaInc numstep
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes typeProblem elemType
-global penalty fixedF contact melange Kpen
+global penalty fixedF contact melange Kpen rift_wall_pressure xM
 global epsilon loadstress
 global results_path
-global rift_wall_pressure
+
 
 
 if ~exist('penalty')
@@ -37,7 +37,16 @@ for ipas = 1:npas
 
     %find type of element: tip, split, vertex
     [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,tangentElem,xTip,xVertex,enrichNode,crackNode] = nnodeDetect(xCrk,enrDomain) ;
-    % Deal with corner nodes by introducing phantom nodes (1 for each signed distance)
+    % if there are any tangent elements
+    if ~isempty(tangentElem)
+      % we create a new set of tangent elements (connectivty) that will be used only for enriched dofs
+      [nodeTanfix] = f_tangent_iso_node(tangentElem,crackNode);
+    else
+      %tan_element = [];
+      %tan_elemCrk = [];
+      nodeTanfix = [];
+    end
+      
     
       %warning('Phantom nodes introduced to account for crack going through nodes')
       %[enrichNode, n_red] =  f_phantomNode(crackNode,elemCrk,splitElem,tipElem,vertexElem,enrichNode) ;
@@ -111,8 +120,47 @@ for ipas = 1:npas
 
     
     if exist('rift_wall_pressure') & strcmp(rift_wall_pressure,'y')
-      [F] = f_apply_ocean_pressure(enrichNode,elemCrk,typeElem,xTip,xVertex,...
-        splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,pos,xCrk,F) ;
+      Ft = F;
+      [F,elemForce] = f_apply_ocean_pressure(enrichNode,elemCrk,typeElem,xTip,xVertex,...
+        splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,[],pos,xCrk,F) ;
+    else
+      elemForce = zeros(size(element,1),2);
+    end
+
+    if exist('melange') & strcmp(melange,'y')
+      if ~exist('xM') 
+        xM = xCrk; % this means that all of the crack including the tip elements will be infilled with melange
+        np = size(xM.coor,1);
+        if np < 4
+          warning('Not enough coordinates in the crack for generic melange aproach')
+        else 
+          xM.melange = ones(1,np-1);
+          xM.melange(1) = 0;
+          xM.melange(end) = 0;
+          xM.width = ones(500,np-1);
+        end
+      end
+      Kt = K;
+      Kt = K - Kt;
+      [Kt] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
+        splitElem,tipElem,vertexElem,cornerElem,tangentElem,crackNode,pos,xM,xCrk,Kt) ;
+      K = K + Kt;
+    end
+
+    if ~isempty(nodeTanfix)
+      % these are dof that are only connected to crack in a tangent element (therefore enrichment is unconstrained). 
+      inds = [];
+      for i = 1:length(nodeTanfix)
+        in = [ 2*pos(nodeTanfix(i))-1, 2*pos(nodeTanfix(i))]; 
+        inds = [inds, in];
+      end
+      warning('fixing dofs : ', num2str(inds) )
+      K(inds,:) = 0;
+      K(:,inds) = 0;
+      F(inds) = 0;
+      for n = 1:length(inds)
+        K(inds(n),inds(n)) = 1;
+      end
     end
 
 
@@ -137,6 +185,13 @@ for ipas = 1:npas
               bcdof = [bcdof 2*dispNodes(i)] ;
               bcval = [bcval -0.1] ;
           end
+        end
+    elseif strcmp(typeProblem,'eCrkTen2')
+        dispNodes = unique([bcNodes{1}]) ;
+        bcdof = [ ]; bcval = [ ];
+        for i=1:length(dispNodes)
+            bcdof = [bcdof 2*dispNodes(i)-1 2*dispNodes(i)] ;
+            bcval = [bcval 0 0] ;
         end
     elseif strcmp(typeProblem,'Test')
       dispNodes = unique([bcNodes{4}]);
@@ -168,12 +223,13 @@ for ipas = 1:npas
     
     [K,F] = feaplyc2(K,F,bcdof,bcval) ;
 
-    if any(fixedF)
-      [crackLips,flagP] = f_cracklips( zeros(totalUnknown,1), xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-      Fcrack = zeros(size(F));
-      Fcrack = f_crackforce_fixed(Fcrack,fixedF,crackLips,xCr,elemCrk,xTip,pos,typeElem, enrichNode,splitElem,vertexElem,tipElem);
-      F = F + Fcrack;
-    end
+    %if exist('fixedF') & ~isempty(fixedF)
+      %[crackLips,flagP] = f_cracklips( zeros(totalUnknown,1), xCr, enrDomain, typeElem, elemCrk, xTip, xVertex, enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+      %Fcrack = zeros(size(F));
+      %Fcrack = f_crackforce_fixed(Fcrack,fixedF,crackLips,xCr,elemCrk,xTip,pos,typeElem, enrichNode,splitElem,vertexElem,tipElem);
+      %keyboard
+      %F = F + Fcrack;
+    %end
 
     [L,U] = lu(K) ;
     y = L\F;
@@ -189,9 +245,10 @@ for ipas = 1:npas
     hold on
     dfac = 1 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-    f_plotCrack(crackLips,1,'r-','g-','k--')
+    f_plotCrack2(crackLips,10,'r-','k-','c--')
     print([results_path,'/crack_walls',num2str(ipas)],'-dpng','-r300')
 
+    keyboard
 
 
     if contact & ~flagP
@@ -205,12 +262,11 @@ for ipas = 1:npas
     axis equal; view(2); shading interp; colorbar
     title('Y displacement before Newton solver')
     print('original_disp','-dpng')
-    %keyboard
+    keyboard
 
 
 
-
-    if penalty
+    if penalty | melangeforce 
       tol = 1e-8;
       cont = 1
       Du = zeros(size(u));
@@ -220,7 +276,7 @@ for ipas = 1:npas
         disp(['---------------------------------------------'])
         Fint = K*u;
         Fext = F;
-        [KT,Gint] = KTmatXFEM(Kpen,enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K,u);
+        [KT,Gint,elemForce] = KTmatXFEM(Kpen,enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,elemForce,crackNode,pos,xCrk,xM,K,u);
         Res  = Fext - Fint - Gint;
         nr = norm(Res,2);
         if cont == 1
@@ -315,7 +371,10 @@ for ipas = 1:npas
    
     [Knum,Theta,xCrk] = KcalJint(xCrk,...
         typeElem,enrDomain,elemCrk,enrichNode,crackNode,xVertex,...
-        vertexElem,pos,u,ipas,delta_inc,Knum,Theta,tipElem,splitElem,cornerElem) ;
+        vertexElem,pos,u,ipas,delta_inc,Knum,Theta,...
+        tipElem,splitElem,cornerElem,elemForce) ;
+
+    keyboard
 
 
 end

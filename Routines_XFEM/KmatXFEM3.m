@@ -127,3 +127,42 @@ end
 % plotCrack(xCrk,enrich_node,plotmesh) ;
 % plot(q(:,1),q(:,2),'r*') ;
 % clear q
+if ~isempty(tan_element)
+  ntan = size(tan_element,1);
+  for iel = 1:ntan
+      sctr = tan_element(iel,:) ;
+      nn = length(sctr) ;
+      ke = 0 ;
+
+      %choose Gauss quadrature rules for elements
+      if strcmp(elemType,'Q4') 
+        intType = 'GAUSS' ;
+      elseif strcmp(elemType,'T3')
+        intType = 'TRIANGULAR' ;
+      end
+      [W,Q] = quadrature(IntOrder,intType,2) ;
+
+      %split_corner = ismember(iel,corner_elem) & ismember(iel,split_elem)
+
+      sctrB = [ ] ;
+      for k = 1:size(xCrk,2)
+          sctrB = [sctrB tan_assembly(iel,tan_element,pos(:,k))] ;
+      end
+
+      %loop over Gauss points
+      for kk = 1:size(W,1)
+        B = [] ;
+        Gpt = Q(kk,:) ;
+        [N,dNdxi] = lagrange_basis(elemType,Gpt) ;
+        JO = node(sctr,:)'*dNdxi ;
+        for k = 1:size(xCrk,2)
+            B = [B tan_xfemBmat(Gpt,iel,tan_elem,tan_elem_crk,crack_nodes)];
+        end
+        Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
+        if OPT == 1
+          sigma = f_extractStress(Ppoint)';
+          Fext(sctrB) = Fext(sctrB) + B'*sigma*W(kk)*det(JO);
+        end
+      end
+  end
+end

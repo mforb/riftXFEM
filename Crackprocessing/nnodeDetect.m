@@ -204,12 +204,12 @@ for kk = 1:size(xCr,2)
                 if enrich_node(sctr(in),kk) == 1 
                   warning(['tangent element next to tip element (might not work) at:  ',num2str(iel)])
                 elseif enrich_node(sctr(in),kk) == 0 
-                    	enrich_node(sctr(in),kk)   = 2;
+                            enrich_node(sctr(in),kk)   = 2;
                 end
                 if enrich_node (sctr(in),kk) == 0  % already enriched
                     [Aw, Awp] = support_area(sctr(in),elems(iel),type_elem,elem_crk,xVertex,kk);
                     if (abs(Awp / Aw) > 1e-4) & (abs((Aw-Awp) / Aw) > 1e-4)   
-                    	enrich_node(sctr(in),kk)   = 2;
+                            enrich_node(sctr(in),kk)   = 2;
                     end
                 end
             end

@@ -76,10 +76,8 @@ else
                 end
             end % is vertex
             % Bxfem at node "in"
-            BI_enr = [dNdx(in,1)*(Hgp - Hi)/2 0 ; 0 dNdx(in,2)*(Hgp - Hi)/2 ;
-                dNdx(in,2)*(Hgp - Hi)/2 dNdx(in,1)*(Hgp - Hi)/2];
-            %BI_enr = [dNdx(in,1)*(Hgp + Hi)/2 0 ; 0 dNdx(in,2)*(Hgp + Hi)/2 ;
-                %dNdx(in,2)*(Hgp + Hi)/2 dNdx(in,1)*(Hgp + Hi)/2];
+            BI_enr = [dNdx(in,1)*(Hgp - Hi) 0 ; 0 dNdx(in,2)*(Hgp - Hi) ;
+                dNdx(in,2)*(Hgp - Hi) dNdx(in,1)*(Hgp - Hi)];
             %else    %if the element is not cut by a crack, the enrichment is always 0 (NO LONGER TRUE)
                 %BI_enr = [0 0 ; 0 0 ; 0 0];
             %end

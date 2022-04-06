@@ -1,5 +1,5 @@
-function [Kglobal,Gint] = KTmatXFEM(E_pen,enr_node,elem_crk,type_elem,xTip,xVertex,...
-    split_elem,tip_elem,vertex_elem,corner_elem,crack_node,pos,xCrk,Kglobal,u)
+function [Kglobal,Gint,elem_force] = KTmatXFEM(E_pen,enr_node,elem_crk,type_elem,xTip,xVertex,...
+    split_elem,tip_elem,vertex_elem,corner_elem,crack_node,elem_force,pos,xCrk,xM,Kglobal,u)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -10,6 +10,7 @@ global gporder numtri
 global plothelp
 global orig_nn
 global frictionB friction_mu
+global melangeforce 
 
 mu = friction_mu;
 
@@ -34,8 +35,55 @@ if plothelp
   set(n2,'MarkerSize',5);
   plotMesh_numbered(node,element,elemType,'b-','no')
 end
-%loop over enriched elements
 elems = union(split_elem,vertex_elem);
+if melangeforce
+  elemst = tan_elem;
+  mel_elems = []
+
+  for kk = 1:size(xCrk,2)
+
+    for iel=1:length(elems)                     %loop on elems (=elements selected for enrichment)
+      found = 0
+      for kj = 1:size(xM.coor,1)-1       %loop over the elements of the fracture
+        e = elems(iel);
+        if xM.melange(kj)
+          q1 = xM(kk).coor(kj,:); 
+          q2 = xM(kk).coor(kj+1,:);
+          [flag1,flag2,crack_node] = crack_interact_element([q1,q2],e,[]);
+          if flag1
+            if found 
+              mel_elems(end,2) = (mel_elems(end,2) + xM.width(kk))/2
+              break
+            else
+              found = 1
+              mel_elems = [mel_elems; e xM.width(kk) ];
+            end
+          elseif found % the only chance of an element belonging two 2 crack sections is if they are one after the other 
+             break
+          end
+        end
+      end
+    end
+
+
+    for iel=1:length(elemst)                     %loop on elems (=elements selected for enrichment)
+      for kj = 1:size(xM.coor,1)-1       %loop over the elements of the fracture
+        if xM.melange(kj)
+          e = elemst(iel);
+          q1 = xM(kk).coor(kj,:); 
+          q2 = xM(kk).coor(kj+1,:);
+          [flag1,flag2,crack_node] = crack_interact_element([q1,q2],e,[]);
+          if flag2
+              mel_elems = [mel_elems; e xM.width(kk)/2 ];
+              break
+          end
+        end
+      end
+    end
+  end
+end
+
+
 % Gint
 Gint =  zeros(size(u));
 
@@ -68,25 +116,11 @@ for kk = 1:size(xCrk,2) %what's the crack?
     %end
     iel = elems(ii) ;
     sctr = element(iel,:) ;
-    sctrA = [];
     skip = 0;
     nn = length(sctr) ;
-    for ni = 1:nn
-      nodeI = sctr(ni); 
-      if (enr_node(nodeI)==1) | (enr_node(nodeI)==0)
-        skip = 1;
-      end
-      AA = [2*pos(nodeI)-1;2*pos(nodeI)];
-      sctrA = [sctrA; AA];
-    end
-    if skip
-      if plothelp
-         disp(['Element Skipped for penalty: different enrichments found iel = ',num2str(iel)])
-      end
-      continue
-    end
 
-    p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,crack_node)
+    [A,BrI] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node);
+    p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node) % elem_crk in natural coordinates
     %vv = node(sctr,:);
     %[phi] = dista(iel,elem_crk) ;
     %if ismember(iel, tip_elem) % for now we wont deal with this element
@@ -134,40 +168,30 @@ for kk = 1:size(xCrk,2) %what's the crack?
 
     JO = l/2;
 
-
-    for k_in = 1:2
+    if penalty
+      for k_in = 1:2
         gpt = gpts(k_in,:) ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
-        gn = nv*Nmat*u(sctrA);
+        gn = nv*Nmat*2*u(A);
         if gn < 0
-        if frictionB
-        try
-          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(k_in)*Nmat'*(nnt - nmt*mu)*Nmat*det(JO) ;
-          Gint(sctrA) = Gint(sctrA) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
-          Gint(sctrA) = Gint(sctrA) + E_pen*W(k_in)*det(JO)*mu*gn*Nmat'*mv';
-        catch
-          keyboard
+          if frictionB
+            Kglobal(A,A) = Kglobal(A,A) + E_pen*W(k_in)*Nmat'*(nnt - nmt*mu)*Nmat*det(JO) ;
+            Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
+            Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*mu*gn*Nmat'*mv';
+          else
+            elem_force(iel,k) = E_pen*gn;
+            Kglobal(A,A) = Kglobal(A,A) + E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+            Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
+          end
         end
-
-        else
-        try
-          Kglobal(sctrA,sctrA) = Kglobal(sctrA,sctrA) + E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
-          Gint(sctrA) = Gint(sctrA) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
-        catch
-          keyboard
-        end
-        end
-        end
-
-
+      end
         
       if plothelp
         Ppoint =  N' * node(sctr,:);
         Pvect = -1*det(JO)*nv;
         Np = node(sctr,:);
         Nvect = -1*det(JO)*N*nv;
-
         figure(2)
         %plotMesh(node,element(iel,:),'T3','r-','no')
         %if ismember(iel,split_elem)   
@@ -180,15 +204,34 @@ for kk = 1:size(xCrk,2) %what's the crack?
         quiver(Ppoint(1),Ppoint(2),Pvect(1),Pvect(2),'r')
         quiver(Np(:,1),Np(:,2),Nvect(:,1),Nvect(:,2),'g')
         if frictionB
-        Fvect = -1*det(JO)*mu*mv;
-        NFvect = -1*det(JO)*N*mv;
-        quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
-        quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
+          Fvect = -1*det(JO)*mu*mv;
+          NFvect = -1*det(JO)*N*mv;
+          quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
+          quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
+        end
+      end
+    end
+
+    if melangeforce
+      if ismember(iel,mel_elems(:,1))
+        ind = find(iel,mel_elems(:,1);
+        mT = mel_elems(ind,2);
+      else
+        break
+      end
+      
+      for k_in = 1:2
+        gpt = gpts(k_in,:) ;
+        [N,dNdxi] = lagrange_basis(elemType,gpt) ;
+        Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
+        gn = nv*Nmat*2*u(A);
+        gt = mv*Nmat*2*u(A);
+        Kglobal(A,A) = Kglobal(A,A) + Cm1(1,1)*W(k_in)*Nmat'*nnt*Nmat*det(JO)/mT ;
+        Kglobal(A,A) = Kglobal(A,A) + Cm1(1,2)*W(k_in)*Nmat'*nmt*Nmat*det(JO)/mT ;
+        Gint(A) = Gint(A) + Cm1(1,1)*W(k_in)*det(JO)*gn*Nmat'*nv'/mT;
+        Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*mu*gn*Nmat'*mv'/mT;
       end
 
-
-      
-    end
     end
   end
 end

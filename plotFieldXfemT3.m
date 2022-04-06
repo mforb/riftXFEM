@@ -76,7 +76,17 @@ patch('faces',tri,'vertices',node,'facevertexcdata',vonmises);
 title('Vonmises')
 shading flat 
 colorbar
-caxis([min(0,quantile(vonmises,0.1)) round(quantile(vonmises,0.995))])
+try 
+  caxis([min(0,quantile(vonmises,0.1)) round(quantile(vonmises,0.995))])
+catch 
+  mi = min(vonmises(:,1,1));
+  ma = max(vonmises(:,1,1));
+  sl = (ma-mi)
+  if sl == 0
+    sl = 1;
+  end
+  caxis([mi+0.2*sl,ma-0.2*sl])
+end
 figure_name = ['Vonmises_stress_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
 % pause
@@ -92,7 +102,18 @@ patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,1));
 title('Stress XX')
 shading flat 
 colorbar
-caxis([min(0,quantile(mstress(:,1,1),0.1)) round(quantile(mstress(:,1,1),0.995))])
+try 
+  caxis([min(0,quantile(mstress(:,1,1),0.1)) round(quantile(mstress(:,1,1),0.995))])
+catch 
+  mi = min(mstress(:,1,1));
+  ma = max(mstress(:,1,1));
+  sl = (ma-mi)
+  if sl == 0
+    sl = 1;
+  end
+  caxis([mi+0.2*sl,ma-0.2*sl])
+end
+
 figure_name = ['Stress_xx_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
 
@@ -107,7 +128,18 @@ patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,2));
 title('Stress YY')
 shading flat 
 colorbar
-caxis([min(0,quantile(mstress(:,1,2),0.1)) round(quantile(mstress(:,1,2),0.995))])
+try 
+  caxis([min(0,quantile(mstress(:,1,2),0.1)) round(quantile(mstress(:,1,2),0.995))])
+catch 
+  mi = min(mstress(:,1,2));
+  ma = max(mstress(:,1,2));
+  sl = (ma-mi)
+  if sl == 0
+    sl = 1;
+  end
+  caxis([mi+0.2*sl,ma-0.2*sl])
+  warning('quantile not available- caxis boundaries are arbitrary-ish')
+end
 figure_name = ['Stress_yy_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
 

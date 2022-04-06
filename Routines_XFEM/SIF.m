@@ -1,5 +1,5 @@
 function [Knum,theta_inc] = SIF(C,tip,elem_crk,xCr,type_elem,enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,...
-    tip_elem,split_elem,vertex_elem,corner_elem)
+    tip_elem,split_elem,vertex_elem,corner_elem,elem_force)
 
 global node element elemType E nu
 global iMethod iParam
@@ -8,6 +8,16 @@ global lambda1 lambda2 nu1 nu2
 global elemType typeMesh typeProblem typeCrack stressState
 
 plotNode = 'NO' ;
+
+if strcmp(elemType,'Q4') 
+  intType = 'GAUSS' ;
+  corner = [1 2 3 4 1] ;
+  nnode = [-1 -1;1 -1;1 1;-1 1] ;
+else
+  intType = 'TRIANGULAR';
+  corner = [1 2 3 1] ;
+  nnode = [0 0;1 0;0 1] ;
+end
 
 % Compute the Stress Intensity Factors
 % Using the Interaction integral method
@@ -36,7 +46,6 @@ QT  =[cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];           % for the transf
 compt=0;
 q=[];
 
-
 for iel = 1 : size(Jdomain,2)
     e = Jdomain(iel) ; % current element
     sctr = element(e,:);
@@ -46,10 +55,14 @@ for iel = 1 : size(Jdomain,2)
     split_order  = 7;
     vertex_order = 7;
     
-    if( ismember(e,split_elem) && any(ismember(enrich_node(sctr),3)) )
+    if( ismember(e,split_elem) && any(ismember(enrich_node(sctr),3)) ) %why?
         order = 3 ;
         phis = phiN(sctr) ;
-        [W,Q] = discontQ4quad(order,phis,nnode) ;
+        if strcmp(elemType,'Q4') 
+          [W,Q] = discontQ4quad(order,phis,nnode) ;
+        else
+          [W,Q] = discontT3(order,phis,nnode) ;
+        end
     else
         %choose Gauss quadrature rules for elements
         [W,Q] = gauss_rule(e,enrich_node,elem_crk,...
@@ -242,6 +255,132 @@ for iel = 1 : size(Jdomain,2)
             I(mode,1) = I(mode,1) + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
         end   %loop on mode
     end       % of quadrature loop
+
+    if ismember(e,split_elem) && any(elem_force(e,:))
+      % The I integral needs to be adjusted to account for forces on the rift wall
+      [W,Q] = quadrature(2,'GAUSS',1) ;
+      [N1,dNdx1]=lagrange_basis('L2',Q(1));
+      [N2,dNdx2]=lagrange_basis('L2',Q(2));
+      p = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,[],crack_nodes) % elem_crk in natural coordinates
+      gpts = [N1'*p; N2'*p];
+      % find the distance between the two intersects (should be able to do this with det(J)
+      x0 = elem_crk(e,1) ; y0 = elem_crk(e,2) ;
+      x1 = elem_crk(e,3) ; y1 = elem_crk(e,4) ;
+      l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
+      nv = [(y0-y1),(x1-x0)]./l;
+      mv = [(x1-x0),(y1 - y0)]./l;
+
+      JO = l/2;
+      % ++++++++++++++
+      % sigma N and T global 
+      % ++++++++++++++
+      sig_elem = [elem_force(e,1) elem_force(e,2); elem_force(e,2) 0];
+      angl = atan2(nv(2),nv(1));
+      rotQT = [ cos(angl), sin(angl); -sin(angl), cos(angl) ]; 
+      sig_global = rotQT*sig_elem*rotQT'
+      sig_local = QT*sig_global*QT'
+      nlocal = QT*nv'
+
+
+
+      % ++++++++++++++
+      % q at nodes
+      % ++++++++++++++
+      q     = qnode(iel,:);
+
+      % ----------------------------
+      % start loop over Gauss points
+      % -----------------------------
+      for gq = 1:size(W,1)
+        pt = gpts(gq,:);
+        wt = W(gq,:);
+        [N,dNdxi] = lagrange_basis(elemType,pt);
+        Gpt = N' * node(sctr,:);     % GP in global coord
+        % ++++++++++++++
+        % q at pt 
+        % ++++++++++++++
+        qpt = N'*q';
+        qm = qpt*nlocal;
+        
+        % ++++++++++++++++++
+        %  Auxiliary fields
+        % ++++++++++++++++++
+        
+        xp    = QT *(Gpt - xyTip)';           % local coordinate to tip
+        r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2)) ;
+        theta = atan2(xp(2),xp(1)) ;
+
+        K1 = 1.0 ;
+        K2 = K1  ;
+        
+        mu = E/(2.+ nu + nu);
+        kappa = 3-4*nu;    %Kolosov coeff, Plain strain
+        
+        SQR  = sqrt(r);
+        CT   = cos(theta);
+        ST   = sin(theta);
+        CT2  = cos(theta/2);
+        ST2  = sin(theta/2);
+        C3T2 = cos(3*theta/2);
+        S3T2 = sin(3*theta/2);
+        
+        drdx = CT;
+        drdy = ST;
+        dtdx = -ST/r;
+        dtdy = CT/r;
+        for mode = 1:2
+          if (mode == 1)
+                
+                u1    = K1*FACDisp1*SQR*CT2*(kappa - CT);
+                du1dr = K1*FACDisp1*0.5/SQR*CT2*(kappa - CT);
+                du1dt = K1*FACDisp1*SQR*(-0.5*ST2*(kappa - CT) + CT2*ST);
+                
+                u2    = K1*FACDisp1*SQR*ST2*(kappa - CT);
+                du2dr = K1*FACDisp1*0.5/SQR*ST2*(kappa - CT);
+                du2dt = K1*FACDisp1*SQR*(0.5*CT2*(kappa - CT) + ST2*ST);
+                
+                AuxGradDisp(1,1) = du1dr*drdx + du1dt*dtdx;
+                AuxGradDisp(1,2) = du1dr*drdy + du1dt*dtdy;
+                AuxGradDisp(2,1) = du2dr*drdx + du2dt*dtdx;
+                AuxGradDisp(2,2) = du2dr*drdy + du2dt*dtdy;
+                
+                AuxEps(1,1) = AuxGradDisp(1,1);
+                AuxEps(2,1) = 0.5*(AuxGradDisp(2,1) + AuxGradDisp(1,2));
+                AuxEps(1,2) = AuxEps(2,1);
+                AuxEps(2,2) = AuxGradDisp(2,2);
+                
+            elseif (mode == 2)
+                
+                u1    = K2*FACDisp2*SQR*ST2*(kappa + 2 + CT);
+                du1dr = K2*FACDisp2*0.5/SQR*ST2*(kappa + 2 + CT);
+                du1dt = K2*FACDisp2*SQR*(0.5*CT2*(kappa + 2 + CT) - ST2*ST);
+                
+                u2    = -K2*FACDisp2*SQR*CT2*(kappa - 2 + CT);
+                du2dr = -K2*FACDisp2*0.5*(1/SQR)*CT2*(kappa - 2 + CT);
+                du2dt = -K2*FACDisp2*SQR*(-0.5*ST2*(kappa - 2 + CT) - CT2*ST);
+                
+                AuxGradDisp(1,1) = du1dr*drdx + du1dt*dtdx;
+                AuxGradDisp(1,2) = du1dr*drdy + du1dt*dtdy;
+                AuxGradDisp(2,1) = du2dr*drdx + du2dt*dtdx;
+                AuxGradDisp(2,2) = du2dr*drdy + du2dt*dtdy;
+                
+                AuxEps(1,1) = AuxGradDisp(1,1);
+                AuxEps(2,1) = 0.5*(AuxGradDisp(2,1) + AuxGradDisp(1,2));
+                AuxEps(1,2) = AuxEps(2,1);
+                AuxEps(2,2) = AuxGradDisp(2,2);
+            end
+            
+            % +++++++++++++++
+            %  Surface part of the I integral 
+            % +++++++++++++++
+            
+            I_wall= -1*(sig_local(1,2) * AuxGradDisp(1,1) + sig_local(2,2) * AuxGradDisp(2,1) ) * qm(2) * 2 ;
+            
+            % Interaction integral I
+            I(mode,1) = I(mode,1) + (I_wall)*det(JO)*wt;
+        end   %loop on mode
+      end       % of quadrature loop
+    end % if split_node and there is a force on wall 
 end           % end of element loop
 
 

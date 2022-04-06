@@ -26,6 +26,7 @@ end
 %num_enrich = size(enrdomain,1) 
 elems = union(split_elem,vertex_elem);
 elems = union(elems,tip_elem);
+
 crack_lips = zeros( size(elems,1),6,4,size(xCr,2));
 Flag_pen = 0;
 

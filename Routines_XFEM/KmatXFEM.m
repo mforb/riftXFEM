@@ -22,7 +22,7 @@ if plothelp
   plotMesh_numbered(node,element,elemType,'b-','no')
 end
 
-
+Kglobal2 = Kglobal
 q = [] ;
 %loop over elements
 for iel = 1:numelem
@@ -52,11 +52,33 @@ for iel = 1:numelem
         end
         Ppoint =  N' * node(sctr,:);
         q = [q;Ppoint] ;
-        try
-          Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
-        catch
-          keyboard
+        Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
+        if iel == 1630
+          disp('in KmatXFEM, iel = 1630')
+          %keyboard
         end
+
+        %if ismember(iel,[106,246,184])
+          %nn   = length(sctr);
+          %cnt = 0 ;
+
+          %for k = 1 : nn
+            %cnt = cnt + 1 ;
+            %sctrB_u(2*k-1) = 2*sctr(k)-1 ;
+            %sctrB_u(2*k)   = 2*sctr(k)   ;
+            %sctrB_a(2*cnt - 1) = 2 * pos(sctr(k)) - 1;
+            %sctrB_a(2*cnt    ) = 2 * pos(sctr(k))    ;
+          %end
+          %[B_u,B_a] = tan_xfemBmat(Gpt,iel,element,elem_crk,crack_nodes)
+          %Kglobal(sctrB_u,sctrB_u) = Kglobal(sctrB_u,sctrB_u) + B_u'*C*B_u*W(kk)*det(JO) ;
+          %Kglobal(sctrB_a,sctrB_u) = Kglobal(sctrB_a,sctrB_u) + B_a'*C*B_u*W(kk)*det(JO) ;
+          %Kglobal(sctrB_u,sctrB_a) = Kglobal(sctrB_u,sctrB_a) + B_u'*C*B_a*W(kk)*det(JO) ;
+          %Kglobal(sctrB_a,sctrB_a) = Kglobal(sctrB_a,sctrB_a) + B_a'*C*B_a*W(kk)*det(JO) ;
+          %Kglobal2(sctrB,sctrB) = Kglobal2(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
+        %else
+           %Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
+           %Kglobal2(sctrB,sctrB) = Kglobal2(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
+        %end
 
         
       %if plothelp
@@ -74,7 +96,7 @@ for iel = 1:numelem
     end
 end
 
-%Plot Gauss points for checking
+
 % plot mesh with crack and enriched nodes
 % plotCrack(xCrk,enrich_node,plotmesh) ;
 % plot(q(:,1),q(:,2),'r*') ;

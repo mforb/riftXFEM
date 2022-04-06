@@ -34,7 +34,7 @@ global results_path rift_wall_pressure
 
 rift_wall_pressure = 'n'
 
-epsilon = 3 
+epsilon = 2 
 plothelp = 0
 contact = 0
 Kpen = 1e7
@@ -55,7 +55,7 @@ Tfact = 1;
 elemType = 'T3' ;
 typeCrack = 'Static' ;
 stressState = 'PlaneStrain' ;
-typeProblem = 'eCrkTen' ; %choose type of problem
+typeProblem = 'eCrkTen2' ; %choose type of problem
 %typeProblem = 'Test' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
 
@@ -80,9 +80,13 @@ read_gmesh
 element = tricheck(node,element);
 numnode = size(node,1) ;
 numelem = size(element,1) ;
+rw = 1027;
+ri = 917;
+g = 9.81;
 
-E =9e9; nu = 0.3; P = 1 ;
-sigmato = 5.8e5 ;
+E =1e10; nu = 0.3; P = 1 ;
+sigmato = 300*g*ri*(rw-ri)/rw;
+sigmato = 2e5;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
     Cm1 = E/10*(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
@@ -92,7 +96,7 @@ end
 
 %crack definition
 deltaInc = 100; numstep = 1;
-xCr(1).coor = [-1501 0; 0 0 ] ;
+xCr(1).coor = [-1501 0; -500 0 ] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];
@@ -120,24 +124,24 @@ end
 t = tiledlayout(2,2,'TileSpacing','Compact');
 % tile 1
 nexttile
-plot([1:length(Knumerical{1,1})],Knumerical{1,1})
+%plot([1:length(Knumerical{1}(1,:))],Knumerical{1})
 xlabel('step')
 title('SIFs end 1')
 legend({'K1','K2'})
 
 nexttile
-plot([1:length(Knumerical{1,2})],Knumerical{1,2})
+plot([1:length(Knumerical{2}(1,:))],Knumerical{2})
 xlabel('step')
 title('SIFs end 2')
 legend({'K1','K2'})
 
 nexttile
-plot([1:length(ThetaInc{1,1})],ThetaInc{1,1})
+%plot([1:length(ThetaInc{1})],ThetaInc{1})
 title('propagation angle, end 1')
 xlabel('step')
 
 nexttile
-plot([1:length(ThetaInc{1,2})],ThetaInc{1,2})
+plot([1:length(ThetaInc{2})],ThetaInc{2})
 title('propagation angle, end 2')
 xlabel('step')
 %plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)

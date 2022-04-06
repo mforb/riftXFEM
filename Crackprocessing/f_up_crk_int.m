@@ -6,7 +6,7 @@ function [ ckint_out ] = f_up_crk_int( ckint, intes, f1, f2, q1, q2, el  )
 global node epsilon
 
 if epsilon > 1e-6
-  in_epsi = 1e-6
+  in_epsi = 1e-6;
 else
   in_epsi = epsilon/10; 
 end

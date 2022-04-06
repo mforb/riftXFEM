@@ -13,12 +13,12 @@ path(path,'../../Mesh')
 path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 %------------------
-results_path = './Ice_shelf_no_pressure';
+results_path = './Ice_shelf_melange';
 mkdir(results_path);
 
 %declare global variables here
 global L D E nu P C sigmato
-global Cm1 Cm2
+global Cm1 
 global elemType typeMesh typeProblem typeCrack stressState
 global xCr deltaInc numstep numcrack
 global plotmesh plotNode
@@ -30,37 +30,35 @@ global loadstress FintX FintY FintXY FintH
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon
-global results_path rift_wall_pressure
+global results_path rift_wall_pressure melange
+global same_coords
 
-rift_wall_pressure = 'y'
+same_coords = 1
 
-epsilon = 5 
-epsilon = 1e-7
-frictionB = 1
-friction_mu = 0.1
-plothelp = 1
-contact = 1
-Kpen = 1e7
-penalty = 1;
+rift_wall_pressure = 'n'
+melange = 'y'
+
+epsilon = 2 
+plothelp = 0
+contact = 0
+penalty = 0;
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
-stressState = 'PlaneStress' ;
-epsilon = 1e-3
 
 OPT = 2; Hidden = true;
 
 xTip= [0,0];
 Rtip = xTip;
 QT = eye(2);
-loadstress = 'y';
+loadstress = 'n';
 Tfact = 1;
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
 stressState = 'PlaneStrain' ;
-%typeProblem = 'eCrkTen' ; %choose type of problem
-typeProblem = 'Test' ; %choose type of problem
+typeProblem = 'eCrkTen' ; %choose type of problem
+%typeProblem = 'Test' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
 
 % read the mesh
@@ -85,18 +83,24 @@ element = tricheck(node,element);
 numnode = size(node,1) ;
 numelem = size(element,1) ;
 
-E =0.9e9; nu = 0.3; P = 1 ;
-sigmato = -1. ;
+rw = 1027;
+ri = 917;
+g = 9.81;
+
+E =1e10; nu = 0.3; P = 1 ;
+%sigmato = 300*g*ri*(rw-ri)/rw;
+sigmato = 2e6;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
-    Cm1 = E/10*(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
+    Cm1 = 1000*E/(10*(1-nu^2))*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 else
     C = E/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
+    Cm1 = 1000*E/(10*(1+nu)*(1-2*nu))*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
 end
 
 %crack definition
-deltaInc = 0.1; numstep = 1;
-xCr(1).coor = [-0.14 -0.2;0.004, 0.09 ;0.2, 0.2] ;
+deltaInc = 100; numstep = 1;
+xCr(1).coor = [-1501 0; 0 0 ] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];

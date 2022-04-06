@@ -31,10 +31,13 @@ global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon
 global results_path rift_wall_pressure
+global same_coords
+
+same_coords = 1
 
 rift_wall_pressure = 'y'
 
-epsilon = 3 
+epsilon = 2 
 plothelp = 0
 contact = 0
 Kpen = 1e7
@@ -81,8 +84,13 @@ element = tricheck(node,element);
 numnode = size(node,1) ;
 numelem = size(element,1) ;
 
-E =9e9; nu = 0.3; P = 1 ;
-sigmato = 5.8e5 ;
+rw = 1027;
+ri = 917;
+g = 9.81;
+
+E =1e10; nu = 0.3; P = 1 ;
+%sigmato = 300*g*ri*(rw-ri)/rw;
+sigmato = 2e5;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
     Cm1 = E/10*(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];

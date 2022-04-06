@@ -1,5 +1,5 @@
-function [ Fext ] = f_apply_ocean_pressure( enrich_node,elem_crk,type_elem,xTip,xVertex,...
-    split_elem,tip_elem,vertex_elem,corner_elem,crack_node,enr_domain,pos,xCrk,Fext )
+function [ Fext, elem_force ] = f_apply_ocean_pressure( enrich_node,elem_crk,type_elem,xTip,xVertex,...
+    split_elem,tip_elem,vertex_elem,corner_elem,crack_node,enr_domain,elem_force,pos,xCrk,Fext )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Mar 18 18:39:27 NZDT 2022
 
@@ -23,7 +23,9 @@ end
 % number of non-enriched df
 dfn = size(W2,1)*2;
 
-
+if isempty(elem_force)
+  elem_force = zeros(size(element,1),2);
+end
 
 
 %loop over elements
@@ -38,6 +40,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     ke = 0 ;
     p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node) % elem_crk in natural coordinates
     fh = f_getHeightF(iel);
+    elem_force(iel,1) = elem_force(iel,1) + fh;
 
     [W,Q] = quadrature(2,'GAUSS',1) ;
     [N1,dNdx1]=lagrange_basis('L2',Q(1));
@@ -57,50 +60,9 @@ for kk = 1:size(xCrk,2) %what's the crack?
     skip = 0;
     nn = length(sctr) ;
     n1 = zeros(1,nn);
-    A = [];
-    Nmat = [];
-    BrI = [];
-    for nI = 1:nn
-      nodeI = sctr(nI);
-      if (enrich_node(nodeI) == 2)     % H(x) enriched node
-          AA = [2*pos(nodeI)-1;2*pos(nodeI)];
-          A  = [A;AA];
-      elseif(enrich_node(nodeI) == 3) % H(x) due to material
-          AA = [2*pos(nodeI)-1; 2*pos(nodeI)];
-          A = [A;AA];
-      elseif (enrich_node(nodeI) == 1) % B(x) enriched node
-          AA = [2*pos(nodeI)-1;
-              2*pos(nodeI);
-              2*(pos(nodeI)+1)-1;
-              2*(pos(nodeI)+1);
-              2*(pos(nodeI)+2)-1;
-              2*(pos(nodeI)+2);
-              2*(pos(nodeI)+3)-1;
-              2*(pos(nodeI)+3);
-              ];
-          A  = [A;AA];
-          if type_elem(iel,1) == 1   %looking for the "tip" element
-              ref_elem = iel;
-          else  
-              [sctrn,xx] = find(element == nodeI);
-              [ele,xx] = find(type_elem(sctrn,:)==1);
-              ref_elem = sctrn(ele);
-          end
-          % compute branch functions
-          if ~any(n1) % do this only once
-            xCre  = [elem_crk(ref_elem,1:2); elem_crk(ref_elem,3:4)];
-            seg   = xCre(2,:) - xCre(1,:);
-            alpha = atan2(seg(2),seg(1));
-            Tip  = [xCre(2,1) xCre(2,2)];
-            QT    = [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];
-          end
-          n1(nI) = 1;
-          xp    = QT*(node(nodeI,:)-Tip)';
-          r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
-          theta = atan2(xp(2),xp(1)); % presumably none of the nodes are on the crack near the tip
-          BrI = [BrI; branch_node(r,theta)];
-      end
-    end
+
+    [A,BrI] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node);
+
     for k_in = 1:2
       gpt = gpts(k_in,:) ;
       [N,dNdxi] = lagrange_basis(elemType,gpt) ;
@@ -122,15 +84,15 @@ for kk = 1:size(xCrk,2) %what's the crack?
          Br_d = Br_u;
         end
       end
-      nA = [1,2]
+      nA = [1,2];
       for ni = 1:nn
         if n1(ni)
-          n_row = sum(n1(1:ni))
+          n_row = sum(n1(1:ni));
           for i = 1:4
             try 
             Fext(A(nA)) = Fext(A(nA)) + fh*N(ni)*(Br_u(i)-BrI(n_row,i))*W(k_in)*det(JO)*nv';
             catch
-              keyboard
+              keyboard;
             end
             nA = [nA(1)+2,nA(2)+2];
           end
