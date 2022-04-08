@@ -2,9 +2,9 @@ function [Knum,Theta,xCrk] = mainXFEM(xCrk,npas,delta_inc)
 
 %-- Declare global variables here global elemType stressState typeCrack global L D E nu C P sigmato
 global numcrack xCr deltaInc numstep
-global plotmesh plotNode
+global plotmesh plotNode plothelp plotiter
 global node element numnode numelem bcNodes edgNodes typeProblem elemType
-global penalty fixedF contact melange Kpen rift_wall_pressure xM
+global penalty fixedF contact melange Kpen rift_wall_pressure xM melangeforce
 global epsilon loadstress
 global results_path
 
@@ -15,13 +15,6 @@ if ~exist('penalty')
 end
 if ~exist('contact')
   contact = 0;
-elseif contact
-  penalty = 1 ; % contact is implemented via the penalty method
-end
-if ~exist('melange')
-  melange = 0
-elseif melange
-  penalty = 1; % material properties within the crack are implemented via penalty method
 end
 
 
@@ -114,7 +107,6 @@ for ipas = 1:npas
 
       [K,F] = KmatXFEM3(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,pos,xCrk,K,F) ;
-
     end
 
 
@@ -127,7 +119,7 @@ for ipas = 1:npas
       elemForce = zeros(size(element,1),2);
     end
 
-    if exist('melange') & strcmp(melange,'y')
+    if exist('melange') & melange 
       if ~exist('xM') 
         xM = xCrk; % this means that all of the crack including the tip elements will be infilled with melange
         np = size(xM.coor,1);
@@ -145,6 +137,7 @@ for ipas = 1:npas
       [Kt] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
         splitElem,tipElem,vertexElem,cornerElem,tangentElem,crackNode,pos,xM,xCrk,Kt) ;
       K = K + Kt;
+      keyboard
     end
 
     if ~isempty(nodeTanfix)
@@ -153,8 +146,8 @@ for ipas = 1:npas
       for i = 1:length(nodeTanfix)
         in = [ 2*pos(nodeTanfix(i))-1, 2*pos(nodeTanfix(i))]; 
         inds = [inds, in];
+        warning(['fixing tangent dof : ', num2str(in(1)), ' and ', num2str(in(2))] )
       end
-      warning('fixing dofs : ', num2str(inds) )
       K(inds,:) = 0;
       K(:,inds) = 0;
       F(inds) = 0;
@@ -231,9 +224,10 @@ for ipas = 1:npas
       %F = F + Fcrack;
     %end
 
-    [L,U] = lu(K) ;
-    y = L\F;
-    u = U\y;
+    %[L,U] = lu(K) ;
+    %y = L\F;
+    %u = U\y;
+    u = K\F;
 
     fu = full(u);
     Stdux = fu(1:2:2*numnode) ;
@@ -245,39 +239,45 @@ for ipas = 1:npas
     hold on
     dfac = 1 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-    f_plotCrack2(crackLips,10,'r-','k-','c--')
-    print([results_path,'/crack_walls',num2str(ipas)],'-dpng','-r300')
-
-    keyboard
+    f_plotCrack2(crackLips,20,'r-','k-','c--')
+    print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r300')
 
 
-    if contact & ~flagP
-      % first we need to find out if there is any interpenetration
-      penalty = 0
-      disp([num2str(toc),'    No contact therefore penalty method was not applied'])
-    end
+
     f = figure('visible','on');
     clf
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
     title('Y displacement before Newton solver')
-    print('original_disp','-dpng')
-    keyboard
+    print([results_path,'/original_ydisp'],'-dpng')
+
+    if contact & ~flagP
+      % first we need to find out if there is any interpenetration
+      contact = 0
+      disp([num2str(toc),'    No contact therefore penalty method was not applied'])
+    end
+    if melangeforce | contact
+      penalty = 1
+    end
 
 
 
-    if penalty | melangeforce 
-      tol = 1e-8;
+    if penalty 
+      tol1 = 1e-8;
+      tol2 = 1;
       cont = 1
       Du = zeros(size(u));
+      Fext = F
+      %if melangeforce
+        %u = u/2;
+      %end
       nu = 1
       while 1 
         disp(['Newton step ',num2str(cont)])
         disp(['---------------------------------------------'])
         Fint = K*u;
-        Fext = F;
-        [KT,Gint,elemForce] = KTmatXFEM(Kpen,enrichNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,elemForce,crackNode,pos,xCrk,xM,K,u);
-        Res  = Fext - Fint - Gint;
+        [KT,Gint,elemForce] = KTmatXFEM(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
+        Res  = Fint - Fext + Gint;
         nr = norm(Res,2);
         if cont == 1
           nr0  = nr;
@@ -285,48 +285,54 @@ for ipas = 1:npas
         rnr = nr/nr0;
         disp(['L2 norm of the residual, R =  ',num2str(nr)])
         disp(['Relative to R0 : ',num2str(rnr)])
-
-        [L,U] = lu(KT) ;
-        y = L\Res;
-        Du = U\y;
-        u = u + Du;
+        u = u - KT\Res;
         cont = cont + 1;
-        fu = full(u);
-        Stdux = fu(1:2:2*numnode) ;
-        Stduy = fu(2:2:2*numnode) ;
 
-        [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+        if plothelp | plotiter 
+          fu = full(u);
+          Stdux = fu(1:2:2*numnode) ;
+          Stduy = fu(2:2:2*numnode) ;
+          [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+          f = figure('visible','on');
+          clf
+          hold on
+          dfac = 1 ;
+          plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
+          f_plotCrack(crackLips,1,'r-','k-','m--')
+          print(['crack_iter',num2str(cont)],'-dpng','-r300')
+        end
 
-        f = figure('visible','on');
-        clf
-        hold on
-        dfac = 1 ;
-        plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-        f_plotCrack(crackLips,1,'r-','g-','k--')
-        print(['crack_iter',num2str(cont)],'-dpng','-r300')
-        %keyboard
 
-
-        if rnr < tol
+        if rnr < tol1 | nr < tol2
            disp(['Converged at step : ',num2str(cont)])
            break
-        elseif cont > 10
+        elseif cont > 500
            warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
            break
         end
       end
     end
 %     
+    fu = full(u);
+    Stdux = fu(1:2:2*numnode) ;
+    Stduy = fu(2:2:2*numnode) ;
 %     % plot displacement contour
-     %figure
-     %clf
-     %trisurf(element,node(:,1),node(:,2),Stduy)
-     %axis equal; view(2); shading interp; colorbar
-     %title(['Y displacement after Newton solver (',num2str(cont) ,' iterations)'])
-     %keyboard
+    figure
+    clf
+    trisurf(element,node(:,1),node(:,2),Stduy)
+    axis equal; view(2); shading interp; colorbar
+    title(['Y displacement after Newton solver'])
+    print([results_path,'/after_ydisp'],'-dpng')
      
      %save('test.mat','K','F','u')
 
+    [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    f = figure('visible','on');
+    hold on
+    dfac = 1 ;
+    plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
+    f_plotCrack2(crackLips,20,'r-','k-','c--')
+    print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r300')
 
     
 %     res = [Stdux Stduy] ;

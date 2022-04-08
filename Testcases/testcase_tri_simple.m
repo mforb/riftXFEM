@@ -21,7 +21,7 @@ global xCr deltaInc numstep numcrack
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
 global plothelp
-global penalty
+global contact 
 global results_path rift_wall_pressure
 global epsilon
 global melange melangeforce Cm1 xM
@@ -38,8 +38,9 @@ typeCrack = 'Static' ;
 stressState = 'PlaneStress' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
 
-melange = 'n'
-melangeforce = 'y'
+melange = 0 
+melangeforce = 1 
+contact = 0
 
 
 %geometry and mesh generation
@@ -66,7 +67,7 @@ E = 1e3; nu = 0.3; P = 1 ;
 sigmato = P ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
-    Cm1 = E*.150/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
+    Cm1 = E*.1/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 else
     C = E/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
 end

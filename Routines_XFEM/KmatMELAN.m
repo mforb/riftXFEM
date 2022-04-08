@@ -31,7 +31,7 @@ mel_elems = []
 for kk = 1:size(xCrk,2)
 
   for iel=1:length(elems)                     %loop on elems (=elements selected for enrichment)
-    found = 0
+    found = 0;
     for kj = 1:size(xM.coor,1)-1       %loop over the elements of the fracture
       e = elems(iel);
       if xM.melange(kj)
@@ -40,11 +40,11 @@ for kk = 1:size(xCrk,2)
         [flag1,flag2,crack_node] = crack_interact_element([q1,q2],e,[]);
         if flag1
           if found 
-            mel_elems(end,2) = (mel_elems(end,2) + xM.width(kk))/2
+            mel_elems(end,2) = (mel_elems(end,2) + xM.width(kj))/2
             break
           else
-            found = 1
-            mel_elems = [mel_elems; e xM.width(kk) ];
+            found = 1;
+            mel_elems = [mel_elems; e xM.width(kj) ];
           end
         elseif found % the only chance of an element belonging two 2 crack sections is if they are one after the other 
            break
@@ -62,7 +62,7 @@ for kk = 1:size(xCrk,2)
         q2 = xM(kk).coor(kj+1,:);
         [flag1,flag2,crack_node] = crack_interact_element([q1,q2],e,[]);
         if flag2
-            mel_elems = [mel_elems; e xM.width(kk)/2 ];
+            mel_elems = [mel_elems; e xM.width(kj)/2 ];
             break
         end
       end
@@ -70,8 +70,6 @@ for kk = 1:size(xCrk,2)
   end
 end
 
-  q = [] ;
-  elemsl = []
   %loop over elements
 for ii=1:size(mel_elems,1)
   % test to see if this element is within xCmel
@@ -97,6 +95,8 @@ for ii=1:size(mel_elems,1)
   nn = length(sctr) ;
   n1 = zeros(1,nn);
 
+
+  [A,BrI,QT] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node);
   [A,BrI] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node);
   A2 = [];
   for nI = 1:nn
@@ -141,7 +141,8 @@ end
 
 f = figure(1)
 hold on
-plotMesh(node,element(elemsl,:),elemType,'c-','no',f)
+plotMesh(node,element(mel_elems(:,1),:),elemType,'c-','no',f)
+
 
 % plot mesh with crack and enriched nodes
 % plotCrack(xCrk,enrich_node,plotmesh) ;

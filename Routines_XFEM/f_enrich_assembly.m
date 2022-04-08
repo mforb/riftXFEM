@@ -1,14 +1,17 @@
-function  [A,BrI] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node)
+function  [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: April 3 2022
 
-global element
+global node element
 
 sctr = element(iel,:) ;
 nn = length(sctr) ;
 n1 = zeros(1,nn);
 A = [];
 BrI = [];
+Tip = [];
+alpha = 0;
+QT = eye(2);
 for nI = 1:nn
   nodeI = sctr(nI);
   if (enrich_node(nodeI) == 2)     % H(x) enriched node

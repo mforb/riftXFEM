@@ -61,7 +61,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
     n1 = zeros(1,nn);
 
-    [A,BrI] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node);
+    [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node);
 
     for k_in = 1:2
       gpt = gpts(k_in,:) ;

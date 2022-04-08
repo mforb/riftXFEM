@@ -12,7 +12,7 @@ path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
-results_path = './ISSM_xmas_Results';
+results_path = './ISSM_xmas_wall_pressure';
 mkdir(results_path);
 %copyfile('../Testcase.m',results_path);
 
@@ -28,10 +28,16 @@ global loadstress FintX FintY FintXY
 % global variables for conversion between two coordinate systems
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
-global OPT Hidden epsilon
+global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 epsilon = 5 
 
 OPT = 2; Hidden = true;
+
+same_coords = 1
+
+rift_wall_pressure = 1
+melange = 0 
+melangeforce = 0
 
 xTip= [0,0];
 Rtip = xTip;
@@ -41,7 +47,7 @@ Tfact = 1;
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
-stressState = 'PlaneStress' ;
+stressState = 'PlaneStrain' ;
 %typeProblem = 'eCrkTen' ; %choose type of problem
 typeProblem = 'Test' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
@@ -229,6 +235,7 @@ if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 else
     C = E/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
+    Cm1 = E*0.1/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
 end
 
 x = [ -2,-0.3];

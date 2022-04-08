@@ -13,7 +13,7 @@ path(path,'../../Mesh')
 path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 %------------------
-results_path = './Ice_shelf_melange';
+results_path = './Ice_shelf_melangeforce';
 mkdir(results_path);
 
 %declare global variables here
@@ -30,13 +30,15 @@ global loadstress FintX FintY FintXY FintH
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon
-global results_path rift_wall_pressure melange
+global results_path rift_wall_pressure melange melangeforce xM
 global same_coords
 
 same_coords = 1
 
 rift_wall_pressure = 'n'
-melange = 'y'
+melange = 0  
+melangeforce = 1
+
 
 epsilon = 2 
 plothelp = 0
@@ -92,16 +94,19 @@ E =1e10; nu = 0.3; P = 1 ;
 sigmato = 2e6;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
-    Cm1 = 1000*E/(10*(1-nu^2))*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
+    Cm1 = 10*E/(10*(1-nu^2))*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 else
     C = E/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
-    Cm1 = 1000*E/(10*(1+nu)*(1-2*nu))*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
+    Cm1 = 10*E/(10*(1+nu)*(1-2*nu))*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
 end
 
 %crack definition
 deltaInc = 100; numstep = 1;
 xCr(1).coor = [-1501 0; 0 0 ] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
+xM.coor = [-1501 0; -700 0; -500 0; 0 0 ] ;
+xM.melange = [0 1 0 ] ;
+xM.width = [0 85 0 ] ;
 numcrack = size(xCr,2) ;
 fixedF = [];
 

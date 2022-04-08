@@ -88,7 +88,7 @@ elseif( ismember(e,split_elem) )
             
         end
     end
-else        %Standard Q4 element
+else        %Standard T3 or Q4 element
     if strcmp(elemType,'Q4') 
       intType = 'GAUSS' ;
     elseif strcmp(elemType,'T3')

@@ -16,6 +16,7 @@ else
   if nEdge==1 % then one of the nodes must be a crack_node
     crack_n = intersect(crack_node,sctr);
     if isempty(crack_n)
+      keyboard
       error("only one edge but no crack node in elem ,",num2str(iel),", when evaluating crack lips")
     end
     crack_c = find(sctr==crack_n);

@@ -22,7 +22,6 @@ if plothelp
   plotMesh_numbered(node,element,elemType,'b-','no')
 end
 
-Kglobal2 = Kglobal
 q = [] ;
 %loop over elements
 for iel = 1:numelem
@@ -53,10 +52,6 @@ for iel = 1:numelem
         Ppoint =  N' * node(sctr,:);
         q = [q;Ppoint] ;
         Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
-        if iel == 1630
-          disp('in KmatXFEM, iel = 1630')
-          %keyboard
-        end
 
         %if ismember(iel,[106,246,184])
           %nn   = length(sctr);

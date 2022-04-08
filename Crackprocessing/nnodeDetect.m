@@ -64,8 +64,8 @@ for kk = 1:size(xCr,2)
     plotMesh(node,element(subelems,:),elemType,'c-','no',f)
   end
 
-  found_start = 0
-  found_end   = 0
+  found_start = 0;
+  found_end   = 0;
 
   for iel=1:length(subelems)                     %loop on elems (=elements selected for enrichment)
     e = subelems(iel) ;
@@ -87,7 +87,7 @@ for kk = 1:size(xCr,2)
           if (kj == 1 ) & flag1 
             flag3 = flag1 ;
           end
-          flag5 = 0
+          flag5 = 0;
           xCr_element = q1;  % link between crack coordinate and elements  
         end
       end
@@ -98,7 +98,7 @@ for kk = 1:size(xCr,2)
             flag4 = flag2;
           end
           flag5 = 0;
-          xCr_element = q2
+          xCr_element = q2;
         end
       end
 
