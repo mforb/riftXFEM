@@ -186,6 +186,13 @@ for ipas = 1:npas
             bcdof = [bcdof 2*dispNodes(i)-1 2*dispNodes(i)] ;
             bcval = [bcval 0 0] ;
         end
+    elseif strcmp(typeProblem,'ISSM')
+        dispNodes = [bcNodes{4}];
+        bcdof = [ ]; bcval = [ ];
+        for i=1:length(dispNodes)
+            bcdof = [bcdof 2*dispNodes(i)-1 2*dispNodes(i)] ;
+            bcval = [bcval 0 0] ;
+        end
     elseif strcmp(typeProblem,'Test')
       dispNodes = unique([bcNodes{4}]);
       bcdof = [2*dispNodes(end)-1 2*dispNodes(end)]; 
@@ -380,7 +387,7 @@ for ipas = 1:npas
         vertexElem,pos,u,ipas,delta_inc,Knum,Theta,...
         tipElem,splitElem,cornerElem,elemForce) ;
 
-    keyboard
+    %keyboard
 
 
 end

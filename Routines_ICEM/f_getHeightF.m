@@ -1,11 +1,11 @@
 function [F] = f_getHeightF(iel);
 global  node element max_elem
-global ISSM_xx ISSM_yy ISSM_xy
+global ISSM_xx ISSM_yy ISSM_xy ISSM_H
 global rhow rhoi 
 
 g = 9.81
-if exist('ISSM_h') 
-  H = ISSM_h(iel);
+if exist('ISSM_H') 
+  H = ISSM_H(iel);
 else
   % get the centre of each element
   nodes = element(iel,:);
