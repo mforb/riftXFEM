@@ -12,7 +12,7 @@ path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
-results_path = './ISSM_xmas_simple';
+results_path = './ISSM_xmas';
 mkdir(results_path);
 %copyfile('../Testcase.m',results_path);
 
@@ -91,6 +91,7 @@ cpos = TR.incenter;
 FintX = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_xx);
 FintY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_yy);
 FintXY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_xy);
+FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_H');
 
 clear global ISSM_xx ISSM_yy ISSM_xy % without the global these only clear in this workspace!!
 %figure(1)
@@ -100,6 +101,11 @@ clear global ISSM_xx ISSM_yy ISSM_xy % without the global these only clear in th
 %plotMesh(node,element,elemType,'b-','yes',figure('visible','off'))
 %print([results_path,'/original_mesh'],'-dpng','-r200')
 
+if Hidden
+  f = figure('visible','off')
+else
+  figure()
+end
 
 indx = find(cpos(:,1)>-2.5e5);
 indy = find(cpos(:,2)<-1e6);
@@ -112,8 +118,31 @@ plotMesh(node,element,elemType,'b-','yes',f)
 hold on
 plot(node(bc_fix,1),node(bc_fix,2),'r*')
 plot(node(bc_front,1),node(bc_front,2),'cs')
-keyboard
 print([results_path,'/section_mesh'],'-dpng','-r200')
+%keyboard
+clf(f);
+% resize bc_fix and edge_nodes to 'in' nodes
+all_node_num = unique(element);
+numnode = size(all_node_num,1); 
+node = node(all_node_num,:);
+for i=1:3*length(element)
+  element(i) = find(all_node_num==element(i));
+end
+edges_front2 = [];
+for i=1:length(edges_front)
+  if find(all_node_num==edges_front(i,1)) & find(all_node_num==edges_front(i,2));
+    edges_front2 = [edges_front2 ; find(all_node_num==edges_front(i,1)),find(all_node_num==edges_front(i,2))]
+  end
+end
+edges_front = edges_front2;
+bc_fix2 = [];
+for i = 1:length(bc_fix)
+  if find(all_node_num==bc_fix(i))
+  bc_fix2 = [ bc_fix2; find(all_node_num==bc_fix(i))];
+  end
+end
+bc_fix = bc_fix2;
+
 
 % refinement using ameshref
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
@@ -123,14 +152,11 @@ in = f_find_points_xCr(cpos,xCr,100000)
 
 [node,element] = TrefineRG(node,element,in);
 
-if Hidden
-  figure('visible','off')
-else
-  figure()
-end
 TR = triangulation(element,node);
 triplot(TR);
 print([results_path,'/mesh_refinement1'],'-dpng','-r200')
+%keyboard
+clf(f)
 
 cpos = TR.incenter;
 in = f_find_points_xCr(cpos,xCr,40000)
@@ -142,14 +168,11 @@ in = f_find_points_xCr(cpos,xCr,40000)
 %in = intersect(indx,indy);
 [node,element] = TrefineRG(node,element,in);
 
-if Hidden
-  figure('visible','off')
-else
-  figure()
-end
 TR = triangulation(element,node);
 triplot(TR);
 print([results_path,'/mesh_refinement2'],'-dpng','-r200')
+%keyboard
+clf(f)
 
 cpos = TR.incenter;
 in = f_find_points_xCr(cpos,xCr,10000,30000)
@@ -161,11 +184,6 @@ in = f_find_points_xCr(cpos,xCr,10000,30000)
 %in = intersect(indx,indy);
 [node,element] = TrefineRG(node,element,in);
 
-if Hidden
-  figure('visible','off')
-else
-  figure()
-end
 TR = triangulation(element,node);
 triplot(TR);
 xl = xlim;
@@ -176,6 +194,8 @@ plot(node(bc_front,1),node(bc_front,2),'cs')
 xlim(xl);
 ylim(yl);
 print([results_path,'/mesh_refinement2_with_bc'],'-dpng','-r200')
+%keyboard
+clf(f);
 
 cpos = TR.incenter;
 in = f_find_points_xCr(cpos,xCr,8000,25000)
@@ -187,47 +207,48 @@ in = f_find_points_xCr(cpos,xCr,8000,25000)
 %in = intersect(indx,indy);
 [node,element] = TrefineRG(node,element,in);
 
-if Hidden
-  figure('visible','off')
-else
-  figure()
-end
-TR = triangulation(element,node);
-triplot(TR);
 xlim([min(xs)-30000,max(xs)+30000])
 ylim([min(ys)-30000,max(ys)+30000])
 print([results_path,'/mesh_refinement4'],'-dpng','-r200')
-
+clf(f)
+TR = triangulation(element,node);
+triplot(TR);
 cpos = TR.incenter;
-figure()
+figure(f)
 patch('faces',element,'vertices',node,'facevertexcdata',FintY(cpos)); shading flat;
+print([results_path,'/StressY_with_refinement'],'-dpng','-r200')
+clf(f)
 
-in = f_find_points_xCr(cpos,xCr,4000,21000)
+%in = f_find_points_xCr(cpos,xCr,4000,21000)
 %indx = find(cpos(:,1)>39e3 & cpos(:,1)<65e3 );
 %indy = find(cpos(:,2)>-1137e3 & cpos(:,2)<-1116e3 );
 
 %in = intersect(indx,indy);
-[node,element] = TrefineRG(node,element,in);
+%[node,element] = TrefineRG(node,element,in);
 
-all_node_num = unique(element);
-numnode = size(all_node_num,1); 
-node = node(all_node_num,:);
-for i=1:3*length(element)
-  element(i) = find(all_node_num==element(i));
-end
+%all_node_num = unique(element);
+numnode = size(node,1); 
+%node = node(all_node_num,:);
+%for i=1:3*length(element)
+  %element(i) = find(all_node_num==element(i));
+%end
+%for i=1:2*length(edges_front)
+  %edges_front(i) = find(all_node_num==edges_front(i));
+%end
+%for i = 1:length(bc_fix)
+  %edges_front(i) = find(all_node_num==bc_fix(i));
+%end
 
 
-if Hidden 
-  figure('visible','off')
-else
-  figure()
-end
 numelem = size(element,1) 
 TR = triangulation(element,node);
 triplot(TR);
-xlim([min(xs)-20000,max(xs)+20000])
-ylim([min(ys)-20000,max(ys)+20000])
+xl = [min(xs)-20000,max(xs)+20000];
+yl = [min(ys)-20000,max(ys)+20000];
+xlim(xl);
+ylim(yl);
 print([results_path,'/mesh_final'],'-dpng','-r200')
+clf(f);
 cpos = TR.incenter;
 %if Hidden 
   %figure('visible','off')
@@ -255,15 +276,15 @@ x = [ -2,-0.3];
 y = [-400000,-400000];
 
 %%crack definition
-deltaInc = 1000; numstep = 20;
+deltaInc = 2000; numstep = 8;
 %xCr(2).coor = [xs2',ys2'] 
 xCr_orig = xCr;
 typeProblem
 plotmesh = 'YES' ; plotNode = 'no' ;
-if Hidden
-  fmesh = figure('visible','off');
+if Hidden 
+  fmesh = figure('visible','off')
 else
-  fmesh = figure();
+  fmesh = figure()
 end
 
 if( strcmp(plotmesh,'YES') )
@@ -281,7 +302,39 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
+xlim(xl);
+ylim(yl);
+print([results_path,'/mesh_crack_start'],'-dpng','-r200')
 
+TR = triangulation(element,node);
+cpos = TR.incenter;
+figure(f)
+clf(f)
+patch('faces',element,'vertices',node,'facevertexcdata',FintY(cpos)); shading flat;
+print([results_path,'/StressYY_import'],'-dpng','-r200')
+xlim(xl);
+ylim(yl);
+print([results_path,'/StressYY_import_zoom'],'-dpng','-r200')
+clf(f)
+
+figure(f)
+patch('faces',element,'vertices',node,'facevertexcdata',FintX(cpos)); shading flat;
+print([results_path,'/StressXX_import'],'-dpng','-r200')
+xlim(xl);
+ylim(yl);
+print([results_path,'/StressXX_import_zoom'],'-dpng','-r200')
+clf(f)
+
+figure(f)
+patch('faces',element,'vertices',node,'facevertexcdata',FintH(cpos)); shading flat;
+print([results_path,'/Thickness_import'],'-dpng','-r200')
+xlim(xl);
+ylim(yl);
+print([results_path,'/Thickness_import_zoom'],'-dpng','-r199')
+clf(f)
+
+global zoom_dim
+zoom_dim = [xl;yl];
 
 [Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc)
 

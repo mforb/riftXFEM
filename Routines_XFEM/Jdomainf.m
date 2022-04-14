@@ -1,6 +1,6 @@
 function [Jdomain,qnode,radius] = Jdomainf(tip_elem,xTip,enrich_node)
 
-global node element
+global node element typeProblem
 
 numnode = size(node,1);
 
@@ -27,7 +27,11 @@ area = polyarea(node(sctr,1),node(sctr,2));
 
 
 % J radius = fac * sqrt(area);
-fac    = 3;
+if strcmp(typeProblem,'ISSM')
+  fac = 4;
+else
+  fac = 3;
+end
 radius = fac * sqrt(area);
 center = xTip;
 

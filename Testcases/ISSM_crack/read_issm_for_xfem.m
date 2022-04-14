@@ -74,4 +74,4 @@ for i = 1:length(element)
   ISSM_H(i) = mean(ISSM_h(sctr));
 end
 
-save('/home/antarctica/Data/import_issm_holly1.mat','element','node','bc_fix','bc_front','edges_front','ISSM_xx','ISSM_yy','ISSM_xy','ISSM_H');
+save('./import_issm_holly1.mat','element','node','bc_fix','bc_front','edges_front','ISSM_xx','ISSM_yy','ISSM_xy','ISSM_H');

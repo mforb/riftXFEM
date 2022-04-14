@@ -15,6 +15,7 @@ global plotmesh
 global results_path
 global ISSM_yy
 global Hidden
+global zoom_dim
 
 stress_pnt =  [ ] ;
 stress_xx = [ ] ;
@@ -67,9 +68,9 @@ vonmises  = sqrt( (mstress(:,1,1)).^2 +(mstress(:,1,2)).^2 -(mstress(:,1,1)).*(m
 
 %figure('visible','off');
 if Hidden
-  figure('visible','off');
+  f = figure('visible','off');
 else
-  figure();
+  f = figure();
 end
 hold on
 patch('faces',tri,'vertices',node,'facevertexcdata',vonmises);
@@ -89,14 +90,16 @@ catch
 end
 figure_name = ['Vonmises_stress_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
+if ~isempty(zoom_dim)
+  xlim(zoom_dim(1,:))
+  ylim(zoom_dim(2,:))
+  figure_name = ['VonmisesZoom_stress_',num2str(ipas)];
+  print([results_path,'/',figure_name],'-dpng','-r300')
+end
+clf(f)
 % pause
 
-if Hidden
-  figure('visible','off');
-else
-  figure();
-end
-%figure('visible','off');
+figure(f);
 hold on
 patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,1));
 title('Stress XX')
@@ -116,13 +119,15 @@ end
 
 figure_name = ['Stress_xx_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
-
-if Hidden
-  figure('visible','off');
-else
-  figure();
+if ~isempty(zoom_dim)
+  xlim(zoom_dim(1,:))
+  ylim(zoom_dim(2,:))
+  figure_name = ['StressZoom_xx_',num2str(ipas)];
+  print([results_path,'/',figure_name],'-dpng','-r300')
 end
-%figure('visible','off');
+clf(f);
+
+figure(f);
 hold on
 patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,2));
 title('Stress YY')
@@ -142,6 +147,14 @@ catch
 end
 figure_name = ['Stress_yy_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
+if ~isempty(zoom_dim)
+  xlim(zoom_dim(1,:))
+  ylim(zoom_dim(2,:))
+  figure_name = ['StressZoom_yy_',num2str(ipas)];
+  print([results_path,'/',figure_name],'-dpng','-r300')
+end
+clf(f);
+clf(f);
 
 %figure;
 %%figure('visible','off');

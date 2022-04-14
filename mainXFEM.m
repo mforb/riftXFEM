@@ -7,8 +7,11 @@ global node element numnode numelem bcNodes edgNodes typeProblem elemType
 global penalty fixedF contact melange Kpen rift_wall_pressure xM melangeforce
 global epsilon loadstress
 global results_path
+global fmesh
+global output_file
+global Hidden
 
-
+output_file = fopen([results_path,'/output.log'],'w')
 
 if ~exist('penalty')
   penalty = 0 ;
@@ -22,7 +25,12 @@ Knum = [ ] ; Theta = [ ] ;
 enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
 %loop over number of steps of crack growth
 for ipas = 1:npas
-    disp([num2str(toc),'    Crack growth number     ',num2str(ipas)]) ;
+    cgrow = [num2str(toc),'    Crack growth number     ',num2str(ipas)]
+    disp(cgrow) ;
+    fprintf(output_file,cgrow)
+    fprintf(output_file,'---------------------------------------------------')
+    fprintf(output_file,'---------------------------------------------------')
+    
 
     disp([num2str(toc),'    Crack processing']) ;
     %find elements within a small region
@@ -51,7 +59,10 @@ for ipas = 1:npas
     
 
 
+
         %plot enriched nodes
+    figure(fmesh);
+    hold on
     if( strcmp(plotmesh,'YES') )
         for k=1:size(xCr,2)
             for kj = 1:size(xCr(k).coor,1)-1
@@ -137,7 +148,7 @@ for ipas = 1:npas
       [Kt] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
         splitElem,tipElem,vertexElem,cornerElem,tangentElem,crackNode,pos,xM,xCrk,Kt) ;
       K = K + Kt;
-      keyboard
+      %keyboard
     end
 
     if ~isempty(nodeTanfix)
@@ -241,22 +252,24 @@ for ipas = 1:npas
     Stduy = fu(2:2:2*numnode) ;
     [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
-    
-    f = figure('visible','on');
+    if Hidden 
+      f = figure('visible','off');
+    else
+      f = figure();
+    end
     hold on
     dfac = 1 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
+    figure(f);
+    hold on
     f_plotCrack2(crackLips,20,'r-','k-','c--')
     print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r300')
-
-
-
-    f = figure('visible','on');
-    clf
+    clf(f)
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
     title('Y displacement before Newton solver')
     print([results_path,'/original_ydisp'],'-dpng')
+    clf(f)
 
     if contact & ~flagP
       % first we need to find out if there is any interpenetration
@@ -318,28 +331,29 @@ for ipas = 1:npas
            break
         end
       end
+      fu = full(u);
+      Stdux = fu(1:2:2*numnode) ;
+      Stduy = fu(2:2:2*numnode) ;
     end
 %     
-    fu = full(u);
-    Stdux = fu(1:2:2*numnode) ;
-    Stduy = fu(2:2:2*numnode) ;
 %     % plot displacement contour
-    figure
-    clf
+    figure(f)
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
     title(['Y displacement after Newton solver'])
     print([results_path,'/after_ydisp'],'-dpng')
+    clf(f)
      
      %save('test.mat','K','F','u')
 
     [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-    f = figure('visible','on');
+    figure(f)
     hold on
     dfac = 1 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
     f_plotCrack2(crackLips,20,'r-','k-','c--')
     print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r300')
+    clf(f)
 
     
 %     res = [Stdux Stduy] ;
@@ -371,14 +385,14 @@ for ipas = 1:npas
          elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,ipas) ;
      end
 
-    
-     f = figure();
+     figure(f) 
      hold on
      dfac = 50 ;
      plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
       %plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
      figure_name = ['Disp_fact_',num2str(dfac),'_',num2str(ipas)];
      print([results_path,'/',figure_name],'-dpng','-r300')
+     clf(f)
 
 
    
@@ -388,7 +402,9 @@ for ipas = 1:npas
         tipElem,splitElem,cornerElem,elemForce) ;
 
     %keyboard
+    var_name = [results_path,'/crack',num2str(ipas),'.mat']
+    save([results_path,'/crack_disp.mat'],'xCrk','Knum','Theta','u','element','node');
 
 
 end
-save([results_path,'/crack_disp.mat'],'xCrk','Knum','Theta','u','element','node');
+fclose(output_file)
