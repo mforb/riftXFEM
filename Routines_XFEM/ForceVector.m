@@ -51,14 +51,14 @@ elseif( strcmp(typeProblem,'eCrkShear') )
             f(sctry) = f(sctry) + N*sigmato*det(J0)*wt ;
         end
     end
-elseif( strcmp(typeProblem,'ISSM')
+elseif( strcmp(typeProblem,'ISSM') )
     frontEdge = edgNodes{1} ;
     [W,Q] = quadrature(1,'GAUSS',1) ;
-    for e = 1:size(FrontEdge,1)
+    for e = 1:size(frontEdge,1)
         iel = f_findElemfromEdge(frontEdge(e,:))
         sctr = frontEdge(e,:) ;
         sctry = sctr.*2 - 1;
-        fh = f_getHeightF(iel);
+        fh = f_getHeightF(iel)
         for q = 1:size(W,1)
             pt = Q(q,:) ; wt = W(q) ;
             N = lagrange_basis('L2',pt) ;

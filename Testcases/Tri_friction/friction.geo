@@ -2,6 +2,7 @@ Merge "friction.txt";
 Curve Loop(1) = {1, 2, 3, 4};
 //+
 Plane Surface(100) = {1};
+Mesh.Algorithm = 1;
 //+
 // Attractors field on points 1 and 55, and on line 1
 /*Field[1] = Attractor;*/

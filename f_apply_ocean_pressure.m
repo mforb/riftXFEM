@@ -39,8 +39,8 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
     ke = 0 ;
     p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node) % elem_crk in natural coordinates
-    fh = f_getHeightF(iel);
-    elem_force(iel,1) = elem_force(iel,1) + fh;
+    fh = f_getHeightF(iel)
+    elem_force(iel,1:2) = elem_force(iel,1:2) + fh;
 
     [W,Q] = quadrature(2,'GAUSS',1) ;
     [N1,dNdx1]=lagrange_basis('L2',Q(1));
@@ -89,11 +89,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         if n1(ni)
           n_row = sum(n1(1:ni));
           for i = 1:4
-            try 
             Fext(A(nA)) = Fext(A(nA)) + fh*N(ni)*(Br_u(i)-BrI(n_row,i))*W(k_in)*det(JO)*nv';
-            catch
-              keyboard;
-            end
             nA = [nA(1)+2,nA(2)+2];
           end
         else

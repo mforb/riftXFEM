@@ -132,7 +132,6 @@ hold on
 patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,2));
 title('Stress YY')
 shading flat 
-colorbar
 try 
   caxis([min(0,quantile(mstress(:,1,2),0.1)) round(quantile(mstress(:,1,2),0.995))])
 catch 
@@ -145,6 +144,7 @@ catch
   caxis([mi+0.2*sl,ma-0.2*sl])
   warning('quantile not available- caxis boundaries are arbitrary-ish')
 end
+colorbar();
 figure_name = ['Stress_yy_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
 if ~isempty(zoom_dim)

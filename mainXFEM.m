@@ -9,7 +9,7 @@ global epsilon loadstress
 global results_path
 global fmesh
 global output_file
-global Hidden
+global Hidden zoom_dim
 
 output_file = fopen([results_path,'/output.log'],'w')
 
@@ -25,11 +25,11 @@ Knum = [ ] ; Theta = [ ] ;
 enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
 %loop over number of steps of crack growth
 for ipas = 1:npas
-    cgrow = [num2str(toc),'    Crack growth number     ',num2str(ipas)]
+    cgrow = [num2str(toc),'    Crack growth number     ',num2str(ipas),'\n']
     disp(cgrow) ;
     fprintf(output_file,cgrow)
-    fprintf(output_file,'---------------------------------------------------')
-    fprintf(output_file,'---------------------------------------------------')
+    fprintf(output_file,'---------------------------------------------------\n')
+    fprintf(output_file,'---------------------------------------------------\n')
     
 
     disp([num2str(toc),'    Crack processing']) ;
@@ -40,8 +40,9 @@ for ipas = 1:npas
     [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,tangentElem,xTip,xVertex,enrichNode,crackNode] = nnodeDetect(xCrk,enrDomain) ;
     % if there are any tangent elements
     if ~isempty(tangentElem)
-      % we create a new set of tangent elements (connectivty) that will be used only for enriched dofs
       [nodeTanfix] = f_tangent_iso_node(tangentElem,crackNode);
+      tan_info = [' CRACK NODES :  ',num2str(length(crackNode)),' crack nodes, ',num2str(length(tangetElem)),' tangent elements, requiring ', num2str(length(nodeTanfix)),' fixed nodes\n']
+      fprintf(output_file,cgrow)
     else
       %tan_element = [];
       %tan_elemCrk = [];
@@ -112,17 +113,17 @@ for ipas = 1:npas
     [K] = KmatXFEM(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,pos,xCrk,K) ;
 
-    [F] = ForceVector(F) ;
-
     else
 
       [K,F] = KmatXFEM3(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,pos,xCrk,K,F) ;
     end
 
+    [F] = ForceVector(F) ;
 
     
-    if exist('rift_wall_pressure') & strcmp(rift_wall_pressure,'y')
+    if exist('rift_wall_pressure') & rift_wall_pressure
+      disp([num2str(toc),'    Applying ocean pressure imbalance']) ;
       Ft = F;
       [F,elemForce] = f_apply_ocean_pressure(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,[],pos,xCrk,F) ;
@@ -353,6 +354,12 @@ for ipas = 1:npas
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
     f_plotCrack2(crackLips,20,'r-','k-','c--')
     print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r300')
+    if ~isempty(zoom_dim)
+      xlim(zoom_dim(1,:))
+      ylim(zoom_dim(2,:))
+      figure_name = ['StressZoom_yy_',num2str(ipas)];
+      print([results_path,'/',figure_name],'-dpng','-r300')
+    end
     clf(f)
 
     

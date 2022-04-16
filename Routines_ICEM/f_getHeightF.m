@@ -1,16 +1,16 @@
 function [F] = f_getHeightF(iel);
 global  node element max_elem
-global ISSM_xx ISSM_yy ISSM_xy ISSM_H
+global ISSM_H
 global rhow rhoi 
 
-g = 9.81
-if exist('ISSM_H') 
+g = 9.81;
+if ~isempty(ISSM_H) 
   H = ISSM_H(iel);
 else
   % get the centre of each element
   nodes = element(iel,:);
   xc    = mean(node(nodes,:),1);
-  %extract stress from the stress field being applied 
+  %extract height 
   H = f_extractHeight(xc)';
 end
 

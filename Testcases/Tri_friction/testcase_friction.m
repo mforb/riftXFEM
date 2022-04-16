@@ -2,16 +2,18 @@
 clear all
 close all
 clc
-
 tic
-
 format long
-
 %---- Define path for subroutines
 path(path,'../../')
 path(path,'../../Crackprocessing')
 path(path,'../../Mesh')
 path(path,'../../Routines_XFEM')
+
+%define (and make) a path for results
+results_path = './Tri_pressure_ocean4';
+mkdir(results_path);
+%copyfile('../Testcase.m',results_path);
 
 %declare global variables here
 global L D E nu P C sigmato
@@ -22,32 +24,35 @@ global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
 global plothelp
 global penalty fixedF contact Kpen
-global frictionB friction_mu epsilon
+global frictionB friction_mu epsilon FintH
+global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
+global fmesh results_path same_coords
 epsilon = 1e-7
-frictionB = 1
-friction_mu = 0.1
+same_coords = 1
 plothelp = 0
-contact = 1
+rift_wall_pressure = 1
 Kpen = 1e7
-penalty = 1;
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
-stressState = 'PlaneStress' ;
-typeProblem = 'dispFriction' ; %choose type of problem
+stressState = 'PlaneStrain' ;
+typeProblem = 'eCrkTen' ; %choose type of problem
+
 
 
 %geometry and mesh generation
 read_gmesh
-%element = element(1:42,:);
-%element = element(1:270,:);
+TR = triangulation(element,node);
+cpos = TR.incenter;
+
+FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),10*ones(length(cpos),1));
 
 element = tricheck(node,element);
 numnode = size(node,1) ;
 numelem = size(element,1) ;
 
-E = 10000*1e6; nu = 0.3; P = 1 ;
-sigmato = -1. ;
+E = 1e6; nu = 0.3; P = 1 ;
+sigmato = 500. ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
     Cm1 = E/10*(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
@@ -56,16 +61,17 @@ else
 end
 
 %crack definition
-deltaInc = 0; numstep = 1;
-xCr(1).coor = [-0.2 -0.2;0.2, 0.2] ;
+deltaInc = 0.05; numstep = 3;
+xCr(1).coor = [-0.1 -0.1;0.1, 0.1] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];
 
 %plot the mesh before proceeding
 plotmesh = 'YES' ; plotNode = 'no' ;
+fmesh = figure();
 if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode)
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
     
     %crack plot
     for k=1:size(xCr,2)
