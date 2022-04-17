@@ -6,6 +6,7 @@ function [Knumerical,ThetaInc,xCr] = KcalJint(xCr,...
 global node element elemType
 global E nu C sigmato
 global Jint iMethod
+global output_file
 
 % ThetaInc = [] ;
 for kk = 1:size(xCr,2) %what's the crack?
@@ -43,17 +44,22 @@ for kk = 1:size(xCr,2) %what's the crack?
 
             K1_num = [K1_num, Knum] ;
             ti1 = [ti1, theta_inc] ;
-            inc_x = xCr(kk).coor(1,1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
-            %[a,b] = find(node(:,1) == inc_x);
-            inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
-            %[a] = find(node(a,2) == inc_y);
-            % if a crack increment passes exaclty througha node, let's give
-            % a small perturbation...
-            %if size(a,1) > 0
-                %theta_inc = theta_inc + 0.01;
-                %inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
-            %end
-            xCr(kk).coornew1= [inc_x inc_y]; %
+            kstr = ['Tip 1: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
+            if xCr(kk).tip(1)
+              inc_x = xCr(kk).coor(1,1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
+              [a,b] = find(node(:,1) == inc_x);
+              inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
+              [a] = find(node(a,2) == inc_y);
+              % if a crack increment passes exaclty througha node, let's give
+              % a small perturbation...
+              if size(a,1) > 0
+                  kstr = [kstr, 'Theta was modified by +0.01 to avoid going through a node\n']; 
+                  theta_inc = theta_inc + 0.01;
+                  inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
+              end
+              xCr(kk).coornew1= [inc_x inc_y]; %
+            end
+            fprintf(output_file,kstr)
         end
         flag2 = inhull(xCr(kk).coor(size(xCr(kk).coor,1),:),vv,[],1e-8); % and the right tip!
         if flag2 == 1
@@ -64,15 +70,20 @@ for kk = 1:size(xCr,2) %what's the crack?
                 enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,elem_force) ;
             K2_num = [K2_num, Knum] ;
             ti2 = [ti2, theta_inc] ;
-            inc_x = xCr(kk).coor(size(xCr(kk).coor,1),1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
-            %[a,b] = find(node(:,1) == inc_x);
-            inc_y = xCr(kk).coor(size(xCr(kk).coor,1),2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
-            %[a] = find(node(a,2) == inc_y);
-            %if size(a,1) > 0
-                %theta_inc = theta_inc + 0.01;
-                %inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
-            %end
-            xCr(kk).coornew2 = [inc_x inc_y]; %right tip
+            kstr = ['Tip 1: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
+            if xCr(kk).tip(2) 
+              inc_x = xCr(kk).coor(size(xCr(kk).coor,1),1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
+              [a,b] = find(node(:,1) == inc_x);
+              inc_y = xCr(kk).coor(size(xCr(kk).coor,1),2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
+              [a] = find(node(a,2) == inc_y);
+              if size(a,1) > 0
+                  kstr = [kstr, 'Theta was modified by +0.01 to avoid going through a node\n']; 
+                  theta_inc = theta_inc + 0.01;
+                  inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
+              end
+              xCr(kk).coornew2 = [inc_x inc_y]; %right tip
+            end
+            fprintf(output_file,kstr)
         end
     end
     xCr(kk).coor = [xCr(kk).coornew1;xCr(kk).coor;xCr(kk).coornew2] ;

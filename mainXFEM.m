@@ -12,6 +12,13 @@ global output_file
 global Hidden zoom_dim
 
 output_file = fopen([results_path,'/output.log'],'w')
+if ~isfield(xCr,'tip')
+  for i =1:size(xCr,2)
+    xCr(i).tip = [1,1];
+  end
+  fprintf(output_file,'No tip field for xCr defined, all tips have been activated\n')
+  disp('No tip field for xCr defined, all tips have been activated') ;
+end
 
 if ~exist('penalty')
   penalty = 0 ;
@@ -25,9 +32,9 @@ Knum = [ ] ; Theta = [ ] ;
 enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
 %loop over number of steps of crack growth
 for ipas = 1:npas
-    cgrow = [num2str(toc),'    Crack growth number     ',num2str(ipas),'\n']
+    cgrow = [num2str(toc),'    Crack growth number     ',num2str(ipas)];
     disp(cgrow) ;
-    fprintf(output_file,cgrow)
+    fprintf(output_file,[cgrow,'\n'])
     fprintf(output_file,'---------------------------------------------------\n')
     fprintf(output_file,'---------------------------------------------------\n')
     
