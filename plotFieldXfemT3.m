@@ -82,7 +82,7 @@ try
 catch 
   mi = min(vonmises(:,1,1));
   ma = max(vonmises(:,1,1));
-  sl = (ma-mi)
+  sl = (ma-mi);
   if sl == 0
     sl = 1;
   end
@@ -110,7 +110,7 @@ try
 catch 
   mi = min(mstress(:,1,1));
   ma = max(mstress(:,1,1));
-  sl = (ma-mi)
+  sl = (ma-mi);
   if sl == 0
     sl = 1;
   end
@@ -137,7 +137,7 @@ try
 catch 
   mi = min(mstress(:,1,2));
   ma = max(mstress(:,1,2));
-  sl = (ma-mi)
+  sl = (ma-mi);
   if sl == 0
     sl = 1;
   end

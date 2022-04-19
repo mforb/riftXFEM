@@ -13,8 +13,8 @@ global Hidden zoom_dim
 
 output_file = fopen([results_path,'/output.log'],'w')
 if ~isfield(xCr,'tip')
-  for i =1:size(xCr,2)
-    xCr(i).tip = [1,1];
+  for i =1:size(xCrk,2)
+    xCrk(i).tip = [1,1];
   end
   fprintf(output_file,'No tip field for xCr defined, all tips have been activated\n')
   disp('No tip field for xCr defined, all tips have been activated') ;
@@ -135,7 +135,7 @@ for ipas = 1:npas
       [F,elemForce] = f_apply_ocean_pressure(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,[],pos,xCrk,F) ;
     else
-      elemForce = zeros(size(element,1),2);
+      elemForce = zeros(size(element,1),4);
     end
 
     if exist('melange') & melange 
@@ -284,7 +284,7 @@ for ipas = 1:npas
       contact = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
     end
-    if melangeforce | contact
+    if contact || melangeforce
       penalty = 1
     end
 
@@ -342,10 +342,19 @@ for ipas = 1:npas
       fu = full(u);
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
+      if rift_wall_pressure
+        elemForce = f_readjust_elemforce(splitElem,elemForce);
+      end
+    end
+
+    plot_wall = 0;
+
+    if plot_wall
+      f_plot_wall_forces(u,xCr,enrDomain,typeElem,elemCrk,splitElem)
     end
 %     
 %     % plot displacement contour
-    figure(f)
+    figure(f);
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
     title(['Y displacement after Newton solver'])
@@ -355,15 +364,15 @@ for ipas = 1:npas
      %save('test.mat','K','F','u')
 
     [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-    figure(f)
+    figure(f);
     hold on
     dfac = 1 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
     f_plotCrack2(crackLips,20,'r-','k-','c--')
     print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r300')
     if ~isempty(zoom_dim)
-      xlim(zoom_dim(1,:))
-      ylim(zoom_dim(2,:))
+      xlim(zoom_dim(1,:));
+      ylim(zoom_dim(2,:));
       figure_name = ['StressZoom_yy_',num2str(ipas)];
       print([results_path,'/',figure_name],'-dpng','-r300')
     end
@@ -399,7 +408,7 @@ for ipas = 1:npas
          elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,ipas) ;
      end
 
-     figure(f) 
+     figure(f);
      hold on
      dfac = 50 ;
      plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
@@ -416,9 +425,7 @@ for ipas = 1:npas
         tipElem,splitElem,cornerElem,elemForce) ;
 
     %keyboard
-    var_name = [results_path,'/crack',num2str(ipas),'.mat']
+    var_name = [results_path,'/crack',num2str(ipas),'.mat'];
     save([results_path,'/crack_disp.mat'],'xCrk','Knum','Theta','u','element','node');
-
-
 end
-fclose(output_file)
+fclose(output_file);

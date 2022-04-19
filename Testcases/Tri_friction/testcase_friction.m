@@ -31,12 +31,13 @@ epsilon = 1e-7
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 1
-Kpen = 1e7
+Kpen = 1e11
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
 stressState = 'PlaneStrain' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
+contact = 1;
 
 
 
@@ -45,7 +46,7 @@ read_gmesh
 TR = triangulation(element,node);
 cpos = TR.incenter;
 
-FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),10*ones(length(cpos),1));
+FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),3*ones(length(cpos),1));
 
 element = tricheck(node,element);
 numnode = size(node,1) ;
@@ -61,7 +62,7 @@ else
 end
 
 %crack definition
-deltaInc = 0.05; numstep = 3;
+deltaInc = 0.05; numstep = 5;
 xCr(1).coor = [-0.1 -0.1;0.1, 0.1] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;

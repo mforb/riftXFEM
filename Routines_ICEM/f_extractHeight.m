@@ -4,7 +4,7 @@ global FintH same_coords
 % QT is the rotation matrix between the field and model
 
 if exist('same_coords') & same_coords
-  xint = x
+  xint = x;
 else
   xint = convertModeltoShelf(x);
 end

@@ -24,7 +24,7 @@ end
 dfn = size(W2,1)*2;
 
 if isempty(elem_force)
-  elem_force = zeros(size(element,1),2);
+  elem_force = zeros(size(element,1),4);
 end
 
 
@@ -38,9 +38,9 @@ for kk = 1:size(xCrk,2) %what's the crack?
     sctr = element(iel,:) ;
     nn = length(sctr) ;
     ke = 0 ;
-    p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node) % elem_crk in natural coordinates
-    fh = f_getHeightF(iel)
-    elem_force(iel,1:2) = elem_force(iel,1:2) + fh;
+    p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
+    fh = f_getHeightF(iel);
+    elem_force(iel,[1,3]) = elem_force(iel,[1,3]) + fh;
 
     [W,Q] = quadrature(2,'GAUSS',1) ;
     [N1,dNdx1]=lagrange_basis('L2',Q(1));

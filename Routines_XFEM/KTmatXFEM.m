@@ -36,6 +36,7 @@ if plothelp
   plotMesh_numbered(node,element,elemType,'b-','no')
 end
 elems = union(split_elem,vertex_elem);
+elems = union(elems,tip_elem);
 if melangeforce
   elemst = tan_elem;
   mel_elems = []
@@ -118,7 +119,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     skip = 0;
     nn = length(sctr) ;
 
-    [A,BrI] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
+    [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
     p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
     %vv = node(sctr,:);
     %[phi] = dista(iel,elem_crk) ;
@@ -172,22 +173,50 @@ for kk = 1:size(xCrk,2) %what's the crack?
       for k_in = 1:2
         gpt = gpts(k_in,:) ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-        Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
+        pint =  N' * node(sctr,:);
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk)
         gn = nv*Nmat*2*u(A);
         if gn < 0
-          if frictionB
-            Kglobal(A,A) = Kglobal(A,A) + E_pen*W(k_in)*Nmat'*(nnt - nmt*mu)*Nmat*det(JO) ;
-            Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
-            Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*mu*gn*Nmat'*mv';
-          else
-            elem_force(iel,k_in) = E_pen*gn;
-            Kglobal(A,A) = Kglobal(A,A) + E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
-            Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
-          end
+          elem_force(iel,2*k_in-1) = E_pen*gn;
+          Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
+          Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+          %if any(enrich_node(sctr)==1)
+            %xp    = QT*(pint-Tip)';           % local coordinates
+            %r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
+            %theta = atan2(xp(2),xp(1));
+            
+            %if ( theta > pi | theta < -pi)
+                %disp (['something wrong with angle ',num2str(thet)]);
+            %end
+            %if abs(abs(theta) - pi) < 0.001
+             %[Br_u,dBdx,dbdy] = branch_gp(r,pi,alpha);
+             %[Br_d,dBdx,dbdy] = branch_gp(r,-1*pi,alpha);
+            %else 
+             %[Br_u,dbdx,dbdy] = branch_gp(r,theta,alpha);
+             %Br_d = Br_u;
+            %end
+          %end
+          %nA = [1,2];
+          %for ni = 1:nn
+            %if n1(ni)
+              %n_row = sum(n1(1:ni));
+              %for i = 1:4
+                %Kglobal(A(nA),A(nA)) = Kglobal(A(nA),A(nA)) + E_pen*W(k_in)*N(ni)*nnt*N(ni)*det(JO) ;
+                %Gint(A(nA)) = Gint(A(nA)) + E_pen*W(k_in)*det(JO)*gn*N(ni)*nv';
+                %nA = [nA(1)+2,nA(2)+2];
+              %end
+              %elem_force(iel,2*k_in-1) = E_pen*gn;
+            %else
+              %elem_force(iel,2*k_in-1) = E_pen*gn;
+              %Gint(A(nA)) = Gint(A(nA)) + E_pen*W(k_in)*det(JO)*gn*N(ni)*nv';
+              %nA = [nA(1)+2,nA(2)+2];
+            %end 
+          %end
         end
       end
         
       if plothelp
+        % this needs fixing
         Ppoint =  N' * node(sctr,:);
         Pvect = -1*det(JO)*nv;
         Np = node(sctr,:);
@@ -224,11 +253,13 @@ for kk = 1:size(xCrk,2) %what's the crack?
         gpt = gpts(k_in,:) ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk)
         gn = nv*Nmat*2*u(A);
         gt = mv*Nmat*2*u(A);
         fn = Cm1(1,1)*(gn/mT);
         ft = Cm1(1,2)*(gt/mT);
-        elem_force(iel,k_in) = Cm1(1,1)*gn;
+        elem_force(iel,2*k_in-1) = Cm1(1,1)*gn;
+        elem_force(iel,2*k_in) = Cm1(1,2)*gt;
         Kglobal(A,A) = Kglobal(A,A) + Cm1(1,1)*W(k_in)*Nmat'*nnt*Nmat*det(JO)/mT ;
         Kglobal(A,A) = Kglobal(A,A) + Cm1(1,2)*W(k_in)*Nmat'*mmt*Nmat*det(JO)/mT ;
         Gint(A) = Gint(A) + W(k_in)*det(JO)*fn*Nmat'*nv';

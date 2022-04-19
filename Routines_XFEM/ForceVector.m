@@ -58,7 +58,7 @@ elseif( strcmp(typeProblem,'ISSM') )
         iel = f_findElemfromEdge(frontEdge(e,:))
         sctr = frontEdge(e,:) ;
         sctry = sctr.*2 - 1;
-        fh = f_getHeightF(iel)
+        fh = f_getHeightF(iel);
         for q = 1:size(W,1)
             pt = Q(q,:) ; wt = W(q) ;
             N = lagrange_basis('L2',pt) ;

@@ -261,7 +261,7 @@ for iel = 1 : size(Jdomain,2)
       [W,Q] = quadrature(2,'GAUSS',1) ;
       [N1,dNdx1]=lagrange_basis('L2',Q(1));
       [N2,dNdx2]=lagrange_basis('L2',Q(2));
-      p = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,[],crack_nodes) % elem_crk in natural coordinates
+      p = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,[],crack_nodes); % elem_crk in natural coordinates
       gpts = [N1'*p; N2'*p];
       % find the distance between the two intersects (should be able to do this with det(J)
       x0 = elem_crk(e,1) ; y0 = elem_crk(e,2) ;
@@ -271,15 +271,7 @@ for iel = 1 : size(Jdomain,2)
       mv = [(x1-x0),(y1 - y0)]./l;
 
       JO = l/2;
-      % ++++++++++++++
-      % sigma N and T global 
-      % ++++++++++++++
-      sig_elem = [elem_force(e,1) elem_force(e,2); elem_force(e,2) 0];
-      angl = atan2(nv(2),nv(1));
-      rotQT = [ cos(angl), sin(angl); -sin(angl), cos(angl) ]; 
-      sig_global = rotQT*sig_elem*rotQT'
-      sig_local = QT*sig_global*QT'
-      nlocal = QT*nv'
+      nlocal = QT*nv';
 
 
 
@@ -300,8 +292,20 @@ for iel = 1 : size(Jdomain,2)
         % q at pt 
         % ++++++++++++++
         qpt = N'*q';
-        qm = qpt*nlocal;
-        
+        qm1 = -1*qpt;
+        qm2 = qpt;
+
+        % ++++++++++++++++++
+        % stress at crack lip 
+        % ++++++++++++++++++
+        sig_elem = [elem_force(e,2*gq-1) elem_force(e,2*gq); elem_force(e,2*gq) 0];
+        angl = atan2(nv(2),nv(1));
+        rotQT = [ cos(angl), sin(angl); -sin(angl), cos(angl) ]; 
+        sig_global = rotQT*sig_elem*rotQT';
+        sig_local = QT*sig_global*QT';
+        sig_local1 = sig_local/2;
+        sig_local2 = sig_local/-2;
+
         % ++++++++++++++++++
         %  Auxiliary fields
         % ++++++++++++++++++
@@ -373,11 +377,73 @@ for iel = 1 : size(Jdomain,2)
             % +++++++++++++++
             %  Surface part of the I integral 
             % +++++++++++++++
+            I_wall1= -1*(sig_local1(1,2) * AuxGradDisp(1,1) + sig_local1(2,2) * AuxGradDisp(2,1) ) * qm1 ;
+            % Interaction integral I
+            I(mode,1) = I(mode,1) + I_wall1*det(JO)*wt;
+        end   %loop on mode
+
+        theta =-1*(2*pi - theta);
+
+        CT   = cos(theta);
+        ST   = sin(theta);
+        CT2  = cos(theta/2);
+        ST2  = sin(theta/2);
+        C3T2 = cos(3*theta/2);
+        S3T2 = sin(3*theta/2);
+        
+        drdx = CT;
+        drdy = ST;
+        dtdx = -ST/r;
+        dtdy = CT/r;
+        for mode = 1:2
+          if (mode == 1)
+                
+                u1    = K1*FACDisp1*SQR*CT2*(kappa - CT);
+                du1dr = K1*FACDisp1*0.5/SQR*CT2*(kappa - CT);
+                du1dt = K1*FACDisp1*SQR*(-0.5*ST2*(kappa - CT) + CT2*ST);
+                
+                u2    = K1*FACDisp1*SQR*ST2*(kappa - CT);
+                du2dr = K1*FACDisp1*0.5/SQR*ST2*(kappa - CT);
+                du2dt = K1*FACDisp1*SQR*(0.5*CT2*(kappa - CT) + ST2*ST);
+                
+                AuxGradDisp(1,1) = du1dr*drdx + du1dt*dtdx;
+                AuxGradDisp(1,2) = du1dr*drdy + du1dt*dtdy;
+                AuxGradDisp(2,1) = du2dr*drdx + du2dt*dtdx;
+                AuxGradDisp(2,2) = du2dr*drdy + du2dt*dtdy;
+                
+                AuxEps(1,1) = AuxGradDisp(1,1);
+                AuxEps(2,1) = 0.5*(AuxGradDisp(2,1) + AuxGradDisp(1,2));
+                AuxEps(1,2) = AuxEps(2,1);
+                AuxEps(2,2) = AuxGradDisp(2,2);
+                
+            elseif (mode == 2)
+                
+                u1    = K2*FACDisp2*SQR*ST2*(kappa + 2 + CT);
+                du1dr = K2*FACDisp2*0.5/SQR*ST2*(kappa + 2 + CT);
+                du1dt = K2*FACDisp2*SQR*(0.5*CT2*(kappa + 2 + CT) - ST2*ST);
+                
+                u2    = -K2*FACDisp2*SQR*CT2*(kappa - 2 + CT);
+                du2dr = -K2*FACDisp2*0.5*(1/SQR)*CT2*(kappa - 2 + CT);
+                du2dt = -K2*FACDisp2*SQR*(-0.5*ST2*(kappa - 2 + CT) - CT2*ST);
+                
+                AuxGradDisp(1,1) = du1dr*drdx + du1dt*dtdx;
+                AuxGradDisp(1,2) = du1dr*drdy + du1dt*dtdy;
+                AuxGradDisp(2,1) = du2dr*drdx + du2dt*dtdx;
+                AuxGradDisp(2,2) = du2dr*drdy + du2dt*dtdy;
+                
+                AuxEps(1,1) = AuxGradDisp(1,1);
+                AuxEps(2,1) = 0.5*(AuxGradDisp(2,1) + AuxGradDisp(1,2));
+                AuxEps(1,2) = AuxEps(2,1);
+                AuxEps(2,2) = AuxGradDisp(2,2);
+            end
             
-            I_wall= -1*(sig_local(1,2) * AuxGradDisp(1,1) + sig_local(2,2) * AuxGradDisp(2,1) ) * qm(2) * 2 ;
+            % +++++++++++++++
+            %  Surface part of the I integral 
+            % +++++++++++++++
+            I_wall2= -1*(sig_local2(1,2) * AuxGradDisp(1,1) + sig_local2(2,2) * AuxGradDisp(2,1) ) * qm2 ;
             
             % Interaction integral I
-            I(mode,1) = I(mode,1) + (I_wall)*det(JO)*wt;
+            I(mode,1) = I(mode,1) + I_wall2*det(JO)*wt;
         end   %loop on mode
       end       % of quadrature loop
     end % if split_node and there is a force on wall 
