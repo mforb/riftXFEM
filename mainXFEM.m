@@ -19,12 +19,15 @@ if ~isfield(xCr,'tip')
   fprintf(output_file,'No tip field for xCr defined, all tips have been activated\n')
   disp('No tip field for xCr defined, all tips have been activated') ;
 end
-
-if ~exist('penalty')
+keyboard
+if ~isempty('penalty')
   penalty = 0 ;
 end
-if ~exist('contact')
+if ~isempty('contact')
   contact = 0;
+end
+if ~isempty('melangeforce')
+  melangeforce = 0;
 end
 
 
@@ -48,7 +51,7 @@ for ipas = 1:npas
     % if there are any tangent elements
     if ~isempty(tangentElem)
       [nodeTanfix] = f_tangent_iso_node(tangentElem,crackNode);
-      tan_info = [' CRACK NODES :  ',num2str(length(crackNode)),' crack nodes, ',num2str(length(tangetElem)),' tangent elements, requiring ', num2str(length(nodeTanfix)),' fixed nodes\n']
+      tan_info = [' CRACK NODES :  ',num2str(length(crackNode)),' crack nodes, ',num2str(length(tangentElem)),' tangent elements, requiring ', num2str(length(nodeTanfix)),' fixed nodes\n']
       fprintf(output_file,cgrow)
     else
       %tan_element = [];

@@ -31,8 +31,9 @@ global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon
 global results_path rift_wall_pressure
+global fmesh
 
-rift_wall_pressure = 'n'
+rift_wall_pressure = 0 
 
 epsilon = 2 
 plothelp = 0
@@ -103,8 +104,9 @@ fixedF = [];
 
 %plot the mesh before proceeding
 plotmesh = 'YES' ; plotNode = 'no' ;
+fmesh = figure();
 if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,figure())
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
     
     %crack plot
     for k=1:size(xCr,2)
