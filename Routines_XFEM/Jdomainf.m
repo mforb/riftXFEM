@@ -1,4 +1,4 @@
-function [Jdomain,qnode,radius] = Jdomainf(tip_elem,xTip,enrich_node)
+function [Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip_elem,xTip,enrich_node)
 
 global node element typeProblem
 
@@ -44,12 +44,17 @@ for i = 1 : numnode
 end
 test = r-radius;
 test = test(element)';
+testW = min(test);
 test = max(test).*min(test);
 Jdomain = find(test<=0);
+JWdomain = find(testW<0);
 test1 = r-radius;
+test2 = test1(element(JWdomain,:))';
 test1 = test1(element(Jdomain,:))';
 test1 = (test1<=0);
+test2 = test2<=0;
 qnode = test1';
+qnode2 = test2';
 
 % checking if there is some B enriched elements in the Jdomain
 for i=1:size(Jdomain,2)

@@ -32,10 +32,11 @@ global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon
 global results_path rift_wall_pressure
 global same_coords
+global fmesh
 
 same_coords = 1
 
-rift_wall_pressure = 'y'
+rift_wall_pressure = 1
 
 epsilon = 2 
 plothelp = 0
@@ -58,7 +59,7 @@ Tfact = 1;
 elemType = 'T3' ;
 typeCrack = 'Static' ;
 stressState = 'PlaneStrain' ;
-typeProblem = 'eCrkTen' ; %choose type of problem
+typeProblem = 'eCrkTen2' ; %choose type of problem
 %typeProblem = 'Test' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
 
@@ -100,15 +101,16 @@ end
 
 %crack definition
 deltaInc = 100; numstep = 1;
-xCr(1).coor = [-1501 0; 0 0 ] ;
+xCr(1).coor = [-1501 0; -500 0 ] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];
 
 %plot the mesh before proceeding
 plotmesh = 'YES' ; plotNode = 'no' ;
+fmesh = figure();
 if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,figure())
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
     
     %crack plot
     for k=1:size(xCr,2)
