@@ -19,7 +19,6 @@ if ~isfield(xCr,'tip')
   fprintf(output_file,'No tip field for xCr defined, all tips have been activated\n')
   disp('No tip field for xCr defined, all tips have been activated') ;
 end
-keyboard
 if ~isempty('penalty')
   penalty = 0 ;
 end
