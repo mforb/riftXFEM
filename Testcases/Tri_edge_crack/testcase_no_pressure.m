@@ -86,7 +86,6 @@ ri = 917;
 g = 9.81;
 
 E =1e10; nu = 0.3; P = 1 ;
-sigmato = 300*g*ri*(rw-ri)/rw;
 sigmato = 2e5;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
@@ -123,6 +122,7 @@ end
 
 [Knumerical,ThetaInc,xCr1] = mainXFEM(xCr,numstep,deltaInc); 
 
+figure('visible','on')
 t = tiledlayout(2,2,'TileSpacing','Compact');
 % tile 1
 nexttile

@@ -164,8 +164,12 @@ for kk = 1:size(xCr,2)
       for ni = 1:length(sctr) 
         no = sctr(ni);
         if ismember(no,crack_node)
-          d1 = norm(crk_int(1:2)-node(no,:),2);
-          d2 = norm(crk_int(3:4)-node(no,:),2);
+          try
+            d1 = norm(crk_int(1:2)-node(no,:),2);
+            d2 = norm(crk_int(3:4)-node(no,:),2);
+          catch
+            keyboard
+          end
           if d1<d2
             elem_crk(e,1:2) = node(no,:);
           else

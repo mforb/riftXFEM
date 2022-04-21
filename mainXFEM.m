@@ -50,7 +50,7 @@ for ipas = 1:npas
     % if there are any tangent elements
     if ~isempty(tangentElem)
       [nodeTanfix] = f_tangent_iso_node(tangentElem,crackNode);
-      tan_info = [' CRACK NODES :  ',num2str(length(crackNode)),' crack nodes, ',num2str(length(tangentElem)),' tangent elements, requiring ', num2str(length(nodeTanfix)),' fixed nodes\n']
+      tan_info = [' CRACK NODES :  ',num2str(length(crackNode)),' crack nodes, ',num2str(length(tangentElem)),' tangent elements, requiring ', num2str(length(nodeTanfix)),' fixed nodes\n'];
       fprintf(output_file,cgrow)
     else
       %tan_element = [];
@@ -375,7 +375,7 @@ for ipas = 1:npas
     if ~isempty(zoom_dim)
       xlim(zoom_dim(1,:));
       ylim(zoom_dim(2,:));
-      figure_name = ['StressZoom_yy_',num2str(ipas)];
+      figure_name = ['crack_walls_after_zoom',num2str(ipas)];
       print([results_path,'/',figure_name],'-dpng','-r300')
     end
     clf(f)

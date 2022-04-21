@@ -5,7 +5,11 @@ sctr = element(iel,:) ;
 vv = node(sctr,:);
 [phi] = dista(iel,elem_crk) ;
 if ismember(iel, tip_elem) 
-  tip = xTip(iel,:);
+  if size(xTip,1)>1 %tip can also be the tip coordinates
+    tip = xTip(iel,:);
+  else
+    tip = xTip;
+  end
   ntip = f_naturalpoint(tip,vv,20,1e-6);
   psi = f_dista2(iel,elem_crk,tip);
   [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;

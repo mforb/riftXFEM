@@ -32,7 +32,7 @@ end
 
 % Determine J domain and weight function
 xyTip = [elem_crk(tip,3) elem_crk(tip,4)] ;
-[Jdomain,qnode,radius] = Jdomainf(tip,xyTip,enrich_node);
+[Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node);
 
 I1 = 0;
 I2 = 0;
@@ -255,13 +255,20 @@ for iel = 1 : size(Jdomain,2)
             I(mode,1) = I(mode,1) + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
         end   %loop on mode
     end       % of quadrature loop
+end
+Knum = I.*E / (2*(1-nu^2)) % plain strain
 
-    if ismember(e,split_elem) && any(elem_force(e,:))
+for iel = 1 : size(JWdomain,2)
+    e = JWdomain(iel) ; % current element
+    sctr = element(e,:);
+    nn   = length(sctr);
+
+    if ( ismember(e,split_elem) || ismember(e,tip_elem) )  && any(elem_force(e,:))
       % The I integral needs to be adjusted to account for forces on the rift wall
       [W,Q] = quadrature(2,'GAUSS',1) ;
       [N1,dNdx1]=lagrange_basis('L2',Q(1));
       [N2,dNdx2]=lagrange_basis('L2',Q(2));
-      p = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,[],crack_nodes); % elem_crk in natural coordinates
+      p = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,xyTip,crack_nodes); % elem_crk in natural coordinates
       gpts = [N1'*p; N2'*p];
       % find the distance between the two intersects (should be able to do this with det(J)
       x0 = elem_crk(e,1) ; y0 = elem_crk(e,2) ;
@@ -278,7 +285,7 @@ for iel = 1 : size(Jdomain,2)
       % ++++++++++++++
       % q at nodes
       % ++++++++++++++
-      q     = qnode(iel,:);
+      q     = qnode2(iel,:);
 
       % ----------------------------
       % start loop over Gauss points
@@ -292,8 +299,8 @@ for iel = 1 : size(Jdomain,2)
         % q at pt 
         % ++++++++++++++
         qpt = N'*q';
-        qm1 = -1*qpt;
-        qm2 = qpt;
+        qm1 = nv*qpt;
+        qm2 = -1*nv*qpt;
 
         % ++++++++++++++++++
         % stress at crack lip 
@@ -313,6 +320,10 @@ for iel = 1 : size(Jdomain,2)
         xp    = QT *(Gpt - xyTip)';           % local coordinate to tip
         r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2)) ;
         theta = atan2(xp(2),xp(1)) ;
+        % if theta is equal to pi then we have to force one side to be consistently positive
+        if abs(abs(theta)-pi) < 1e-8 
+          theta = pi;
+        end
 
         K1 = 1.0 ;
         K2 = K1  ;
@@ -377,7 +388,7 @@ for iel = 1 : size(Jdomain,2)
             % +++++++++++++++
             %  Surface part of the I integral 
             % +++++++++++++++
-            I_wall1= -1*(sig_local1(1,2) * AuxGradDisp(1,1) + sig_local1(2,2) * AuxGradDisp(2,1) ) * qm1 ;
+            I_wall1 = -1*(sig_local1(1,2) * AuxGradDisp(1,1) + sig_local1(2,2) * AuxGradDisp(2,1) ) * qm1(2);
             % Interaction integral I
             I(mode,1) = I(mode,1) + I_wall1*det(JO)*wt;
         end   %loop on mode
@@ -440,7 +451,7 @@ for iel = 1 : size(Jdomain,2)
             % +++++++++++++++
             %  Surface part of the I integral 
             % +++++++++++++++
-            I_wall2= -1*(sig_local2(1,2) * AuxGradDisp(1,1) + sig_local2(2,2) * AuxGradDisp(2,1) ) * qm2 ;
+            I_wall2= (sig_local2(1,2) * AuxGradDisp(1,1) + sig_local2(2,2) * AuxGradDisp(2,1) ) * qm2(2);
             
             % Interaction integral I
             I(mode,1) = I(mode,1) + I_wall2*det(JO)*wt;
@@ -452,7 +463,7 @@ end           % end of element loop
 
 
 % Compute SIFs from I integral
-Knum = I.*E / (2*(1-nu^2)); % plain strain
+Knum = I.*E / (2*(1-nu^2)) % plain strain
 Knum = Roundoffa(Knum,5);
 KI = Knum(1);
 KII = Knum(2);
