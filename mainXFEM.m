@@ -19,16 +19,15 @@ if ~isfield(xCr,'tip')
   fprintf(output_file,'No tip field for xCr defined, all tips have been activated\n')
   disp('No tip field for xCr defined, all tips have been activated') ;
 end
-if ~isempty('penalty')
+if isempty('penalty')
   penalty = 0 ;
 end
-if ~isempty('contact')
+if isempty('contact')
   contact = 0;
 end
-if ~isempty('melangeforce')
+if isempty('melangeforce')
   melangeforce = 0;
 end
-
 
 Knum = [ ] ; Theta = [ ] ;
 enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
@@ -286,10 +285,11 @@ for ipas = 1:npas
       contact = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
     end
+
+
     if contact || melangeforce
       penalty = 1
     end
-
 
 
     if penalty 
@@ -349,10 +349,10 @@ for ipas = 1:npas
       end
     end
 
-    plot_wall = 0;
+    plot_wall = 1;
 
     if plot_wall
-      f_plot_wall_forces(u,xCr,enrDomain,typeElem,elemCrk,splitElem)
+      f_plot_wall_forces(u,xCr,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem)
     end
 %     
 %     % plot displacement contour

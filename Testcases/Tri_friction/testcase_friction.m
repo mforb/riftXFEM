@@ -9,6 +9,7 @@ path(path,'../../')
 path(path,'../../Crackprocessing')
 path(path,'../../Mesh')
 path(path,'../../Routines_XFEM')
+path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
 results_path = './Tri_pressure_ocean4';
