@@ -65,22 +65,20 @@ if melangeforce
         end
       end
     end
-
-
-    for iel=1:length(elemst)                     %loop on elems (=elements selected for enrichment)
-      for kj = 1:size(xM.coor,1)-1       %loop over the elements of the fracture
-        if xM.melange(kj)
-          e = elemst(iel);
-          q1 = xM(kk).coor(kj,:); 
-          q2 = xM(kk).coor(kj+1,:);
-          [flag1,flag2,cn_] = crack_interact_element([q1,q2],e,[]);
-          if flag2
-              mel_elems = [mel_elems; e xM.width(kj)/2 ];
-              break
-          end
-        end
-      end
-    end
+    %for iel=1:length(elemst)                     %loop on elems (=elements selected for enrichment)
+      %for kj = 1:size(xM.coor,1)-1       %loop over the elements of the fracture
+        %if xM.melange(kj)
+          %e = elemst(iel);
+          %q1 = xM(kk).coor(kj,:); 
+          %q2 = xM(kk).coor(kj+1,:);
+          %[flag1,flag2,cn_] = crack_interact_element([q1,q2],e,[]);
+          %if flag2
+              %mel_elems = [mel_elems; e xM.width(kj)/2 ];
+              %break
+          %end
+        %end
+      %end
+    %end
   end
 end
 
@@ -158,15 +156,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     [N2,dNdx2]=lagrange_basis('L2',Q(2));
     gpts = [N1'*p; N2'*p];
     % find the distance between the two intersects (should be able to do this with det(J)
-    x0 = elem_crk(iel,1) ; y0 = elem_crk(iel,2) ;
-    x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
-    l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
-    nv = [(y0-y1),(x1-x0)]./l;
-    mv = [(x1-x0),(y1 - y0)]./l;
-    nnt = nv'*nv;
-    nmt = mv'*nv; 
-    mmt = mv'*mv;
-
+    [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(elem_crk(iel,:));
     JO = l/2;
 
     if contact 

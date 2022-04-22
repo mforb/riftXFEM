@@ -1,5 +1,5 @@
 function [Kglobal] = KmatMELAN(enrich_node,elem_crk,type_elem,xVertex,xTip,...
-    split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,crack_nodes,pos,xM,xCrk,Kglobal)
+    split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,crack_node,pos,xM,xCrk,Kglobal)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -37,7 +37,7 @@ for kk = 1:size(xCrk,2)
       if xM.melange(kj)
         q1 = xM(kk).coor(kj,:); 
         q2 = xM(kk).coor(kj+1,:);
-        [flag1,flag2,crack_node] = crack_interact_element([q1,q2],e,[]);
+        [flag1,flag2,cn_] = crack_interact_element([q1,q2],e,[]);
         if flag1
           if found 
             mel_elems(end,2) = (mel_elems(end,2) + xM.width(kj))/2
@@ -60,7 +60,7 @@ for kk = 1:size(xCrk,2)
         e = elemst(iel);
         q1 = xM(kk).coor(kj,:); 
         q2 = xM(kk).coor(kj+1,:);
-        [flag1,flag2,crack_node] = crack_interact_element([q1,q2],e,[]);
+        [flag1,flag2,cn_] = crack_interact_element([q1,q2],e,[]);
         if flag2
             mel_elems = [mel_elems; e xM.width(kj)/2 ];
             break
@@ -77,22 +77,16 @@ for ii=1:size(mel_elems,1)
   % if yes then we do all the following 
   iel = mel_elems(ii,1);
   sctr = element(iel,:) ;
+  nn = length(sctr) ;
   mT = mel_elems(ii,2);
 
   % find the distance between the two intersects (should be able to do this with det(J)
-  x0 = elem_crk(iel,1) ; y0 = elem_crk(iel,2) ;
-  x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
-  l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
-  nv = [(y0-y1),(x1-x0)]./l;
-  mv = [(x1-x0),(y0 - y1)]./l;
-  nnt = nv'*nv;
-  nmt = mv'*nv; 
+  [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(elem_crk(iel,:));
 
   JN = [ mv',nv' ];
 
     
   skip = 0;
-  nn = length(sctr) ;
   n1 = zeros(1,nn);
 
 
@@ -113,7 +107,7 @@ for ii=1:size(mel_elems,1)
 
   sctrB = [ ] ;
   for k = 1:1
-      sctrB = [sctrB assembly(iel,enrich_node(:,k),pos(:,k),k,crack_nodes)] ;
+      sctrB = [sctrB assembly(iel,enrich_node(:,k),pos(:,k),k,crack_node)] ;
   end
   scBEn = sctrB(7:end)
 
@@ -129,7 +123,7 @@ for ii=1:size(mel_elems,1)
   for kk = 1:size(W,1)
       B = [] ;
       Gpt = Q(kk,:) ;
-      [B, dJ] = xfemBmel(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_nodes,k,JN,mT);
+      [B, dJ] = xfemBmel(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_node,k,JN,mT);
       % for now
       % now we want to rotate this so that is is 
       %Ppoint =  N' * node(sctr,:);
