@@ -12,7 +12,7 @@ path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
-results_path = './Tri_pressure_ocean4';
+results_path = './Tri_pressure_flat';
 mkdir(results_path);
 %copyfile('../Testcase.m',results_path);
 
@@ -32,7 +32,7 @@ epsilon = 1e-7
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 1
-Kpen = 1e11
+Kpen = 1e15
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
@@ -63,8 +63,8 @@ else
 end
 
 %crack definition
-deltaInc = 0.05; numstep = 5;
-xCr(1).coor = [-0.1 -0.1;0.1, 0.1] ;
+deltaInc = 0.05; numstep = 7;
+xCr(1).coor = [-0.1 0;0.1, 0] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];
@@ -88,11 +88,38 @@ if( strcmp(plotmesh,'YES') )
     end
 end
 
-[Knum1,ThetaInc1,xCr1] = mainXFEM(xCr,numstep,deltaInc); 
+[Knumerical,ThetaInc,xCr1] = mainXFEM(xCr,numstep,deltaInc); 
 
 %close all
 %fixedF = [0,1];
 
+t = tiledlayout(2,2,'TileSpacing','Compact');
+% tile 1
+nexttile
+plot([1:length(Knumerical{1,1})],Knumerical{1,1})
+xlabel('step')
+title('SIFs end 1')
+legend({'K1','K2'})
+
+nexttile
+plot([1:length(Knumerical{1,2})],Knumerical{1,2})
+xlabel('step')
+title('SIFs end 2')
+legend({'K1','K2'})
+
+nexttile
+plot([1:length(ThetaInc{1,1})],ThetaInc{1,1})
+title('propagation angle, end 1')
+xlabel('step')
+
+nexttile
+plot([1:length(ThetaInc{1,2})],ThetaInc{1,2})
+title('propagation angle, end 2')
+xlabel('step')
+%plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
+
+figure_name = ['Knum_results'];
+print([results_path,'/',figure_name],'-dpng','-r300')
 
 
 %xCr(1).coor = [-0.1 0.084764928;0.4 0.084764928] ;

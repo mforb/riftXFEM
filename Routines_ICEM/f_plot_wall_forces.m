@@ -1,4 +1,4 @@
-function [ ] = f_plot_wall_forces( u,xCrk,enrDomain,typeElem,elem_force,elem_crk,split_elem,vertex_elem,tip_elem)
+function [ ] = f_plot_wall_forces( u,xCrk,enrDomain,typeElem,elem_force,elem_crk,split_elem,vertex_elem,tip_elem,stepnum)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Mar 18 18:39:27 NZDT 2022
 
@@ -6,7 +6,7 @@ function [ ] = f_plot_wall_forces( u,xCrk,enrDomain,typeElem,elem_force,elem_crk
 global node element numnode numelem elemType
 global plotmesh plotNode
 global gporder numtri
-global plothelp Hidden
+global plothelp Hidden results_path
 global rift_wall_pressure
 
 
@@ -16,16 +16,27 @@ global rift_wall_pressure
 
 
 
-
 for kk = 1:size(xCrk,2) %what's the crack?
   if Hidden
     f = figure('visible','off');
   else
     f = figure();
   end
-  ns = size(xCrk(kk).coor,2);
+  ns = size(xCrk(kk).coor,1);
+  xseg = [xCrk(kk).coor(end-1,:),xCrk(kk).coor(end,:)];
+  [lseg,~,~,~,~,~] = f_segment_dist(xseg);
   crack_coord = {};
   f_app = {};
+  f_tra = {};
+  if ns == 2
+    f_app{1} = [0,0] ;
+    f_tra{1} = [0,0] ; 
+    crack_coord{1} = [0 lseg]; 
+  else
+    f_app{1} = 0; f_app{ns-1} = 0;
+    f_tra{1} = 0; f_tra{ns-1} = 0;
+    crack_coord{1} = 0; crack_coord{ns-1} = lseg;
+  end
   for ii = 1:length(tip_elem)
     iel = tip_elem(ii);
     sctr = element(iel,:);
@@ -37,14 +48,35 @@ for kk = 1:size(xCrk,2) %what's the crack?
       if flag1
         [l,~,~,~,~,~] = f_segment_dist(segment);
         dw = l/(2*sqrt(3));
-        if i == 1
-          crack_coord{i} = [dw, l - dw];
+        fp = elem_force(iel,[1,3]);
+        ft = elem_force(iel,[2,4]);
+        if ns == 2
+          if points_same_2d(segment(1:2),xseg(1:2))
+            ccoord = [dw l-dw]; 
+          else
+            ccoord = [lseg-(l-dw), lseg - dw];
+          end
+          ind = find(crack_coord{1}>ccoord(1),1);
+          crack_coord{1}= [crack_coord{1}(1:ind-1),ccoord,crack_coord{1}(ind:end)];
+          f_app{1} = [f_app{1}(1:ind-1),fp,f_app{1}(ind:end)];
+          f_tra{1} = [f_tra{1}(1:ind-1),ft,f_tra{1}(ind:end)];
+          break
         else
-          crack_coord{i} = [lseg - (l - dw), lseg - dw];
+          if i == 1
+            ccoord = [ dw l-dw];
+            crack_coord{i} = [crack_coord{i}, ccoord];
+            f_app{i} = [ f_app{i}, fp ];
+            f_tra{i} = [ f_tra{i}, ft ];
+          else
+            ccoord = [lseg-(l-dw), lseg-dw];
+            crack_coord{i} = [ccoord, crack_coord{i}];
+            f_app{i} = [  fp, f_app{i}];
+            f_tra{i} = [  ft, f_tra{i}];
+          end
         end
-        f_app{i} = elem_force(iel,1:2);
       end
     end
+  end
   for ii =1:length(vertex_elem)
     iel = vertex_elem(ii);
     sctr = element(iel,:);
@@ -60,20 +92,27 @@ for kk = 1:size(xCrk,2) %what's the crack?
         d2 = f_segment_dist(l2);
         dt = d1 + d2 ; %this is just for plotting purposes, in reality the segment between intercepts is used
         dw = dt/(2*sqrt(3));
+        fp = elem_force(iel,[1,3]);
+        ft = elem_force(iel,[2,4]);
         if d1 > dw 
           crack_coord{i} = [ crack_coord{i}, lseg - (d1 - dw) ]
-          f_app{i} = [ f_app{i}, elem_force(iel,1) ]
+          f_app{i} = [ f_app{i}, fp(1) ];
+          f_tra{i} = [ f_tra{i}, ft(1) ];
           if d2 < dw
-            crack_coord{i} = [ crack_coord{i}, lseg - d1 - (dt - dw) ]
-            f_app{i} = [ f_app{i}, elem_force(iel,2) ]
+            crack_coord{i} = [ crack_coord{i}, lseg - ( dw - d2 ) ]
+            f_app{i} = [ f_app{i}, fp(2) ];
+            f_tra{i} = [ f_tra{i}, ft(2) ];
           else
-            crack_coord{i+1} = [ dt - dw -d1, crack_coord{i+1} ]
-            f_app{i} = [ elem_force(iel,2), f_app{i+1}]
+            crack_coord{i+1} = [ dt - (dw + d1), crack_coord{i+1} ]
+            f_app{i+1} = [ fp(2), f_app{i+1}];
+            f_tra{i+1} = [ ft(2), f_tra{i+1}];
           end
         else 
           crack_coord{i+1} = [ dw-d1, dt-dw-d1 , crack_coord{i+1} ] 
-          f_app{i+1} = [ elem_force(iel,2), f_pp{i+1} ] 
+          f_app{i+1} = [ fp, f_app{i+1} ];
+          f_tra{i+1} = [ ft, f_tra{i+1} ]; 
         end
+        break
       end
     end
   end
@@ -91,47 +130,62 @@ for kk = 1:size(xCrk,2) %what's the crack?
       if flag1
         nseg = [xseg(1:2),segment(1:2)];
         [nl,~,~,~,~,~] = f_segment_dist(nseg);
-        ccoords = [ nl + dw, nl + l - dw] 
-        fp = elem_force(iel,:);
+        ccoords = [ nl + dw, nl + l - dw] ;
+        fp = elem_force(iel,[1,3]);
+        ft = elem_force(iel,[2,4]);
         seg_coord = crack_coord{i};
         seg_f = f_app{i};
+        seg_t = f_tra{i};
         ind = find(seg_coord>ccoords(1),1);
         if isempty(ind)
           seg_coord = [seg_coord, ccoords];
           seg_f = [seg_f,fp];
+          seg_t = [seg_t,ft];
         elseif ind == 1
           seg_coord = [ccoords, seg_coord];
           seg_f = [fp, seg_f];
+          seg_t = [ft, seg_t];
         else
-          seg_coord = [seg_coord(1:ind)];
+          seg_coord = [seg_coord(1:ind-1),ccoords,seg_coord(ind:end)];
           seg_f = [seg_f(1:ind-1),fp,seg_f(ind:end)];
+          seg_t = [seg_t(1:ind-1),ft,seg_t(ind:end)];
         end
         crack_coord{i} = seg_coord;
         f_app{i} = seg_f;
+        f_tra{i} = seg_t;
       end
     end
   end
   pl = 0;
   cc = []; 
   ff = [];
+  tt = [];
   for i = 1:ns-1
     xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
     [lseg,~,~,~,~,~] = f_segment_dist(xseg);
     cc = [ cc, crack_coord{i} + pl ];
     ff = [ff, f_app{i}]; 
+    tt = [tt, f_tra{i}]; 
     pl = pl + lseg;
   end
-  keyboard
-  plot(pl,ff)
-  keyboard
-end
 
+  t = tiledlayout(2,1,'TileSpacing','Compact');
+  nexttile
 
+  plot(cc,ff,'linewidth',3,'DisplayName','normal sym force')
+  xlabel('distance along crack')
+  ylabel('force')
+  tstr = ['normal forces acting on rift ',num2str(kk)];
+  title(tstr);
 
-
-      
-
-
-  end
+  nexttile
+  plot(cc,tt,'color',[1,0.1,0],'linewidth',2,'DisplayName','tangential force')
+  xlabel('distance along crack')
+  ylabel('force')
+  tstr = ['tangential forces acting on rift ',num2str(kk)];
+  title(tstr);
+  nstr = ['rift',num2str(kk),'forces_step',num2str(stepnum)];
+  print([results_path,'/',nstr],'-dpng','-r300')
+  clf
 end
 

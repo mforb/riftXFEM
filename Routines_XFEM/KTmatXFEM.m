@@ -167,8 +167,8 @@ for kk = 1:size(xCrk,2) %what's the crack?
         Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk)
         gn = nv*Nmat*2*u(A);
         if gn < 0
-          elem_force(iel,2*k_in-1) = E_pen*gn;
-          Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
+          elem_force(iel,2*k_in-1) = -1*E_pen*gn;
+          Gint(A) = Gint(A) - E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
           Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
           %if any(enrich_node(sctr)==1)
             %xp    = QT*(pint-Tip)';           % local coordinates
@@ -238,6 +238,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
       else
         continue
       end
+      keyboard
       
       for k_in = 1:2
         gpt = gpts(k_in,:) ;

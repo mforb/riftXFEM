@@ -259,7 +259,7 @@ for ipas = 1:npas
     fu = full(u);
     Stdux = fu(1:2:2*numnode) ;
     Stduy = fu(2:2:2*numnode) ;
-    [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    [crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
     if Hidden 
       f = figure('visible','off');
@@ -293,8 +293,10 @@ for ipas = 1:npas
 
 
     if penalty 
-      tol1 = 1e-8;
-      tol2 = 1;
+      elemForce_orig = elemForce;
+      elemForce = zeros(size(elemForce));
+      tol1 = 1e-10;
+      tol2 = 1e-7;
       cont = 1
       Du = zeros(size(u));
       Fext = F
@@ -307,7 +309,7 @@ for ipas = 1:npas
         disp(['---------------------------------------------'])
         Fint = K*u;
         [KT,Gint,elemForce] = KTmatXFEM(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
-        Res  = Fint - Fext + Gint;
+        Res  = Fint - (Fext + Gint);
         nr = norm(Res,2);
         if cont == 1
           nr0  = nr;
@@ -322,7 +324,7 @@ for ipas = 1:npas
           fu = full(u);
           Stdux = fu(1:2:2*numnode) ;
           Stduy = fu(2:2:2*numnode) ;
-          [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+          [crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
           f = figure('visible','on');
           clf
           hold on
@@ -344,15 +346,12 @@ for ipas = 1:npas
       fu = full(u);
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
-      if rift_wall_pressure
-        elemForce = f_readjust_elemforce(splitElem,elemForce);
-      end
+      elemForce = elemForce + elemForce_orig;
+      plot_wall = 1;
     end
 
-    plot_wall = 1;
-
     if plot_wall
-      f_plot_wall_forces(u,xCr,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem)
+      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas)
     end
 %     
 %     % plot displacement contour

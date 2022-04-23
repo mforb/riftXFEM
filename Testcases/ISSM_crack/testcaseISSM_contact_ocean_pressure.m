@@ -52,7 +52,7 @@ stressState = 'PlaneStrain' ;
 %typeProblem = 'eCrkTen' ; %choose type of problem
 typeProblem = 'ISSM' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
-Kpen = 1e12;
+Kpen = 1e16;
 
 % import rifts
 % srift1 = shaperead('../../Data/2013_14_cracka_open.shp');

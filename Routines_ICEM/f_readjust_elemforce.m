@@ -12,5 +12,5 @@ global node element numnode numelem elemType
 for ii=1:size(split_elem,1)
   iel = split_elem(ii);
   fh = f_getHeightF(iel);
-  elem_force(iel,1:3) = elem_force(iel,1:3) + fh ;
+  elem_force(iel,[1,3]) = elem_force(iel,[1,3]) + fh ;
 end
