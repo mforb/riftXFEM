@@ -170,6 +170,8 @@ for kk = 1:size(xCrk,2) %what's the crack?
           elem_force(iel,2*k_in-1) = -1*E_pen*gn;
           Gint(A) = Gint(A) - E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
           Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+          % stabalization term
+          %Kglobal(A,A) = Kglobal(A,A) - W(k_in)*((E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
           %if any(enrich_node(sctr)==1)
             %xp    = QT*(pint-Tip)';           % local coordinates
             %r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));

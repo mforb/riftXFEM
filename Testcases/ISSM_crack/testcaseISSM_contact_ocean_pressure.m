@@ -28,7 +28,7 @@ global loadstress FintX FintY FintXY FintH
 % global variables for conversion between two coordinate systems
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
-global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure contact Kpen
+global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure contact Kpen stabilize
 epsilon = 5 
 
 OPT = 2; Hidden = true;
@@ -52,7 +52,8 @@ stressState = 'PlaneStrain' ;
 %typeProblem = 'eCrkTen' ; %choose type of problem
 typeProblem = 'ISSM' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
-Kpen = 1e16;
+Kpen = 1e14;
+stabilize = 1
 
 % import rifts
 % srift1 = shaperead('../../Data/2013_14_cracka_open.shp');

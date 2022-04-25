@@ -4,7 +4,7 @@ function [Knum,Theta,xCrk] = mainXFEM(xCrk,npas,delta_inc)
 global numcrack xCr deltaInc numstep
 global plotmesh plotNode plothelp plotiter
 global node element numnode numelem bcNodes edgNodes typeProblem elemType
-global penalty fixedF contact melange Kpen rift_wall_pressure xM melangeforce
+global penalty fixedF contact melange Kpen rift_wall_pressure xM melangeforce stabilize
 global epsilon loadstress
 global results_path
 global fmesh
@@ -277,17 +277,59 @@ for ipas = 1:npas
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
     title('Y displacement before Newton solver')
-    print([results_path,'/original_ydisp'],'-dpng')
+    print([results_path,'/original_ydisp',num2str(ipas)],'-dpng')
     clf(f)
 
     if contact & ~flagP
       % first we need to find out if there is any interpenetration
       contact = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
+    elseif contact & flagP
+      if ~isempty(stabilize) & stabilize
+        [K] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,K,u);
+        disp([num2str(toc),'    Recalculating u with stabalized K'])
+        u = K\F;
+        fu2 = full(u);
+        Stdux2 = fu2(1:2:2*numnode) ;
+        Stduy2 = fu2(2:2:2*numnode) ;
+        if Hidden 
+          f = figure('visible','off');
+        else
+          f = figure();
+        end
+        trisurf(element,node(:,1),node(:,2),Stduy2-Stduy)
+        axis equal; view(2); shading interp; colorbar
+        title('Y displacement change from stabilizing')
+        print([results_path,'/stab_ydiff_',num2str(ipas)],'-dpng')
+        if ~isempty(zoom_dim)
+          xlim(zoom_dim(1,:));
+          ylim(zoom_dim(2,:));
+          figure_name = ['stab_ydiff_zoom_',num2str(ipas)];
+          print([results_path,'/',figure_name],'-dpng','-r300')
+        end
+        clf(f)
+        [crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+        dfac = 1 ;
+        plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
+        f_plotCrack2(crackLips,20,'r-','k-','c--')
+        print([results_path,'/crack_walls_stab',num2str(ipas)],'-dpng','-r300')
+        clf(f)
+        trisurf(element,node(:,1),node(:,2),Stduy2)
+        axis equal; view(2); shading interp; colorbar
+        title('Y displacement after stabilizing')
+        print([results_path,'/stab_ydisp_',num2str(ipas)],'-dpng')
+        if ~isempty(zoom_dim)
+          xlim(zoom_dim(1,:));
+          ylim(zoom_dim(2,:));
+          figure_name = ['stab_ydisp_zoom_',num2str(ipas)];
+          print([results_path,'/',figure_name],'-dpng','-r300')
+        end
+        clf(f)
+      end
+      penalty = 1
     end
 
-
-    if contact || melangeforce
+    if melangeforce
       penalty = 1
     end
 
