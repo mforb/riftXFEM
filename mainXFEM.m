@@ -280,6 +280,7 @@ for ipas = 1:npas
     print([results_path,'/original_ydisp',num2str(ipas)],'-dpng')
     clf(f)
 
+
     if contact & ~flagP
       % first we need to find out if there is any interpenetration
       contact = 0
@@ -337,8 +338,8 @@ for ipas = 1:npas
     if penalty 
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
-      tol1 = 1e-10;
-      tol2 = 1e-7;
+      tol1 = 1e-22;
+      tol2 = 1e-15;
       cont = 1
       Du = zeros(size(u));
       Fext = F
@@ -351,7 +352,7 @@ for ipas = 1:npas
         disp(['---------------------------------------------'])
         Fint = K*u;
         [KT,Gint,elemForce] = KTmatXFEM(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
-        Res  = Fint - (Fext + Gint);
+        Res  = Fext - Fint - Gint ;
         nr = norm(Res,2);
         if cont == 1
           nr0  = nr;
@@ -359,7 +360,16 @@ for ipas = 1:npas
         rnr = nr/nr0;
         disp(['L2 norm of the residual, R =  ',num2str(nr)])
         disp(['Relative to R0 : ',num2str(rnr)])
-        u = u - KT\Res;
+        if rnr < tol1 | nr < tol2
+           disp(['Converged at step : ',num2str(cont)])
+           break
+        elseif cont > 200
+          keyboard
+        elseif cont > 500
+           warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
+           break
+        end
+        u = u + KT\Res;
         cont = cont + 1;
 
         if plothelp | plotiter 
@@ -377,18 +387,11 @@ for ipas = 1:npas
         end
 
 
-        if rnr < tol1 | nr < tol2
-           disp(['Converged at step : ',num2str(cont)])
-           break
-        elseif cont > 500
-           warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
-           break
-        end
       end
       fu = full(u);
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
-      elemForce = elemForce + elemForce_orig;
+      %elemForce = elemForce + elemForce_orig;
       plot_wall = 1;
     end
 

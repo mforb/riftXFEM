@@ -24,22 +24,22 @@ global xCr deltaInc numstep numcrack
 global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
 global plothelp
-global penalty fixedF contact Kpen stabalize
+global penalty fixedF contact Kpen stabilize
 global frictionB friction_mu epsilon FintH
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global fmesh results_path same_coords
 epsilon = 1e-7
 same_coords = 1
 plothelp = 0
-rift_wall_pressure = 1
-Kpen = 1e10
+rift_wall_pressure = 0
+Kpen = 1e14
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
 stressState = 'PlaneStrain' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
 contact = 1;
-stabalize = 1;
+stabilize = 0;
 
 
 
@@ -48,14 +48,14 @@ read_gmesh
 TR = triangulation(element,node);
 cpos = TR.incenter;
 
-FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),3*ones(length(cpos),1));
+FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),ones(length(cpos),1));
 
 element = tricheck(node,element);
 numnode = size(node,1) ;
 numelem = size(element,1) ;
 
 E = 1e6; nu = 0.3; P = 1 ;
-sigmato = 500. ;
+sigmato = -100. ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
     Cm1 = E/10*(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
@@ -64,8 +64,8 @@ else
 end
 
 %crack definition
-deltaInc = 0.05; numstep = 7;
-xCr(1).coor = [-0.1 0;0.1, 0] ;
+deltaInc = 0.05; numstep = 5;
+xCr(1).coor = [-.1 0;.1, 0] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];

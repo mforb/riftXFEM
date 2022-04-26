@@ -54,7 +54,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
       gn = nv*Nmat*2*u(A);
       if gn < 0
         % stabalization term
-        Kglobal(A,A) = Kglobal(A,A) - W(k_in)*((E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
+        Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(1*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
       end
     end
   end
