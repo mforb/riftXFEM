@@ -45,25 +45,12 @@ for in = 1:nn
         end
         [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
         % compute branch functions at node "in"
-        xp    = QT*(node(sctr(in),:)-xTip)';
-        r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
-        theta = atan2(xp(2),xp(1));
         
-        if ( theta > pi | theta < -pi)
-            disp (['something wrong with angle ',num2str(thet)]);
-        end
-        [BrI] = branch_node(r,theta);
-        
-        % composants of Benr matrix
-        
-        aa = N(in)*(Br(1)-BrI(1));
+        aa = N(in)*(Br(1));
         N1_enr = [aa 0 ; 0 aa];
-        aa = N(in)*(Br(2)-BrI(2));
-        N2_enr = [aa 0 ; 0 aa];
-        aa = N(in)*(Br(3)-BrI(3));
-        N3_enr = [aa 0 ; 0 aa];
-        aa = N(in)*(Br(4)-BrI(4));
-        N4_enr = [aa 0 ; 0 aa];
+        N2_enr = [0 0 ; 0 0];
+        N3_enr = [0 0 ; 0 0];
+        N4_enr = [0 0 ; 0 0];
         
         
         

@@ -32,14 +32,14 @@ epsilon = 1e-7
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 0
-Kpen = 1e14
+Kpen = 1e9
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
 stressState = 'PlaneStrain' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
 contact = 1;
-stabilize = 0;
+stabilize = 1;
 
 
 
