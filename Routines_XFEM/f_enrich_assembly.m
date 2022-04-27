@@ -20,15 +20,15 @@ for nI = 1:nn
   elseif(enrich_node(nodeI) == 3) % H(x) due to material
       AA = [2*pos(nodeI)-1; 2*pos(nodeI)];
       A = [A;AA];
-  elseif (enrich_node(nodeI) == 1) % B(x) enriched node
+  elseif (enrich_node(nodeI) == 1) % B(x) enriched node only the first branch function is relevant
       AA = [2*pos(nodeI)-1;
           2*pos(nodeI);
-          2*(pos(nodeI)+1)-1;
-          2*(pos(nodeI)+1);
-          2*(pos(nodeI)+2)-1;
-          2*(pos(nodeI)+2);
-          2*(pos(nodeI)+3)-1;
-          2*(pos(nodeI)+3);
+          %2*(pos(nodeI)+1)-1;
+          %2*(pos(nodeI)+1);
+          %2*(pos(nodeI)+2)-1;
+          %2*(pos(nodeI)+2);
+          %2*(pos(nodeI)+3)-1;
+          %2*(pos(nodeI)+3);
           ];
       A  = [A;AA];
       if type_elem(iel,1) == 1   %looking for the "tip" element

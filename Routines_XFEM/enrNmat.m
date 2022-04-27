@@ -46,42 +46,12 @@ for in = 1:nn
         [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
         % compute branch functions at node "in"
         
-        aa = N(in)*(Br(1));
+        aa = N(in)*(Br(1))/sqrt(r);
         N1_enr = [aa 0 ; 0 aa];
-        N2_enr = [0 0 ; 0 0];
-        N3_enr = [0 0 ; 0 0];
-        N4_enr = [0 0 ; 0 0];
         
-        
-        
-        N_enr = [N1_enr N2_enr N3_enr N4_enr];
-        clear N1_enr; clear N2_enr; clear N3_enr; clear N4_enr;
-        Nxfem = [Nxfem N_enr];
+        N_enr = [N1_enr];
+        clear N1_enr;         Nxfem = [Nxfem N_enr];
         clear N_enr ;
-    elseif( enrich_node(sctr(in)) == 3)
-        % compute the enrichment function and derivatives
-        % at gauss point
-        x = Gpt(1);
-        y = Gpt(2);
-        d = sqrt((x-xc)^2+(y-yc)^2);
-        Fgp    = abs(d - incR) ;
-        dFdx = sign(Fgp)*(x-xc)/d;
-        dFdy = sign(Fgp)*(y-yc)/d;
-        
-        % compute the enrichment function at node
-        x = node(sctr(in),1);
-        y = node(sctr(in),2);
-        d = sqrt((x-xc)^2+(y-yc)^2);
-        FI = abs(d - incR);
-        
-        % Bxfem at node "in"
-        aa = N(in)*(Fgp-FI) + N(in)*dFdx ;
-        N_enr = [aa 0; 0 aa];
-        
-        % Add to the total Bxfem
-        Nxfem = [Nxfem N_enr];
-        clear N_enr ;
-    end
     end          % end of loop on nodes
     % B matrix
     Nxfem;
