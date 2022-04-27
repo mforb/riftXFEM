@@ -25,8 +25,9 @@ else
 end
 
 iwant = [ ] ;
+elem_blend = 0;
 %switch between non-enriched and enriched elements
-if( any(enrich_node(sctr)) == 0 ) & isempty(intersect(crack_node,sctr)) 
+if( all(enrich_node(sctr)) == 0 ) ) 
     %if (type_elem(e,cont) == 4 )
       %ref_elem = e;
       %xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
@@ -36,7 +37,7 @@ if( any(enrich_node(sctr)) == 0 ) & isempty(intersect(crack_node,sctr))
 else
     Bxfem = [ ] ;
     %loop on nodes, check is node is enriched........
-    
+     
     for in = 1:nn
         %Enriched by H(x) at global gauss point
         if ( enrich_node(sctr(in)) == 2)
@@ -93,6 +94,12 @@ else
                 [sctrn,xx] = find(element == sctr(in));
                 [ele,xx] = find(type_elem(sctrn,:)==1);
                 ref_elem = sctrn(ele);
+                n2 = find(enrich_node(sctr==2));
+                n0 = find(enrich_node(sctr==0));
+                nR = union(n2,n0);
+                elem_blend = 1;
+                Rpt = sum(N(nR));
+                dRdx = sum(dNdx(nR,1),1)
             end
             % compute branch functions at Gauss point
             xCre  = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];
@@ -119,22 +126,40 @@ else
             [BrI] = branch_node(r,theta);
             
             % composants of Benr matrix
-            
-            aa = dNdx(in,1)*(Br(1)-BrI(1)) + N(in)*dBdx(1) ;
-            bb = dNdx(in,2)*(Br(1)-BrI(1)) + N(in)*dBdy(1) ;
-            B1_enr = [aa 0 ; 0 bb ; bb aa];
-            
-            aa = dNdx(in,1)*(Br(2)-BrI(2)) + N(in)*dBdx(2) ;
-            bb = dNdx(in,2)*(Br(2)-BrI(2)) + N(in)*dBdy(2) ;
-            B2_enr = [aa 0 ; 0 bb ; bb aa];
-            
-            aa = dNdx(in,1)*(Br(3)-BrI(3)) + N(in)*dBdx(3) ;
-            bb = dNdx(in,2)*(Br(3)-BrI(3)) + N(in)*dBdy(3) ;
-            B3_enr = [aa 0 ; 0 bb ; bb aa];
-            
-            aa = dNdx(in,1)*(Br(4)-BrI(4)) + N(in)*dBdx(4) ;
-            bb = dNdx(in,2)*(Br(4)-BrI(4)) + N(in)*dBdy(4) ;
-            B4_enr = [aa 0 ; 0 bb ; bb aa];
+            if elem_blend = 0 
+              aa = dNdx(in,1)*(Br(1)-BrI(1)) + N(in)*dBdx(1) ;
+              bb = dNdx(in,2)*(Br(1)-BrI(1)) + N(in)*dBdy(1) ;
+              B1_enr = [aa 0 ; 0 bb ; bb aa];
+              
+              aa = dNdx(in,1)*(Br(2)-BrI(2)) + N(in)*dBdx(2) ;
+              bb = dNdx(in,2)*(Br(2)-BrI(2)) + N(in)*dBdy(2) ;
+              B2_enr = [aa 0 ; 0 bb ; bb aa];
+              
+              aa = dNdx(in,1)*(Br(3)-BrI(3)) + N(in)*dBdx(3) ;
+              bb = dNdx(in,2)*(Br(3)-BrI(3)) + N(in)*dBdy(3) ;
+              B3_enr = [aa 0 ; 0 bb ; bb aa];
+              
+              aa = dNdx(in,1)*(Br(4)-BrI(4)) + N(in)*dBdx(4) ;
+              bb = dNdx(in,2)*(Br(4)-BrI(4)) + N(in)*dBdy(4) ;
+              B4_enr = [aa 0 ; 0 bb ; bb aa];
+            else
+              aa = Rpt*(dNdx(in,1)*(Br(1)-BrI(1)) + N(in)*dBdx(1)) + dRdx(1)*N(in)*(Br(1)-BrI(1)) ;
+              bb = Rpt*(dNdx(in,2)*(Br(1)-BrI(1)) + N(in)*dBdy(1)) + dRdx(2)*N(in)*(Br(1)-BrI(1)) ;
+              B1_enr = [aa 0 ; 0 bb ; bb aa];
+              
+              aa = Rpt*(dNdx(in,1)*(Br(2)-BrI(2)) + N(in)*dBdx(2)) + dRdx(1)*N(in)*(Br(2)-BrI(2)) ;
+              bb = Rpt*(dNdx(in,2)*(Br(2)-BrI(2)) + N(in)*dBdy(2)) + dRdx(2)*N(in)*(Br(2)-BrI(2)) ;
+              B2_enr = [aa 0 ; 0 bb ; bb aa];
+              
+              aa = Rpt*(dNdx(in,1)*(Br(3)-BrI(3)) + N(in)*dBdx(3)) + dRdx(1)*N(in)*(Br(3)-BrI(3)) ;
+              bb = Rpt*(dNdx(in,2)*(Br(3)-BrI(3)) + N(in)*dBdy(3)) + dRdx(2)*N(in)*(Br(3)-BrI(3)) ;
+              B3_enr = [aa 0 ; 0 bb ; bb aa];
+              
+              aa = Rpt*(dNdx(in,1)*(Br(4)-BrI(4)) + N(in)*dBdx(4)) + dRdx(1)*N(in)*(Br(4)-BrI(4)) ;
+              bb = Rpt*(dNdx(in,2)*(Br(4)-BrI(4)) + N(in)*dBdy(4)) + dRdx(2)*N(in)*(Br(4)-BrI(4)) ;
+              B4_enr = [aa 0 ; 0 bb ; bb aa];
+            end
+
             
             BI_enr = [B1_enr B2_enr B3_enr B4_enr];
             clear B1_enr; clear B2_enr; clear B3_enr; clear B4_enr;
