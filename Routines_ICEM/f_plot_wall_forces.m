@@ -77,45 +77,6 @@ for kk = 1:size(xCrk,2) %what's the crack?
       end
     end
   end
-  for ii =1:length(vertex_elem)
-    iel = vertex_elem(ii);
-    sctr = element(iel,:);
-    segment = elem_crk(iel,:);
-    for i=1:ns-1
-      xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
-      [lseg,~,~,~,~,~] = f_segment_dist(xseg);
-      [flag1,flag2,~] = crack_interact_element(xseg,iel,[]);
-      if flag1
-        l1 = [segment(1:2),xseg(3:4)];
-        d1 = f_segment_dist(l1);
-        l2 = [xseg(3:4),segment(3:4)];
-        d2 = f_segment_dist(l2);
-        dt = d1 + d2 ; %this is just for plotting purposes, in reality the segment between intercepts is used
-        dw = dt/(2*sqrt(3));
-        fp = elem_force(iel,[1,3]);
-        ft = elem_force(iel,[2,4]);
-        if d1 > dw 
-          crack_coord{i} = [ crack_coord{i}, lseg - (d1 - dw) ]
-          f_app{i} = [ f_app{i}, fp(1) ];
-          f_tra{i} = [ f_tra{i}, ft(1) ];
-          if d2 < dw
-            crack_coord{i} = [ crack_coord{i}, lseg - ( dw - d2 ) ]
-            f_app{i} = [ f_app{i}, fp(2) ];
-            f_tra{i} = [ f_tra{i}, ft(2) ];
-          else
-            crack_coord{i+1} = [ dt - (dw + d1), crack_coord{i+1} ]
-            f_app{i+1} = [ fp(2), f_app{i+1}];
-            f_tra{i+1} = [ ft(2), f_tra{i+1}];
-          end
-        else 
-          crack_coord{i+1} = [ dw-d1, dt-dw-d1 , crack_coord{i+1} ] 
-          f_app{i+1} = [ fp, f_app{i+1} ];
-          f_tra{i+1} = [ ft, f_tra{i+1} ]; 
-        end
-        break
-      end
-    end
-  end
   for ii=1:length(split_elem)
     iel = split_elem(ii);
     sctr = element(iel,:) ;
@@ -156,6 +117,45 @@ for kk = 1:size(xCrk,2) %what's the crack?
       end
     end
   end
+  for ii =1:length(vertex_elem)
+    iel = vertex_elem(ii);
+    sctr = element(iel,:);
+    segment = elem_crk(iel,:);
+    for i=1:ns-1
+      xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
+      [lseg,~,~,~,~,~] = f_segment_dist(xseg);
+      [flag1,flag2,~] = crack_interact_element(xseg,iel,[]);
+      if flag1
+        l1 = [segment(1:2),xseg(3:4)];
+        d1 = f_segment_dist(l1);
+        l2 = [xseg(3:4),segment(3:4)];
+        d2 = f_segment_dist(l2);
+        dt = d1 + d2 ; %this is just for plotting purposes, in reality the segment between intercepts is used
+        dw = dt/(2*sqrt(3));
+        fp = elem_force(iel,[1,3]);
+        ft = elem_force(iel,[2,4]);
+        if d1 > dw 
+          crack_coord{i} = [ crack_coord{i}, lseg - (d1 - dw) ]
+          f_app{i} = [ f_app{i}, fp(1) ];
+          f_tra{i} = [ f_tra{i}, ft(1) ];
+          if d2 < dw
+            crack_coord{i} = [ crack_coord{i}, lseg - ( dw - d2 ) ]
+            f_app{i} = [ f_app{i}, fp(2) ];
+            f_tra{i} = [ f_tra{i}, ft(2) ];
+          else
+            crack_coord{i+1} = [ d2 - dw, crack_coord{i+1} ]
+            f_app{i+1} = [ fp(2), f_app{i+1}];
+            f_tra{i+1} = [ ft(2), f_tra{i+1}];
+          end
+        else 
+          crack_coord{i+1} = [ dw-d1, dt-dw-d1 , crack_coord{i+1} ] 
+          f_app{i+1} = [ fp, f_app{i+1} ];
+          f_tra{i+1} = [ ft, f_tra{i+1} ]; 
+        end
+        break
+      end
+    end
+  end
   pl = 0;
   cc = []; 
   ff = [];
@@ -186,6 +186,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   title(tstr);
   nstr = ['rift',num2str(kk),'forces_step',num2str(stepnum)];
   print([results_path,'/',nstr],'-dpng','-r300')
+  keyboard
   clf
 end
 
