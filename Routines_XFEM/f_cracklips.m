@@ -74,11 +74,17 @@ for kk = 1:size(xCr,2) %what's the crack?
             up_down = 0;
             in = find(enr_node(sctr)==1,1);
             if type_elem(iel,1) == 1   %looking for the "tip" element
-                ref_elem = iel;
+              ref_elem = iel;
+              Rpt = 1;
             else    %trovo l'elemento/fessura a cui fa riferimento il nodo (SOLO 1 RIF AUTORIZZATO!!)
-                [sctrn,xx] = find(element == sctr(in));
-                [ele,xx] = find(type_elem(sctrn,:)==1);
-                ref_elem = sctrn(ele);
+              [sctrn,xx] = find(element == sctr(in));
+              [ele,xx] = find(type_elem(sctrn,:)==1);
+              ref_elem = sctrn(ele);
+              n2 = find(enr_node(sctr==2));
+              n0 = find(enr_node(sctr==0));
+              nR = union(n2,n0);
+              elem_blend = 1;
+              Rpt = sum(N(nR));
             end
             % compute branch functions at Gauss point
             xCre  = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];
@@ -128,9 +134,9 @@ for kk = 1:size(xCr,2) %what's the crack?
               [BrI] = branch_node(r,theta);
 
               for i = 1:4
-                c_p = c_p + Ni*(Br_u(i)-BrI(i)) * [Ue(idx*2-1),Ue(idx*2)];
-                c_d = c_d + Ni*(Br_d(i)-BrI(i)) * [Ue(idx*2-1),Ue(idx*2)];
-                  idx = idx + 1;
+                c_p = c_p + Rpt*Ni*(Br_u(i)-BrI(i)) * [Ue(idx*2-1),Ue(idx*2)];
+                c_d = c_d + Rpt*Ni*(Br_d(i)-BrI(i)) * [Ue(idx*2-1),Ue(idx*2)];
+                idx = idx + 1;
                 %if (abs(cc_m(1)-1.) < 0.001)
                   %disp(['element ',num2str(iel),'   function ',num2str(i),' :'])
                   %disp(['Br = ', num2str(Br(i))])

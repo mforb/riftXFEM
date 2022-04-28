@@ -1,4 +1,4 @@
-function [Nxfem] = enrNmat(N,e,type_elem,enrich_node,xCrl,GVertex,cont)
+function [Nxfem] = enrNmat(N,e,type_elem,enrich_node,xCrl,GVertex,cont,pen)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -25,10 +25,14 @@ for in = 1:nn
     elseif ( enrich_node(sctr(in)) == 1) % B(x) enriched node
         if type_elem(e,1) == 1   %looking for the "tip" element
             ref_elem = e;
+            Rpt = 1;
         else    %trovo l'elemento/fessura a cui fa riferimento il nodo (SOLO 1 RIF AUTORIZZATO!!)
             [sctrn,xx] = find(element == sctr(in));
             [ele,xx] = find(type_elem(sctrn,:)==1);
             ref_elem = sctrn(ele);
+            nR = find(enrich_node(sctr==1));
+            elem_blend = 1;
+            Rpt = sum(N(nR));
         end
         % compute branch functions at Gauss point
         xCre  = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];
@@ -45,8 +49,12 @@ for in = 1:nn
         end
         [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
         % compute branch functions at node "in"
-        
-        aa = N(in)*(Br(1))/sqrt(r);
+        if pen 
+          %aa = Rpt*N(in)*(Br(1))/sqrt(r);
+          aa = Rpt*N(in)*(Br(1));
+        else
+          aa = Rpt*N(in)*(Br(1));
+        end
         N1_enr = [aa 0 ; 0 aa];
         
         N_enr = [N1_enr];

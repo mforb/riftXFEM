@@ -164,7 +164,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         gpt = gpts(k_in,:) ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         pint =  N' * node(sctr,:);
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk)
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true)
         gn = nv*Nmat*2*u(A);
         if gn < 0
           elem_force(iel,2*k_in-1) = -1*E_pen*gn;

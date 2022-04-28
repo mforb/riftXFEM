@@ -1,4 +1,4 @@
-function [ Fext, elem_force ] = f_apply_ocean_pressure( enrich_node,elem_crk,type_elem,xTip,xVertex,...
+function [ Fext, elem_force ] = f_apply_ocean_pressure( enr_node,elem_crk,type_elem,xTip,xVertex,...
     split_elem,tip_elem,vertex_elem,corner_elem,crack_node,enr_domain,elem_force,pos,xCrk,Fext )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Mar 18 18:39:27 NZDT 2022
@@ -61,42 +61,14 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
     n1 = zeros(1,nn);
 
-    [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enrich_node);
+    [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
 
     for k_in = 1:2
       gpt = gpts(k_in,:) ;
       [N,dNdxi] = lagrange_basis(elemType,gpt) ;
       pint =  N' * node(sctr,:);
-      
-      if any(enrich_node(sctr)==1)
-        xp    = QT*(pint-Tip)';           % local coordinates
-        r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
-        theta = atan2(xp(2),xp(1));
-        
-        if ( theta > pi | theta < -pi)
-            disp (['something wrong with angle ',num2str(thet)]);
-        end
-        if abs(abs(theta) - pi) < 0.001
-         [Br_u,dBdx,dbdy] = branch_gp(r,pi,alpha);
-         [Br_d,dBdx,dbdy] = branch_gp(r,-1*pi,alpha);
-        else 
-         [Br_u,dbdx,dbdy] = branch_gp(r,theta,alpha);
-         Br_d = Br_u;
-        end
-      end
-      nA = [1,2];
-      for ni = 1:nn
-        if n1(ni)
-          n_row = sum(n1(1:ni));
-          for i = 1:4
-            Fext(A(nA)) = Fext(A(nA)) + fh*N(ni)*(Br_u(i)-BrI(n_row,i))*W(k_in)*det(JO)*nv';
-            nA = [nA(1)+2,nA(2)+2];
-          end
-        else
-          Fext(A(nA)) = Fext(A(nA)) + fh*W(k_in)*det(JO)*N(ni)*nv';
-          nA = [nA(1)+2,nA(2)+2];
-        end 
-      end
+      Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false);
+      Fext(A) = Fext(A) + fh*W(k_in)*det(JO)*Nmat'*nv';
     end
   end
 end

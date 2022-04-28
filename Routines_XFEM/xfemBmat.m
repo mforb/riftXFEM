@@ -27,7 +27,7 @@ end
 iwant = [ ] ;
 elem_blend = 0;
 %switch between non-enriched and enriched elements
-if( all(enrich_node(sctr)) == 0 ) ) 
+if( all(enrich_node(sctr) == 0) ) 
     %if (type_elem(e,cont) == 4 )
       %ref_elem = e;
       %xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
@@ -94,12 +94,10 @@ else
                 [sctrn,xx] = find(element == sctr(in));
                 [ele,xx] = find(type_elem(sctrn,:)==1);
                 ref_elem = sctrn(ele);
-                n2 = find(enrich_node(sctr==2));
-                n0 = find(enrich_node(sctr==0));
-                nR = union(n2,n0);
+                nR = find(enrich_node(sctr)==1);
                 elem_blend = 1;
                 Rpt = sum(N(nR));
-                dRdx = sum(dNdx(nR,1),1)
+                dRdx = sum(dNdx(nR,:),1);
             end
             % compute branch functions at Gauss point
             xCre  = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];
@@ -126,7 +124,7 @@ else
             [BrI] = branch_node(r,theta);
             
             % composants of Benr matrix
-            if elem_blend = 0 
+            if ~elem_blend 
               aa = dNdx(in,1)*(Br(1)-BrI(1)) + N(in)*dBdx(1) ;
               bb = dNdx(in,2)*(Br(1)-BrI(1)) + N(in)*dBdy(1) ;
               B1_enr = [aa 0 ; 0 bb ; bb aa];

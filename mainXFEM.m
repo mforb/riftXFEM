@@ -363,8 +363,7 @@ for ipas = 1:npas
         if rnr < tol1 | nr < tol2
            disp(['Converged at step : ',num2str(cont)])
            break
-        elseif cont > 200
-          keyboard
+        %elseif cont > 200
         elseif cont > 500
            warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
            break
@@ -385,17 +384,11 @@ for ipas = 1:npas
           f_plotCrack(crackLips,1,'r-','k-','m--')
           print(['crack_iter',num2str(cont)],'-dpng','-r300')
         end
-
-
       end
       fu = full(u);
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
       %elemForce = elemForce + elemForce_orig;
-      plot_wall = 1;
-    end
-
-    if plot_wall
       f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas)
     end
 %     

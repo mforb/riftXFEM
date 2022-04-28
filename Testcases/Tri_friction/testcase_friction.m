@@ -12,7 +12,7 @@ path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
-results_path = './Tri_pressure_flat';
+results_path = './Tri_stab_singular_Pen';
 mkdir(results_path);
 %copyfile('../Testcase.m',results_path);
 
@@ -64,7 +64,7 @@ else
 end
 
 %crack definition
-deltaInc = 0.05; numstep = 5;
+deltaInc = 0.05; numstep = 3;
 xCr(1).coor = [-.1 0;.1, 0] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
