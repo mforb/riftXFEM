@@ -263,9 +263,15 @@ for iel = 1 : size(JWdomain,2)
     sctr = element(e,:);
     nn   = length(sctr);
 
-    if ( ismember(e,split_elem) || ismember(e,tip_elem) )  && any(elem_force(e,:))
+    if ( ismember(e,vertex_elem) || ismember(e,split_elem) || ismember(e,tip_elem) )  && any(elem_force(1,e,:))
+      if ismember(e,vertex_elem)
+        n2 = 2;
+      else
+        n2 = 1;
+      end
+      for seg = 1:n2
       % The I integral needs to be adjusted to account for forces on the rift wall
-      [W,Q] = quadrature(2,'GAUSS',1) ;
+      [W,Q] = quadrature(3,'GAUSS',1) ;
       [N1,dNdx1]=lagrange_basis('L2',Q(1));
       [N2,dNdx2]=lagrange_basis('L2',Q(2));
       p = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,xyTip,crack_nodes); % elem_crk in natural coordinates
@@ -305,7 +311,7 @@ for iel = 1 : size(JWdomain,2)
         % ++++++++++++++++++
         % stress at crack lip 
         % ++++++++++++++++++
-        sig_elem = [elem_force(e,2*gq-1) elem_force(e,2*gq); elem_force(e,2*gq) 0];
+        sig_elem = [elem_force(seg,e,2*gq-1) elem_force(seg,e,2*gq); elem_force(seg,e,2*gq) 0];
         angl = atan2(nv(2),nv(1));
         rotQT = [ cos(angl), sin(angl); -sin(angl), cos(angl) ]; 
         sig_global = rotQT*sig_elem*rotQT';
@@ -457,6 +463,7 @@ for iel = 1 : size(JWdomain,2)
             I(mode,1) = I(mode,1) + I_wall2*det(JO)*wt;
         end   %loop on mode
       end       % of quadrature loop
+    end % 2 segments if vertex
     end % if split_node and there is a force on wall 
 end           % end of element loop
 

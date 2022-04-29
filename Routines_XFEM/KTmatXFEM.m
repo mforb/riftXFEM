@@ -149,119 +149,120 @@ for kk = 1:size(xCrk,2) %what's the crack?
     %end
 
     % need to find the normal
-    
+     
+    for seg = 1:length(p)-1
 
-    [W,Q] = quadrature(2,'GAUSS',1) ;
-    [N1,dNdx1]=lagrange_basis('L2',Q(1));
-    [N2,dNdx2]=lagrange_basis('L2',Q(2));
-    gpts = [N1'*p; N2'*p];
-    % find the distance between the two intersects (should be able to do this with det(J)
-    [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(elem_crk(iel,:));
-    JO = l/2;
+      [W,Q] = quadrature(3,'GAUSS',1) ;
+      % find the distance between the two intersects (should be able to do this with det(J)
+      [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(elem_crk(iel,:));
+      JO = l/2;
 
-    if contact 
-      for k_in = 1:2
-        gpt = gpts(k_in,:) ;
-        [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-        pint =  N' * node(sctr,:);
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true)
-        gn = nv*Nmat*2*u(A);
-        if gn < 0
-          elem_force(iel,2*k_in-1) = -1*E_pen*gn;
-          Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
-          Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
-          % stabalization term
-          %Kglobal(A,A) = Kglobal(A,A) - W(k_in)*((E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
-          %if any(enrich_node(sctr)==1)
-            %xp    = QT*(pint-Tip)';           % local coordinates
-            %r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
-            %theta = atan2(xp(2),xp(1));
-            
-            %if ( theta > pi | theta < -pi)
-                %disp (['something wrong with angle ',num2str(thet)]);
+      if contact 
+        for k_in = 1:length(Q)
+          [N1,dNdx1]=lagrange_basis('L2',Q(k_in));
+          gpt = N1'*p;
+      % find the distance between the two intersects (should be able to do this with det(J)
+          [N,dNdxi] = lagrange_basis(elemType,gpt) ;
+          pint =  N' * node(sctr,:);
+          Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true)
+          gn = nv*Nmat*2*u(A);
+          if gn < 0
+            elem_force(seg,iel,2*k_in-1) = -1*E_pen*gn;
+            Gint(A) = Gint(A) + E_pen*W(k_in)*det(JO)*gn*Nmat'*nv';
+            Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+            % stabalization term
+            %Kglobal(A,A) = Kglobal(A,A) - W(k_in)*((E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
+            %if any(enrich_node(sctr)==1)
+              %xp    = QT*(pint-Tip)';           % local coordinates
+              %r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
+              %theta = atan2(xp(2),xp(1));
+              
+              %if ( theta > pi | theta < -pi)
+                  %disp (['something wrong with angle ',num2str(thet)]);
+              %end
+              %if abs(abs(theta) - pi) < 0.001
+               %[Br_u,dBdx,dbdy] = branch_gp(r,pi,alpha);
+               %[Br_d,dBdx,dbdy] = branch_gp(r,-1*pi,alpha);
+              %else 
+               %[Br_u,dbdx,dbdy] = branch_gp(r,theta,alpha);
+               %Br_d = Br_u;
+              %end
             %end
-            %if abs(abs(theta) - pi) < 0.001
-             %[Br_u,dBdx,dbdy] = branch_gp(r,pi,alpha);
-             %[Br_d,dBdx,dbdy] = branch_gp(r,-1*pi,alpha);
-            %else 
-             %[Br_u,dbdx,dbdy] = branch_gp(r,theta,alpha);
-             %Br_d = Br_u;
-            %end
-          %end
-          %nA = [1,2];
-          %for ni = 1:nn
-            %if n1(ni)
-              %n_row = sum(n1(1:ni));
-              %for i = 1:4
-                %Kglobal(A(nA),A(nA)) = Kglobal(A(nA),A(nA)) + E_pen*W(k_in)*N(ni)*nnt*N(ni)*det(JO) ;
+            %nA = [1,2];
+            %for ni = 1:nn
+              %if n1(ni)
+                %n_row = sum(n1(1:ni));
+                %for i = 1:4
+                  %Kglobal(A(nA),A(nA)) = Kglobal(A(nA),A(nA)) + E_pen*W(k_in)*N(ni)*nnt*N(ni)*det(JO) ;
+                  %Gint(A(nA)) = Gint(A(nA)) + E_pen*W(k_in)*det(JO)*gn*N(ni)*nv';
+                  %nA = [nA(1)+2,nA(2)+2];
+                %end
+                %elem_force(iel,2*k_in-1) = E_pen*gn;
+              %else
+                %elem_force(iel,2*k_in-1) = E_pen*gn;
                 %Gint(A(nA)) = Gint(A(nA)) + E_pen*W(k_in)*det(JO)*gn*N(ni)*nv';
                 %nA = [nA(1)+2,nA(2)+2];
-              %end
-              %elem_force(iel,2*k_in-1) = E_pen*gn;
-            %else
-              %elem_force(iel,2*k_in-1) = E_pen*gn;
-              %Gint(A(nA)) = Gint(A(nA)) + E_pen*W(k_in)*det(JO)*gn*N(ni)*nv';
-              %nA = [nA(1)+2,nA(2)+2];
-            %end 
-          %end
+              %end 
+            %end
+          end
         end
       end
-        
+          
       if plothelp
         % this needs fixing
-        Ppoint =  N' * node(sctr,:);
-        Pvect = -1*det(JO)*nv;
-        Np = node(sctr,:);
-        Nvect = -1*det(JO)*N*nv;
-        figure(2)
-        %plotMesh(node,element(iel,:),'T3','r-','no')
-        %if ismember(iel,split_elem)   
+          Ppoint =  N' * node(sctr,:);
+          Pvect = -1*det(JO)*nv;
+          Np = node(sctr,:);
+          Nvect = -1*det(JO)*N*nv;
+          figure(2)
+          %plotMesh(node,element(iel,:),'T3','r-','no')
+          %if ismember(iel,split_elem)   
 
-          %ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
-          %%keyboard
-          %delete(ppl)
-        %end
-        plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
-        quiver(Ppoint(1),Ppoint(2),Pvect(1),Pvect(2),'r')
-        quiver(Np(:,1),Np(:,2),Nvect(:,1),Nvect(:,2),'g')
-        if frictionB
-          Fvect = -1*det(JO)*mu*mv;
-          NFvect = -1*det(JO)*N*mv;
-          quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
-          quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
+            %ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
+            %%keyboard
+            %delete(ppl)
+          %end
+          plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
+          quiver(Ppoint(1),Ppoint(2),Pvect(1),Pvect(2),'r')
+          quiver(Np(:,1),Np(:,2),Nvect(:,1),Nvect(:,2),'g')
+          if frictionB
+            Fvect = -1*det(JO)*mu*mv;
+            NFvect = -1*det(JO)*N*mv;
+            quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
+            quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
+          end
+      end
+
+      if melangeforce
+        if ismember(iel,mel_elems(:,1))
+          ind = find(mel_elems(:,1)==iel);
+          mT = mel_elems(ind,2);
+        else
+          continue
         end
+        keyboard
+        
+        for k_in = 1:2
+          gpt = gpts(k_in,:) ;
+          [N,dNdxi] = lagrange_basis(elemType,gpt) ;
+          Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
+          Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk)
+          gn = nv*Nmat*2*u(A);
+          gt = mv*Nmat*2*u(A);
+          fn = Cm1(1,1)*(gn/mT);
+          ft = Cm1(1,2)*(gt/mT);
+          elem_force(seg,iel,2*k_in-1) = Cm1(1,1)*gn;
+          elem_force(seg,iel,2*k_in) = Cm1(1,2)*gt;
+          Kglobal(A,A) = Kglobal(A,A) + Cm1(1,1)*W(k_in)*Nmat'*nnt*Nmat*det(JO)/mT ;
+          Kglobal(A,A) = Kglobal(A,A) + Cm1(1,2)*W(k_in)*Nmat'*mmt*Nmat*det(JO)/mT ;
+          Gint(A) = Gint(A) + W(k_in)*det(JO)*fn*Nmat'*nv';
+          Gint(A) = Gint(A) + W(k_in)*det(JO)*ft*Nmat'*mv';
+        end
+        disp(['iel is ',num2str(iel)]);
+        disp(['mT: ',num2str(mT)]);
+        disp(['gn: ',num2str(gn)]);
+        disp(['gt: ',num2str(gt)]);
       end
-    end
-
-    if melangeforce
-      if ismember(iel,mel_elems(:,1))
-        ind = find(mel_elems(:,1)==iel);
-        mT = mel_elems(ind,2);
-      else
-        continue
-      end
-      keyboard
-      
-      for k_in = 1:2
-        gpt = gpts(k_in,:) ;
-        [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-        Nmat = [N(1), 0, N(2), 0, N(3), 0 ; 0, N(1), 0 , N(2), 0, N(3)];
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk)
-        gn = nv*Nmat*2*u(A);
-        gt = mv*Nmat*2*u(A);
-        fn = Cm1(1,1)*(gn/mT);
-        ft = Cm1(1,2)*(gt/mT);
-        elem_force(iel,2*k_in-1) = Cm1(1,1)*gn;
-        elem_force(iel,2*k_in) = Cm1(1,2)*gt;
-        Kglobal(A,A) = Kglobal(A,A) + Cm1(1,1)*W(k_in)*Nmat'*nnt*Nmat*det(JO)/mT ;
-        Kglobal(A,A) = Kglobal(A,A) + Cm1(1,2)*W(k_in)*Nmat'*mmt*Nmat*det(JO)/mT ;
-        Gint(A) = Gint(A) + W(k_in)*det(JO)*fn*Nmat'*nv';
-        Gint(A) = Gint(A) + W(k_in)*det(JO)*ft*Nmat'*mv';
-      end
-      disp(['iel is ',num2str(iel)]);
-      disp(['mT: ',num2str(mT)]);
-      disp(['gn: ',num2str(gn)]);
-      disp(['gt: ',num2str(gt)]);
     end
   end
 end

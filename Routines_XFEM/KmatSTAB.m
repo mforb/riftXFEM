@@ -52,8 +52,8 @@ for kk = 1:size(xCrk,2) %what's the crack?
       pint =  N' * node(sctr,:);
       Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false)
       gn = nv*Nmat*2*u(A);
-      %if gn < 0
-      if 1 
+      if gn < 0
+      %if 1 
         % stabalization term
         Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(1*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
       end

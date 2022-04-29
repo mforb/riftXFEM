@@ -39,10 +39,11 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
     ke = 0 ;
     p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
+    for seg = 1:length(p)-2
     fh = f_getHeightF(iel);
-    elem_force(iel,[1,3]) = elem_force(iel,[1,3]) + fh;
+    elem_force(seg,iel,[1,3]) = elem_force(seg,iel,[1,3]) + fh;
 
-    [W,Q] = quadrature(2,'GAUSS',1) ;
+    [W,Q] = quadrature(3,'GAUSS',1) ;
     [N1,dNdx1]=lagrange_basis('L2',Q(1));
     [N2,dNdx2]=lagrange_basis('L2',Q(2));
     gpts = [N1'*p; N2'*p];
@@ -70,6 +71,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
       Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false);
       Fext(A) = Fext(A) + fh*W(k_in)*det(JO)*Nmat'*nv';
     end
+  end
   end
 end
 
