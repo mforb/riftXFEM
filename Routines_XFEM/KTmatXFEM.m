@@ -11,6 +11,7 @@ global plothelp
 global orig_nn
 global frictionB friction_mu
 global melangeforce contact Cm1
+global wall_int
 
 mu = friction_mu;
 
@@ -118,7 +119,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
 
     [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
-    p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
+    [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
     %vv = node(sctr,:);
     %[phi] = dista(iel,elem_crk) ;
     %if ismember(iel, tip_elem) % for now we wont deal with this element
@@ -150,11 +151,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
 
     % need to find the normal
      
-    for seg = 1:length(p)-1
-
-      [W,Q] = quadrature(3,'GAUSS',1) ;
+    for seg = 1:length(ap)-1
+      p = ap(seg:seg+1,:);
+      pg = [apg(seg,:),apg(seg+1,:)];
+      [W,Q] = quadrature(wall_int,'GAUSS',1) ;
       % find the distance between the two intersects (should be able to do this with det(J)
-      [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(elem_crk(iel,:));
+      [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
       JO = l/2;
 
       if contact 

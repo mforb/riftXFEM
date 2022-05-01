@@ -25,14 +25,14 @@ global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
 global plothelp
 global penalty fixedF contact Kpen stabilize
-global frictionB friction_mu epsilon FintH
+global frictionB friction_mu epsilon FintH wall_int
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global fmesh results_path same_coords
 epsilon = 1e-7
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 0
-Kpen = 1e11
+Kpen = 1e10
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
@@ -40,6 +40,7 @@ stressState = 'PlaneStrain' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
 contact = 1;
 stabilize = 1;
+wall_int = 4;
 
 
 

@@ -8,7 +8,7 @@ global node element numnode numelem elemType
 global plotmesh plotNode
 global gporder numtri
 global plothelp
-global rift_wall_pressure
+global rift_wall_pressure wall_int
 
 if strcmp(elemType,'Q4') 
   intType = 'GAUSS' ;
@@ -24,7 +24,7 @@ end
 dfn = size(W2,1)*2;
 
 if isempty(elem_force)
-  elem_force = zeros(size(element,1),4);
+  elem_force = zeros(2,size(element,1),wall_int*2);
 end
 
 
@@ -38,40 +38,33 @@ for kk = 1:size(xCrk,2) %what's the crack?
     sctr = element(iel,:) ;
     nn = length(sctr) ;
     ke = 0 ;
-    p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
-    for seg = 1:length(p)-2
-    fh = f_getHeightF(iel);
-    elem_force(seg,iel,[1,3]) = elem_force(seg,iel,[1,3]) + fh;
+    [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
+    for seg = 1:length(p)-1
+      p = ap(seg:seg+1,:);
+      pg = [apg(seg,:),apg(seg+1,:)];
+      fh = f_getHeightF(iel);
+      elem_force(seg,iel,1:2:wall_int*2) = elem_force(seg,iel,1:2:wall_int*2) + fh;
 
-    [W,Q] = quadrature(3,'GAUSS',1) ;
-    [N1,dNdx1]=lagrange_basis('L2',Q(1));
-    [N2,dNdx2]=lagrange_basis('L2',Q(2));
-    gpts = [N1'*p; N2'*p];
-    % find the distance between the two intersects (should be able to do this with det(J)
-    x0 = elem_crk(iel,1) ; y0 = elem_crk(iel,2) ;
-    x1 = elem_crk(iel,3) ; y1 = elem_crk(iel,4) ;
-    l = sqrt((x1-x0)*(x1-x0) + (y1-y0)*(y1-y0)) ;
-    nv = [(y0-y1),(x1-x0)]./l;
-    mv = [(x1-x0),(y1 - y0)]./l;
-    nnt = nv'*nv;
-    nmt = mv'*nv; 
+      [W,Q] = quadrature(wall_int,'GAUSS',1) ;
+      % find the distance between the two intersects (should be able to do this with det(J)
+      [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
+      JO = l/2;
 
-    JO = l/2;
-      
-    skip = 0;
-    nn = length(sctr) ;
-    n1 = zeros(1,nn);
+        
+      skip = 0;
+      nn = length(sctr) ;
+      n1 = zeros(1,nn);
 
-    [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
+      [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
 
-    for k_in = 1:2
-      gpt = gpts(k_in,:) ;
-      [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-      pint =  N' * node(sctr,:);
-      Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false);
-      Fext(A) = Fext(A) + fh*W(k_in)*det(JO)*Nmat'*nv';
+      for k_in = 1:length(Q)
+        [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
+        gpt = Np'*p;
+        [N,dNdxi] = lagrange_basis(elemType,gpt) ;
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false);
+        Fext(A) = Fext(A) + fh*W(k_in)*det(JO)*Nmat'*nv';
+      end
     end
-  end
   end
 end
 

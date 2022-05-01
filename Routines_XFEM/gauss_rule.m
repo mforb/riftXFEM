@@ -20,10 +20,14 @@ end
 [phi] = dista(e,elem_crk) ;
 
 %numerical integration order for numerical integration
-NormalOrder = 2 ;  %max = 8
-TipOrder = 6 ;     %max = 20
-SplitOrder = 3;
-VertexOrder = 3 ;
+%NormalOrder = 2 ;  %max = 8
+%TipOrder = 6 ;     %max = 20
+%SplitOrder = 3;
+%VertexOrder = 3 ;
+NormalOrder = 3 ;  %max = 8
+TipOrder = 8 ;     %max = 20
+SplitOrder = 4;
+VertexOrder = 4 ;
 
 [IntOrder]=getOrder(e,split_elem,tip_elem,vertex_elem,tip_enr,tipnodes,...
     TipOrder,SplitOrder,VertexOrder,NormalOrder) ;

@@ -10,6 +10,7 @@ global results_path
 global fmesh
 global output_file
 global Hidden zoom_dim
+global wall_int
 
 output_file = fopen([results_path,'/output.log'],'w')
 if ~isfield(xCr,'tip')
@@ -19,14 +20,17 @@ if ~isfield(xCr,'tip')
   fprintf(output_file,'No tip field for xCr defined, all tips have been activated\n')
   disp('No tip field for xCr defined, all tips have been activated') ;
 end
-if isempty('penalty')
+if isempty(penalty)
   penalty = 0 ;
 end
-if isempty('contact')
+if isempty(contact)
   contact = 0;
 end
-if isempty('melangeforce')
+if isempty(melangeforce)
   melangeforce = 0;
+end
+if isempty(wall_int)
+  wall_int = 2;
 end
 
 Knum = [ ] ; Theta = [ ] ;
@@ -136,7 +140,7 @@ for ipas = 1:npas
       [F,elemForce] = f_apply_ocean_pressure(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,[],pos,xCrk,F) ;
     else
-      elemForce = zeros(size(element,1),4);
+      elemForce = zeros(2,size(element,1),wall_int*2); % 2 potential segments, all elements, int points * 2 for normal and tangential
     end
 
     if exist('melange') & melange 
@@ -338,8 +342,8 @@ for ipas = 1:npas
     if penalty 
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
-      tol1 = 1e-22;
-      tol2 = 1e-14;
+      tol1 = 1e-15;
+      tol2 = 1e-13;
       cont = 1
       Du = zeros(size(u));
       Fext = F
@@ -364,7 +368,7 @@ for ipas = 1:npas
            disp(['Converged at step : ',num2str(cont)])
            break
         %elseif cont > 200
-        elseif cont > 500
+        elseif cont > 50
            warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
            break
         end

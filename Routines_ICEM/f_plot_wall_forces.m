@@ -8,6 +8,7 @@ global plotmesh plotNode
 global gporder numtri
 global plothelp Hidden results_path
 global rift_wall_pressure
+global wall_int
 
 
 
@@ -15,6 +16,7 @@ global rift_wall_pressure
 %elems = union(split_elem,vertex_elem);
 
 
+[W,Q] = quadrature(wall_int,'GAUSS',1) ;
 
 for kk = 1:size(xCrk,2) %what's the crack?
   if Hidden
@@ -47,67 +49,68 @@ for kk = 1:size(xCrk,2) %what's the crack?
       [flag1,flag2,~] = crack_interact_element(xseg,iel,[]);
       if flag1
         [l,~,~,~,~,~] = f_segment_dist(segment);
-        dw = l/(2*sqrt(3));
-        fp = elem_force(iel,[1,3]);
-        ft = elem_force(iel,[2,4]);
+        ccoord = ((l/2).*(Q+1))';
+        [ccoord,so] = sort(ccoord);
+        fp = elem_force(1,iel,1:2:wall_int*2); fp=fp(so); fp = reshape(fp,1,4);
+        ft = elem_force(1,iel,2:2:wall_int*2); ft = ft(so); ft = reshape(ft,1,4);
+        
         if ns == 2
-          if points_same_2d(segment(1:2),xseg(1:2))
-            ccoord = [dw l-dw]; 
-          else
-            ccoord = [lseg-(l-dw), lseg - dw];
+          if ~points_same_2d(segment(1:2),xseg(1:2))
+            ccoord = lseg-ccoord; 
           end
-          ind = find(crack_coord{1}>ccoord(1),1);
+          [ccoord,so] = sort(ccoord);
+          ind = find(crack_coord{1}>ccoord(end),1);
           crack_coord{1}= [crack_coord{1}(1:ind-1),ccoord,crack_coord{1}(ind:end)];
-          f_app{1} = [f_app{1}(1:ind-1),fp,f_app{1}(ind:end)];
-          f_tra{1} = [f_tra{1}(1:ind-1),ft,f_tra{1}(ind:end)];
+          f_app{1} = [f_app{1}(1:ind-1),fp(so),f_app{1}(ind:end)];
+          f_tra{1} = [f_tra{1}(1:ind-1),ft(so),f_tra{1}(ind:end)];
           break
         else
           if i == 1
-            ccoord = [ dw l-dw];
             crack_coord{i} = [crack_coord{i}, ccoord];
             f_app{i} = [ f_app{i}, fp ];
             f_tra{i} = [ f_tra{i}, ft ];
           else
-            ccoord = [lseg-(l-dw), lseg-dw];
+            ccoord = lseg-ccoord; 
+            [ccoord,so] = sort(ccoord);
             crack_coord{i} = [ccoord, crack_coord{i}];
-            f_app{i} = [  fp, f_app{i}];
-            f_tra{i} = [  ft, f_tra{i}];
+            f_app{i} = [  fp(so), f_app{i}];
+            f_tra{i} = [  ft(so), f_tra{i}];
           end
         end
       end
     end
   end
+  [~,so] = sort(Q);
   for ii=1:length(split_elem)
     iel = split_elem(ii);
     sctr = element(iel,:) ;
     segment = elem_crk(iel,:);
     [l,~,~,~,~,~] = f_segment_dist(segment);
-    dw = l/(2*sqrt(3));
     % if there is ocean force
-    fp = elem_force(iel,1:2) ;
     for i=1:ns-1
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
       [flag1,flag2,~] = crack_interact_element(xseg,iel,[]);
       if flag1
         nseg = [xseg(1:2),segment(1:2)];
         [nl,~,~,~,~,~] = f_segment_dist(nseg);
-        ccoords = [ nl + dw, nl + l - dw] ;
-        fp = elem_force(iel,[1,3]);
-        ft = elem_force(iel,[2,4]);
+        ccoord = (l/2).*(Q+1)'+nl;
+        ccoord = ccoord(so);
+        fp = elem_force(1,iel,1:2:wall_int*2); fp = fp(so); fp = reshape(fp,1,4);
+        ft = elem_force(1,iel,2:2:wall_int*2); ft = ft(so); ft = reshape(ft,1,4);
         seg_coord = crack_coord{i};
         seg_f = f_app{i};
         seg_t = f_tra{i};
-        ind = find(seg_coord>ccoords(1),1);
+        ind = find(seg_coord>ccoord(end),1);
         if isempty(ind)
-          seg_coord = [seg_coord, ccoords];
+          seg_coord = [seg_coord, ccoord];
           seg_f = [seg_f,fp];
           seg_t = [seg_t,ft];
         elseif ind == 1
-          seg_coord = [ccoords, seg_coord];
+          seg_coord = [ccoord, seg_coord];
           seg_f = [fp, seg_f];
           seg_t = [ft, seg_t];
         else
-          seg_coord = [seg_coord(1:ind-1),ccoords,seg_coord(ind:end)];
+          seg_coord = [seg_coord(1:ind-1),ccoord,seg_coord(ind:end)];
           seg_f = [seg_f(1:ind-1),fp,seg_f(ind:end)];
           seg_t = [seg_t(1:ind-1),ft,seg_t(ind:end)];
         end
@@ -126,32 +129,26 @@ for kk = 1:size(xCrk,2) %what's the crack?
       [lseg,~,~,~,~,~] = f_segment_dist(xseg);
       [flag1,flag2,~] = crack_interact_element(xseg,iel,[]);
       if flag1
+        nseg = [xseg(1:2),segment(1:2)];
+        [nl,~,~,~,~,~] = f_segment_dist(nseg);
         l1 = [segment(1:2),xseg(3:4)];
         d1 = f_segment_dist(l1);
         l2 = [xseg(3:4),segment(3:4)];
         d2 = f_segment_dist(l2);
-        dt = d1 + d2 ; %this is just for plotting purposes, in reality the segment between intercepts is used
-        dw = dt/(2*sqrt(3));
-        fp = elem_force(iel,[1,3]);
-        ft = elem_force(iel,[2,4]);
-        if d1 > dw 
-          crack_coord{i} = [ crack_coord{i}, lseg - (d1 - dw) ]
-          f_app{i} = [ f_app{i}, fp(1) ];
-          f_tra{i} = [ f_tra{i}, ft(1) ];
-          if d2 < dw
-            crack_coord{i} = [ crack_coord{i}, lseg - ( dw - d2 ) ]
-            f_app{i} = [ f_app{i}, fp(2) ];
-            f_tra{i} = [ f_tra{i}, ft(2) ];
-          else
-            crack_coord{i+1} = [ d2 - dw, crack_coord{i+1} ]
-            f_app{i+1} = [ fp(2), f_app{i+1}];
-            f_tra{i+1} = [ ft(2), f_tra{i+1}];
-          end
-        else 
-          crack_coord{i+1} = [ dw-d1, dt-dw-d1 , crack_coord{i+1} ] 
-          f_app{i+1} = [ fp, f_app{i+1} ];
-          f_tra{i+1} = [ ft, f_tra{i+1} ]; 
-        end
+        ccoord1 = (d1/2).*(Q+1)'+nl;
+        ccoord1 =ccoord1(so)
+        ccoord2 = (d2/2).*(Q+1)';
+        ccoord2 =ccoord2(so)
+        fp1 = elem_force(1,iel,1:2:wall_int*2); fp1 = fp1(so); fp1 = reshape(fp1,1,4);
+        ft1 = elem_force(1,iel,2:2:wall_int*2); ft1 = ft1(so); ft1 = reshape(ft1,1,4);
+        fp2 = elem_force(2,iel,1:2:wall_int*2); fp2 = fp2(so); fp2 = reshape(fp2,1,4);
+        ft2 = elem_force(2,iel,2:2:wall_int*2); ft2 = ft2(so); ft2 = reshape(ft2,1,4);
+        crack_coord{i} = [ crack_coord{i}, ccoord1 ];
+        f_app{i} = [ f_app{i}, fp1 ];
+        f_tra{i} = [ f_tra{i}, ft1 ];
+        crack_coord{i+1} = [ ccoord2, crack_coord{i+1} ]
+        f_app{i+1} = [ fp, f_app{i+1}];
+        f_tra{i+1} = [ ft, f_tra{i+1}];
         break
       end
     end

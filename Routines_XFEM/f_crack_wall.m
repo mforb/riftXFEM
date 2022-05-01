@@ -1,4 +1,4 @@
-function [p] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node)
+function [p,pg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node)
 global node element epsilon
 
 sctr = element(iel,:) ;
@@ -14,6 +14,7 @@ if ismember(iel, tip_elem)
   psi = f_dista2(iel,elem_crk,tip);
   [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
   p = [nnodes(end,:); ntip ];
+  pg = [elem_crk(iel,1:2);tip];
 else 
   [cutEdge, nnodes] = f_edgedetect(nnode, corner,  phi) ;
   nEdge = length(cutEdge);
@@ -28,5 +29,12 @@ else
   end
 
   p = [nnodes(end-1,:);nnodes(end,:)];
+  pg = [elem_crk(iel,1:2);elem_crk(iel,3:4)];
 
+  if ismember(iel,vertex_elem)
+    tip = xVertex(iel,:);
+    ntip = f_naturalpoint(tip,vv,20,1e-6);
+    p = [p(1,:) ; ntip ; p(2,:) ];
+    pg = [pg(1,:);tip;pg(3,:) ];
+  end
 end

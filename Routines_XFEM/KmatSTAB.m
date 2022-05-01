@@ -10,7 +10,7 @@ global gporder numtri
 global plothelp
 global orig_nn
 global frictionB friction_mu
-global melangeforce contact Cm1
+global melangeforce contact Cm1 wall_int
 
 mu = friction_mu;
 
@@ -35,27 +35,30 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
 
     [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
-    p = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
+    [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
+    wall_int
+    [W,Q] = quadrature(wall_int,'GAUSS',1) ;
     
 
-    [W,Q] = quadrature(2,'GAUSS',1) ;
-    [N1,dNdx1]=lagrange_basis('L2',Q(1));
-    [N2,dNdx2]=lagrange_basis('L2',Q(2));
-    gpts = [N1'*p; N2'*p];
-    % find the distance between the two intersects (should be able to do this with det(J)
-    [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(elem_crk(iel,:));
-    JO = l/2;
+    for seg = 1:length(ap)-1
+      p = ap(seg:seg+1,:);
+      pg = [apg(seg,:),apg(seg+1,:)];
+      % find the distance between the two intersects (should be able to do this with det(J)
+      [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
+      JO = l/2;
 
-    for k_in = 1:2
-      gpt = gpts(k_in,:) ;
-      [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-      pint =  N' * node(sctr,:);
-      Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false)
-      gn = nv*Nmat*2*u(A);
-      if gn < 0
-      %if 1 
-        % stabalization term
-        Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(1*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
+      for k_in = 1:2
+        [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
+        gpt = Np'*p ;
+        [N,dNdxi] = lagrange_basis(elemType,gpt) ;
+        pint =  N' * node(sctr,:);
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false)
+        gn = nv*Nmat*2*u(A);
+        if gn < 0
+        %if 1 
+          % stabalization term
+          Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(1*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
+        end
       end
     end
   end
