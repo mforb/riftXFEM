@@ -1,4 +1,4 @@
-function [p,pg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node)
+function [p,pg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node)
 global node element epsilon
 
 sctr = element(iel,:) ;
@@ -35,6 +35,6 @@ else
     tip = xVertex(iel,:);
     ntip = f_naturalpoint(tip,vv,20,1e-6);
     p = [p(1,:) ; ntip ; p(2,:) ];
-    pg = [pg(1,:);tip;pg(3,:) ];
+    pg = [pg(1,:);tip;pg(2,:) ];
   end
 end

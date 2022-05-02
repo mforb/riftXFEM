@@ -51,7 +51,7 @@ for in = 1:nn
         % compute branch functions at node "in"
         if pen 
           aa = Rpt*N(in)*(Br(1))/sqrt(r);
-          %aa = Rpt*N(in)*(Br(1));
+          %aa = Rpt*N(in)*(Br(1))/r;
         else
           aa = Rpt*N(in)*(Br(1));
         end

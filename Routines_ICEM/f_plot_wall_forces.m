@@ -51,9 +51,10 @@ for kk = 1:size(xCrk,2) %what's the crack?
         [l,~,~,~,~,~] = f_segment_dist(segment);
         ccoord = ((l/2).*(Q+1))';
         [ccoord,so] = sort(ccoord);
-        fp = elem_force(1,iel,1:2:wall_int*2); fp=fp(so); fp = reshape(fp,1,4);
-        ft = elem_force(1,iel,2:2:wall_int*2); ft = ft(so); ft = reshape(ft,1,4);
-        
+        fp = elem_force(1,iel,1:2:wall_int*2); fp=fp(so); fp = reshape(fp,1,wall_int);
+        ft = elem_force(1,iel,2:2:wall_int*2); ft = ft(so); ft = reshape(ft,1,wall_int);
+        %fp = (fp)/l;
+        %ft = (ft)/l;
         if ns == 2
           if ~points_same_2d(segment(1:2),xseg(1:2))
             ccoord = lseg-ccoord; 
@@ -90,13 +91,16 @@ for kk = 1:size(xCrk,2) %what's the crack?
     for i=1:ns-1
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
       [flag1,flag2,~] = crack_interact_element(xseg,iel,[]);
-      if flag1
+      [~,flag_int] = f_edge_int_points(iel,xseg);
+      if flag1 & flag_int
         nseg = [xseg(1:2),segment(1:2)];
         [nl,~,~,~,~,~] = f_segment_dist(nseg);
         ccoord = (l/2).*(Q+1)'+nl;
         ccoord = ccoord(so);
-        fp = elem_force(1,iel,1:2:wall_int*2); fp = fp(so); fp = reshape(fp,1,4);
-        ft = elem_force(1,iel,2:2:wall_int*2); ft = ft(so); ft = reshape(ft,1,4);
+        fp = elem_force(1,iel,1:2:wall_int*2); fp = fp(so); fp = reshape(fp,1,wall_int);
+        ft = elem_force(1,iel,2:2:wall_int*2); ft = ft(so); ft = reshape(ft,1,wall_int);
+        %fp = (fp)/l;
+        %ft = (ft)/l;
         seg_coord = crack_coord{i};
         seg_f = f_app{i};
         seg_t = f_tra{i};
@@ -128,7 +132,8 @@ for kk = 1:size(xCrk,2) %what's the crack?
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
       [lseg,~,~,~,~,~] = f_segment_dist(xseg);
       [flag1,flag2,~] = crack_interact_element(xseg,iel,[]);
-      if flag1
+      [~,flag_int] = f_edge_int_points(iel,xseg);
+      if flag1 & flag_int
         nseg = [xseg(1:2),segment(1:2)];
         [nl,~,~,~,~,~] = f_segment_dist(nseg);
         l1 = [segment(1:2),xseg(3:4)];
@@ -136,17 +141,21 @@ for kk = 1:size(xCrk,2) %what's the crack?
         l2 = [xseg(3:4),segment(3:4)];
         d2 = f_segment_dist(l2);
         ccoord1 = (d1/2).*(Q+1)'+nl;
-        ccoord1 =ccoord1(so)
+        ccoord1 =ccoord1(so);
         ccoord2 = (d2/2).*(Q+1)';
-        ccoord2 =ccoord2(so)
-        fp1 = elem_force(1,iel,1:2:wall_int*2); fp1 = fp1(so); fp1 = reshape(fp1,1,4);
-        ft1 = elem_force(1,iel,2:2:wall_int*2); ft1 = ft1(so); ft1 = reshape(ft1,1,4);
-        fp2 = elem_force(2,iel,1:2:wall_int*2); fp2 = fp2(so); fp2 = reshape(fp2,1,4);
-        ft2 = elem_force(2,iel,2:2:wall_int*2); ft2 = ft2(so); ft2 = reshape(ft2,1,4);
+        ccoord2 =ccoord2(so);
+        fp1 = elem_force(1,iel,1:2:wall_int*2); fp1 = fp1(so); fp1 = reshape(fp1,1,wall_int);
+        ft1 = elem_force(1,iel,2:2:wall_int*2); ft1 = ft1(so); ft1 = reshape(ft1,1,wall_int);
+        %fp1 = (fp1)/d1;
+        %ft1 = (ft1)/d1;
+        fp2 = elem_force(2,iel,1:2:wall_int*2); fp2 = fp2(so); fp2 = reshape(fp2,1,wall_int);
+        ft2 = elem_force(2,iel,2:2:wall_int*2); ft2 = ft2(so); ft2 = reshape(ft2,1,wall_int);
+        %fp2 = (fp2)/d1;
+        %ft2 = (ft2)/d2;
         crack_coord{i} = [ crack_coord{i}, ccoord1 ];
         f_app{i} = [ f_app{i}, fp1 ];
         f_tra{i} = [ f_tra{i}, ft1 ];
-        crack_coord{i+1} = [ ccoord2, crack_coord{i+1} ]
+        crack_coord{i+1} = [ ccoord2, crack_coord{i+1} ];
         f_app{i+1} = [ fp, f_app{i+1}];
         f_tra{i+1} = [ ft, f_tra{i+1}];
         break
@@ -183,7 +192,6 @@ for kk = 1:size(xCrk,2) %what's the crack?
   title(tstr);
   nstr = ['rift',num2str(kk),'forces_step',num2str(stepnum)];
   print([results_path,'/',nstr],'-dpng','-r300')
-  keyboard
   clf
 end
 

@@ -29,6 +29,7 @@ global loadstress FintX FintY FintXY FintH
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure contact Kpen stabilize
+global wall_int stabilize
 epsilon = 5 
 
 OPT = 2; Hidden = true;
@@ -39,6 +40,8 @@ rift_wall_pressure = 1
 melange = 0 
 melangeforce = 0
 contact = 1
+stabilize = 1
+wall_int = 1
 
 xTip= [0,0];
 Rtip = xTip;

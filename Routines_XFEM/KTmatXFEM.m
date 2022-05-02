@@ -119,7 +119,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
 
     [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
-    [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
+    [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
     %vv = node(sctr,:);
     %[phi] = dista(iel,elem_crk) ;
     %if ismember(iel, tip_elem) % for now we wont deal with this element

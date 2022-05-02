@@ -33,6 +33,7 @@ same_coords = 1
 plothelp = 0
 rift_wall_pressure = 0
 Kpen = 1e10
+
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
@@ -40,7 +41,7 @@ stressState = 'PlaneStrain' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
 contact = 1;
 stabilize = 1;
-wall_int = 4;
+wall_int = 1;
 
 
 

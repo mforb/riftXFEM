@@ -11,6 +11,7 @@ global plothelp
 global orig_nn
 global frictionB friction_mu
 global melangeforce contact Cm1 wall_int
+global skip_branch
 
 mu = friction_mu;
 
@@ -35,7 +36,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
 
     [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
-    [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,crack_node); % elem_crk in natural coordinates
+    [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
+    if skip_branch
+      if ~isempty(BrI)
+        continue
+      end
+    end
     wall_int
     [W,Q] = quadrature(wall_int,'GAUSS',1) ;
     
@@ -47,7 +53,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
       [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
       JO = l/2;
 
-      for k_in = 1:2
+      for k_in = 1:length(Q) 
         [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
         gpt = Np'*p ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;

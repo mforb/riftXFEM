@@ -10,7 +10,7 @@ global results_path
 global fmesh
 global output_file
 global Hidden zoom_dim
-global wall_int
+global wall_int skip_branch
 
 output_file = fopen([results_path,'/output.log'],'w')
 if ~isfield(xCr,'tip')
@@ -31,6 +31,9 @@ if isempty(melangeforce)
 end
 if isempty(wall_int)
   wall_int = 2;
+end
+if isempty(skip_branch)
+  skip_branch = 0;
 end
 
 Knum = [ ] ; Theta = [ ] ;
@@ -142,6 +145,7 @@ for ipas = 1:npas
     else
       elemForce = zeros(2,size(element,1),wall_int*2); % 2 potential segments, all elements, int points * 2 for normal and tangential
     end
+    keyboard
 
     if exist('melange') & melange 
       if ~exist('xM') 
@@ -283,11 +287,12 @@ for ipas = 1:npas
     title('Y displacement before Newton solver')
     print([results_path,'/original_ydisp',num2str(ipas)],'-dpng')
     clf(f)
+    keyboard
 
 
     if contact & ~flagP
       % first we need to find out if there is any interpenetration
-      contact = 0
+      penalty = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
     elseif contact & flagP
       if ~isempty(stabilize) & stabilize
@@ -342,8 +347,8 @@ for ipas = 1:npas
     if penalty 
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
-      tol1 = 1e-15;
-      tol2 = 1e-13;
+      tol1 = 1e-20;
+      tol2 = 1e-15;
       cont = 1
       Du = zeros(size(u));
       Fext = F

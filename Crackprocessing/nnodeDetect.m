@@ -118,11 +118,7 @@ for kk = 1:size(xCr,2)
       end
               
       if ~isempty(int_points)
-        try
-          [crk_int] = f_up_crk_int(crk_int,int_points,flag1,flag2,q1,q2,e);
-        catch
-          keyboard
-        end
+        [crk_int] = f_up_crk_int(crk_int,int_points,flag1,flag2,q1,q2,e);
       end
     end % crack segment
     if flag5 & isempty(crk_int)
