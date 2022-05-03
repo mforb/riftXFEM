@@ -145,7 +145,7 @@ for ipas = 1:npas
     else
       elemForce = zeros(2,size(element,1),wall_int*2); % 2 potential segments, all elements, int points * 2 for normal and tangential
     end
-    keyboard
+    %keyboard
 
     if exist('melange') & melange 
       if ~exist('xM') 
@@ -287,7 +287,7 @@ for ipas = 1:npas
     title('Y displacement before Newton solver')
     print([results_path,'/original_ydisp',num2str(ipas)],'-dpng')
     clf(f)
-    keyboard
+    %keyboard
 
 
     if contact & ~flagP

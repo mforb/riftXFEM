@@ -11,7 +11,11 @@ else
   nodes = element(iel,:);
   xc    = mean(node(nodes,:),1);
   %extract height 
-  H = f_extractHeight(xc)';
+  try
+    H = f_extractHeight(xc)';
+  catch
+    keyboard
+  end
 end
 
 if isempty(rhow) | isempty(rhoi)

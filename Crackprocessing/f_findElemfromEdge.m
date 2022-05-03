@@ -4,7 +4,7 @@ function [ elem ] = f_findElemfromEdge( edge )
 global node element
 
 % the edge is composed of two nodes, there is only one element that will contain both those nodes
-e1,r = find(element == edge(1));
-e2,r = find(element == edge(1));
+[e1,r] = find(element == edge(1));
+[e2,r] = find(element == edge(2));
 elem = intersect(e1,e2);
 end

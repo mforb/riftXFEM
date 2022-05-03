@@ -24,10 +24,10 @@ global plotmesh plotNode
 global node element numnode numelem bcNodes edgNodes
 global results_path fmesh
 % global variables for stress
-global loadstress FintX FintY FintXY
+global loadstress FintX FintY FintXY FintH
 % global variables for conversion between two coordinate systems
 global Rtip QT xTip Tfact
-global ISSM_xx ISSM_yy ISSM_xy
+global ISSM_xx ISSM_yy ISSM_xy 
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 epsilon = 5 
 
@@ -93,7 +93,7 @@ FintY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_yy);
 FintXY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_xy);
 FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_H');
 
-clear global ISSM_xx ISSM_yy ISSM_xy % without the global these only clear in this workspace!!
+clear global ISSM_xx ISSM_yy ISSM_xy ISSM_H % without the global these only clear in this workspace!!
 %figure(1)
 %triplot(TR);
 
@@ -276,7 +276,7 @@ x = [ -2,-0.3];
 y = [-400000,-400000];
 
 %%crack definition
-deltaInc = 2000; numstep = 8;
+deltaInc = 2000; numstep = 3;
 %xCr(2).coor = [xs2',ys2'] 
 xCr_orig = xCr;
 typeProblem
