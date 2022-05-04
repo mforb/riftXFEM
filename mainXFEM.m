@@ -133,9 +133,7 @@ for ipas = 1:npas
       [K,F] = KmatXFEM3(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,pos,xCrk,K,F) ;
     end
-    keyboard
     [F] = ForceVector(F) ;
-    keyboard
 
     
     if exist('rift_wall_pressure') & rift_wall_pressure
@@ -143,7 +141,6 @@ for ipas = 1:npas
       Ft = F;
       [F,elemForce] = f_apply_ocean_pressure(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,[],pos,xCrk,F) ;
-      keyboard
     else
       elemForce = zeros(2,size(element,1),wall_int*2); % 2 potential segments, all elements, int points * 2 for normal and tangential
     end
@@ -283,14 +280,12 @@ for ipas = 1:npas
     hold on
     f_plotCrack2(crackLips,20,'r-','k-','c--')
     print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r300')
-    keyboard
     clf(f)
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
     title('Y displacement before Newton solver')
     print([results_path,'/original_ydisp',num2str(ipas)],'-dpng')
     clf(f)
-    keyboard
 
 
     if contact & ~flagP

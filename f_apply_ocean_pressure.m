@@ -64,9 +64,6 @@ for kk = 1:size(xCrk,2) %what's the crack?
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false);
         Fext(A) = Fext(A) + fh*W(k_in)*det(JO)*Nmat'*nv';
-        if (iel==11751) | (iel==11749)
-          keyboard
-        end
       end
     end
   end
