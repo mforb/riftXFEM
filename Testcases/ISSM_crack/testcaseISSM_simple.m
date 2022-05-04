@@ -29,6 +29,7 @@ global loadstress FintX FintY FintXY FintH
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy 
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
+global same_coords
 epsilon = 5 
 
 OPT = 2; Hidden = true;

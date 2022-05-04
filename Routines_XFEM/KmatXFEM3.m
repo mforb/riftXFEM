@@ -9,7 +9,7 @@ global plotmesh plotNode
 global gporder numtri
 global plothelp
 global orig_nn
-global OPT rift_wall_pressure
+global OPT rift_wall_pressure ISSM_xx
 
 if plothelp
   figure(2)
@@ -78,14 +78,18 @@ for iel = 1:numelem
 
         switch OPT
         case 1
-          if ~exist('ISSM_xx')
-          sigma = f_extractStress(Ppoint)';
+          if ~isempty('ISSM_xx')
+            sigma = f_getstress(iel);
+          else
+            sigma = f_extractStress(Ppoint)';
           end
           %keyboard
           Fext(sctrB) = Fext(sctrB) + B'*sigma*W(kk)*det(JO);
         case 2
-          if ~exist('ISSM_xx')
-          sigma = f_extractStress(Ppoint)';
+          if ~isempty('ISSM_xx')
+            sigma = f_getstress(iel);
+          else
+            sigma = f_extractStress(Ppoint)';
           end
           if ismember(iel,enr_domain)  % over kill, maybe should check if any nodes are enriched
             % pretend the enrdomain is not enriched

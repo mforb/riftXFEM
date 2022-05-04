@@ -14,7 +14,7 @@ if ismember(iel, tip_elem)
   psi = f_dista2(iel,elem_crk,tip);
   [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
   p = [nnodes(end,:); ntip ];
-  pg = [elem_crk(iel,1:2);tip];
+  pg = elem_crk(iel,:);
 else 
   [cutEdge, nnodes] = f_edgedetect(nnode, corner,  phi) ;
   nEdge = length(cutEdge);

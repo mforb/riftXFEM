@@ -30,7 +30,7 @@ for in = 1:nn
             [sctrn,xx] = find(element == sctr(in));
             [ele,xx] = find(type_elem(sctrn,:)==1);
             ref_elem = sctrn(ele);
-            nR = find(enrich_node(sctr==1));
+            nR = find(enrich_node(sctr)==1);
             elem_blend = 1;
             Rpt = sum(N(nR));
         end
