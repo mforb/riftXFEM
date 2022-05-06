@@ -11,7 +11,8 @@ global plothelp
 global orig_nn
 global frictionB friction_mu
 global melangeforce contact Cm1 wall_int
-global skip_branch
+global skip_branch skip_vertex
+global output_file
 
 mu = friction_mu;
 
@@ -24,13 +25,23 @@ elseif strcmp(elemType, 'T3')
   nnode = [0 0;1 0;0 1] ;
 end
 
-elems = union(split_elem,vertex_elem);
-elems = union(elems,tip_elem);
+if skip_vertex
+  elems = union(split_elem,vertex_elem);
+else
+  elems = split_elem
+end
+if ~skip_branch
+  elems = union(elems,tip_elem);
+end
 
+
+cc = 0;
+cct = 0;
 
 for kk = 1:size(xCrk,2) %what's the crack?
   for ii=1:size(elems,1)
     iel = elems(ii) ;
+    cc = cc + 1;
     sctr = element(iel,:) ;
     skip = 0;
     nn = length(sctr) ;
@@ -42,7 +53,6 @@ for kk = 1:size(xCrk,2) %what's the crack?
         continue
       end
     end
-    wall_int
     [W,Q] = quadrature(wall_int,'GAUSS',1) ;
     
 
@@ -58,10 +68,14 @@ for kk = 1:size(xCrk,2) %what's the crack?
         gpt = Np'*p ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         pint =  N' * node(sctr,:);
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false)
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true);
         gn = nv*Nmat*2*u(A);
         if gn < 0
-        %if 1 
+          if k_in == 1
+            if seg == 1
+              cct = cct + 1;
+            end
+          end
           % stabalization term
           Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(1*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
         end
@@ -69,3 +83,6 @@ for kk = 1:size(xCrk,2) %what's the crack?
     end
   end
 end
+out_str = ['The ratio of elements stabilized: ',num2str(cct/cc)];
+disp(out_str);
+fprintf(output_file,[out_str,'\n'])

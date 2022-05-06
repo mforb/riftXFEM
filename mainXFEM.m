@@ -10,7 +10,7 @@ global results_path
 global fmesh
 global output_file
 global Hidden zoom_dim
-global wall_int skip_branch
+global wall_int skip_branch skip_vertex
 
 output_file = fopen([results_path,'/output.log'],'w')
 if ~isfield(xCr,'tip')
@@ -34,6 +34,9 @@ if isempty(wall_int)
 end
 if isempty(skip_branch)
   skip_branch = 0;
+end
+if isempty(skip_vertex)
+  skip_vertex = 0;
 end
 
 Knum = [ ] ; Theta = [ ] ;
@@ -294,8 +297,9 @@ for ipas = 1:npas
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
     elseif contact & flagP
       if ~isempty(stabilize) & stabilize
+        K_orig = K;
         [K] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,K,u);
-        disp([num2str(toc),'    Recalculating u with stabalized K'])
+        disp([num2str(toc),'    Recalculating u with stabilized K'])
         u = K\F;
         fu2 = full(u);
         Stdux2 = fu2(1:2:2*numnode) ;
@@ -334,11 +338,11 @@ for ipas = 1:npas
         end
         clf(f)
       end
-      penalty = 1
+      penalty = 1;
     end
 
     if melangeforce
-      penalty = 1
+      penalty = 1;
     end
 
 
@@ -359,6 +363,7 @@ for ipas = 1:npas
         disp(['---------------------------------------------'])
         Fint = K*u;
         [KT,Gint,elemForce] = KTmatXFEM(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
+        %[KT] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,KT,u);
         Res  = Fext - Fint - Gint ;
         nr = norm(Res,2);
         if cont == 1
@@ -371,7 +376,7 @@ for ipas = 1:npas
            disp(['Converged at step : ',num2str(cont)])
            break
         %elseif cont > 200
-        elseif cont > 50
+        elseif cont > 200 
            warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
            break
         end

@@ -12,7 +12,7 @@ path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
-results_path = './ISSM_xmas_oceanP_contact';
+results_path = './ISSM_xmas_soft_stab_nov_superref';
 mkdir(results_path);
 %copyfile('../Testcase.m',results_path);
 
@@ -29,7 +29,7 @@ global loadstress FintX FintY FintXY FintH
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure contact Kpen stabilize
-global wall_int stabilize
+global wall_int stabilize skip_vertex
 epsilon = 5 
 
 OPT = 2; Hidden = true;
@@ -42,6 +42,7 @@ melangeforce = 0
 contact = 1
 stabilize = 1
 wall_int = 1
+skip_vertex = 1
 
 xTip= [0,0];
 Rtip = xTip;
@@ -55,8 +56,7 @@ stressState = 'PlaneStrain' ;
 %typeProblem = 'eCrkTen' ; %choose type of problem
 typeProblem = 'ISSM' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
-Kpen = 1e14;
-stabilize = 1
+Kpen = 1e11;
 
 % import rifts
 % srift1 = shaperead('../../Data/2013_14_cracka_open.shp');
@@ -152,7 +152,7 @@ bc_fix = bc_fix2;
 
 % refinement using ameshref
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
-in = f_find_points_xCr(cpos,xCr,100000)
+in = f_find_points_xCr(cpos,xCr,35000)
 %indx = find(cpos(:,1)>-20e3 & cpos(:,1)<110e3 );
 %indy = find(cpos(:,2)>-1180e3 & cpos(:,2)<-1080e3 );
 
@@ -165,7 +165,7 @@ print([results_path,'/mesh_refinement1'],'-dpng','-r200')
 clf(f)
 
 cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,40000)
+in = f_find_points_xCr(cpos,xCr,25000)
 
 
 %indx = find(cpos(:,1)>0e3 & cpos(:,1)<90e3 );
@@ -181,7 +181,7 @@ print([results_path,'/mesh_refinement2'],'-dpng','-r200')
 clf(f)
 
 cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,10000,30000)
+in = f_find_points_xCr(cpos,xCr,10000,20000)
 
 
 %indx = find(cpos(:,1)>10e3 & cpos(:,1)<80e3 );
@@ -204,13 +204,17 @@ print([results_path,'/mesh_refinement2_with_bc'],'-dpng','-r200')
 clf(f);
 
 cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,8000,25000)
+in = f_find_points_xCr(cpos,xCr,5000,10000)
+[node,element] = TrefineRG(node,element,in);
 
+TR = triangulation(element,node);
+cpos = TR.incenter;
+in = f_find_points_xCr(cpos,xCr,3000,8000)
+[node,element] = TrefineRG(node,element,in);
 
-%indx = find(cpos(:,1)>10e3 & cpos(:,1)<80e3 );
-%indy = find(cpos(:,2)>-1150e3 & cpos(:,2)<-1110e3 );
-
-%in = intersect(indx,indy);
+TR = triangulation(element,node);
+cpos = TR.incenter;
+in = f_find_points_xCr(cpos,xCr,1000,4500)
 [node,element] = TrefineRG(node,element,in);
 
 xlim([min(xs)-30000,max(xs)+30000])
@@ -282,7 +286,7 @@ x = [ -2,-0.3];
 y = [-400000,-400000];
 
 %%crack definition
-deltaInc = 1000; numstep = 10;
+deltaInc = 1000; numstep = 2;
 %xCr(2).coor = [xs2',ys2'] 
 xCr_orig = xCr;
 typeProblem

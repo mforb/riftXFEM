@@ -12,7 +12,7 @@ path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
-results_path = './Tri_stab_singular_Pen';
+results_path = './Tri_stab';
 mkdir(results_path);
 %copyfile('../Testcase.m',results_path);
 
@@ -27,12 +27,12 @@ global plothelp
 global penalty fixedF contact Kpen stabilize
 global frictionB friction_mu epsilon FintH wall_int
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
-global fmesh results_path same_coords
+global fmesh results_path same_coords skip_branch skip_vertex
 epsilon = 1e-7
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 0
-Kpen = 1e10
+Kpen = 1e9
 
 %problem flags
 elemType = 'T3' ;
@@ -42,6 +42,8 @@ typeProblem = 'eCrkTen' ; %choose type of problem
 contact = 1;
 stabilize = 1;
 wall_int = 1;
+skip_branch = 1;
+skip_vertex = 1;
 
 
 

@@ -166,6 +166,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   cc = []; 
   ff = [];
   tt = [];
+  inters = [];
   for i = 1:ns-1
     xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
     [lseg,~,~,~,~,~] = f_segment_dist(xseg);
@@ -173,12 +174,20 @@ for kk = 1:size(xCrk,2) %what's the crack?
     ff = [ff, f_app{i}]; 
     tt = [tt, f_tra{i}]; 
     pl = pl + lseg;
+    inters = [inters, pl];
   end
+  inters(end) = [];
 
   t = tiledlayout(2,1,'TileSpacing','Compact');
   nexttile
 
   plot(cc,ff,'linewidth',3,'DisplayName','normal sym force')
+  yl = ylim();
+  hold on
+  for i = 1: length(inters)
+    plot([inters(i),inters(i)],yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
+  end
+  ylim(yl);
   xlabel('distance along crack')
   ylabel('force')
   tstr = ['normal forces acting on rift ',num2str(kk)];
@@ -186,6 +195,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
 
   nexttile
   plot(cc,tt,'color',[1,0.1,0],'linewidth',2,'DisplayName','tangential force')
+  hold on
+  yl = ylim();
+  for i = 1: length(inters)
+    plot([inters(i),inters(i)],yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
+  end
+  ylim(yl);
   xlabel('distance along crack')
   ylabel('force')
   tstr = ['tangential forces acting on rift ',num2str(kk)];
