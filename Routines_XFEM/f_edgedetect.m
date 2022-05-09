@@ -1,12 +1,19 @@
-function [ cutEdge, node ] = f_edgedetect( node, corner, phi, psi )
+function [ cutEdge, node, pnode_l,nnode_l ] = f_edgedetect( node, corner, phi, psi )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Thu Nov 25 15:49:14 NZDT 2021
 cutEdge = [ ] ;
+pnode_l = [];
+nnode_l = [];
 %loop on element edges
 if nargin == 3
 for iedge = 1:size(node,1)
     n1 = corner(iedge) ;
     n2 = corner(iedge+1) ;
+    if phi(n1) > 0 
+      pnode_l = [pnode_l, n1];
+    elseif phi(n1) < 0
+      nnode_l = [nnode_l, n1];
+    end
     if( phi(n1)*phi(n2) < 0 ) 
         r = phi(n1)/(phi(n1)-phi(n2)) ;
         pnt = (1-r)*node(n1,:)+r*node(n2,:) ;
@@ -20,6 +27,11 @@ elseif nargin == 4
     for i = 1:size(node,1)
         n1 = corner(i);
         n2 = corner(i+1);
+        if phi(n1) > 0 
+          pnode_l = [pnode_l, n1];
+        elseif phi(n1) < 0
+          nnode_l = [nnode_l, n1];
+        end
         if phi(n1)*phi(n2) < 0  & ( psi(n1) < 0 | psi(n2) < 0) 
           l1 = psi(n1);
           l2 = psi(n2);

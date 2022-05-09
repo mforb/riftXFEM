@@ -26,9 +26,9 @@ elseif strcmp(elemType, 'T3')
 end
 
 if skip_vertex
-  elems = union(split_elem,vertex_elem);
-else
   elems = split_elem
+else
+  elems = union(split_elem,vertex_elem);
 end
 if ~skip_branch
   elems = union(elems,tip_elem);
@@ -48,6 +48,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
 
     [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
     [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
+    ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
     if skip_branch
       if ~isempty(BrI)
         continue

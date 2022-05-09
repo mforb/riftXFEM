@@ -40,6 +40,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     nn = length(sctr) ;
     ke = 0 ;
     [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
+    ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
     for seg = 1:length(ap)-1
       p = ap(seg:seg+1,:);
       pg = [apg(seg,:),apg(seg+1,:)];

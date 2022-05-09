@@ -30,7 +30,7 @@ global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure contact Kpen stabilize
 global wall_int stabilize skip_vertex
-epsilon = 5 
+epsilon = 20 
 
 OPT = 2; Hidden = true;
 
@@ -42,7 +42,8 @@ melangeforce = 0
 contact = 1
 stabilize = 1
 wall_int = 1
-skip_vertex = 1
+skip_vertex = 0
+skip_branch = 1
 
 xTip= [0,0];
 Rtip = xTip;
@@ -56,7 +57,7 @@ stressState = 'PlaneStrain' ;
 %typeProblem = 'eCrkTen' ; %choose type of problem
 typeProblem = 'ISSM' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
-Kpen = 1e11;
+Kpen = 1e12;
 
 % import rifts
 % srift1 = shaperead('../../Data/2013_14_cracka_open.shp');
@@ -286,7 +287,7 @@ x = [ -2,-0.3];
 y = [-400000,-400000];
 
 %%crack definition
-deltaInc = 1000; numstep = 2;
+deltaInc = 1000; numstep = 1;
 %xCr(2).coor = [xs2',ys2'] 
 xCr_orig = xCr;
 typeProblem

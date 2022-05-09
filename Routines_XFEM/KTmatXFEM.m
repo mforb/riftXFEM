@@ -91,9 +91,9 @@ cc = 0;
 cct = 0;
 
 if skip_vertex
-  elems = union(split_elem,vertex_elem);
-else
   elems = split_elem
+else
+  elems = union(split_elem,vertex_elem);
 end
 if ~skip_branch
   elems = union(elems,tip_elem);
@@ -109,6 +109,7 @@ if contact
 
       [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
       [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
+      ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
       for seg = 1:length(ap)-1
         p = ap(seg:seg+1,:);
         pg = [apg(seg,:),apg(seg+1,:)];
@@ -116,6 +117,7 @@ if contact
         % find the distance between the two intersects (should be able to do this with det(J)
         [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
         JO = l/2;
+
 
         for k_in = 1:length(Q)
           [N1,dNdx1]=lagrange_basis('L2',Q(k_in));

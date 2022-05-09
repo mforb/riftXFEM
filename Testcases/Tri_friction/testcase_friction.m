@@ -28,11 +28,11 @@ global penalty fixedF contact Kpen stabilize
 global frictionB friction_mu epsilon FintH wall_int
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global fmesh results_path same_coords skip_branch skip_vertex
-epsilon = 1e-7
+epsilon = 1e-4
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 0
-Kpen = 1e9
+Kpen = 1e8
 
 %problem flags
 elemType = 'T3' ;
@@ -43,7 +43,7 @@ contact = 1;
 stabilize = 1;
 wall_int = 1;
 skip_branch = 1;
-skip_vertex = 1;
+skip_vertex = 0;
 
 
 
@@ -69,7 +69,7 @@ end
 
 %crack definition
 deltaInc = 0.05; numstep = 3;
-xCr(1).coor = [-.1 0;.1, 0] ;
+xCr(1).coor = [-.1 -0.01;.1, -0.01] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];

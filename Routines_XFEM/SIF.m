@@ -267,6 +267,7 @@ for iel = 1 : size(JWdomain,2)
     if ( ismember(e,vertex_elem) || ismember(e,split_elem) || ismember(e,tip_elem) )  && any(elem_force(1,e,:))
       % The I integral needs to be adjusted to account for forces on the rift wall
       [ap,apg] = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,xyTip,xVertex,crack_nodes); % elem_crk in natural coordinates
+      ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
       for seg = 1:length(ap) - 1
         % find the distance between the two intersects (should be able to do this with det(J)
         p = ap(seg:seg+1,:);
