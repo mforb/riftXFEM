@@ -1,4 +1,4 @@
-function [NP,NN,BP,BN] = nitcheNBmat(N,pos,e,type_elem,enrich_node,xCrl,GVertex,cont,pen)
+function [NP,NN,BP,BN] = nitcheNBmat(pt,pos,e,type_elem,enrich_node,xCrl,GVertex,crack_node,cont,pen)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -15,6 +15,11 @@ Gpt = N' * node(sctr,:);                  % GP in global coord, used
 
 %Standard B matrix is computed always...
 Nxfem = [ ] ;
+Bxfem = [];
+BxfemP = [];
+BxfemN = [];
+NxfemP = [];
+NxfemN = [];
 %loop on nodes, check is node is enriched........
 if cont == 1
     Bfem = zeros(3,2*nn) ;
@@ -22,9 +27,9 @@ if cont == 1
     Bfem(2,2:2:2*nn) = dNdx(:,2)' ;
     Bfem(3,1:2:2*nn) = dNdx(:,2)' ;
     Bfem(3,2:2:2*nn) = dNdx(:,1)' ;
-    Nfem = zeros(2,2*nn) ;
+    Nfem = zeros(1,2*nn) ;
     Nfem(1,1:2:2*nn) = N' ;
-    Nfem(2,2:2:2*nn) = N' ;
+    Nfem(1,2:2:2*nn) = N' ;
 else
     Bfem = [] ;
     Nfem = [] ;
@@ -34,7 +39,7 @@ for in = 1:nn
     %Enriched by H(x) at global gauss point
     if ( enrich_node(sctr(in)) == 2)
         ref_elem = e;
-        xcre = [xcrl(ref_elem,1) xcrl(ref_elem,2); xcrl(ref_elem,3) xcrl(ref_elem,4)];                 %each element has its crack!
+        xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
         if ismember(sctr(in),crack_node) 
           Hi = sign(-1);
         else
@@ -45,21 +50,21 @@ for in = 1:nn
         Hgp = 1;
         BI_enrP = [dNdx(in,1)*(Hgp - Hi) 0 ; 0 dNdx(in,2)*(Hgp - Hi) ;
             dNdx(in,2)*(Hgp - Hi) dNdx(in,1)*(Hgp - Hi)];
-        N_enrP = [N(in)*(Hgp - Hi) 0 ; 0 N(in)*(Hgp - Hi)] ;
+        N_enrP = [N(in)*(Hgp - Hi) , N(in)*(Hgp - Hi)] ;
         Hgp = -1;
         BI_enrN = [dNdx(in,1)*(Hgp - Hi) 0 ; 0 dNdx(in,2)*(Hgp - Hi) ;
             dNdx(in,2)*(Hgp - Hi) dNdx(in,1)*(Hgp - Hi)];
-        N_enrN = [N(in)*(Hgp - Hi) 0 ; 0 N(in)*(Hgp - Hi)] ;
+        N_enrN = [N(in)*(Hgp - Hi) , N(in)*(Hgp - Hi)] ;
         %else    %if the element is not cut by a crack, the enrichment is always 0 (NO LONGER TRUE)
             %BI_enr = [0 0 ; 0 0 ; 0 0];
         %end
         % Add to the total Bxfem
         BxfemP = [BxfemP BI_enrP];
-        BxfemN = [BxfemP BI_enrN];
+        BxfemN = [BxfemN BI_enrN];
         NxfemP = [NxfemP N_enrP];
         NxfemN = [NxfemN N_enrN];
-        clear BI_enrP BI_enrN;
-        clear N_enrP N_enrN;
+        clear BI_enrP; clear BI_enrN;
+        clear N_enrP; clear N_enrN;
         
         % ------------ Enriched by asymptotic functions -----------------------------------
     elseif ( enrich_node(sctr(in)) == 1) % B(x) enriched node
@@ -151,10 +156,11 @@ for in = 1:nn
         Bxfem = [Bxfem BI_enr];
         clear BI_enr ;
     end
-    BP = [ Bfem BxfemP];
-    BN = [ Bfem BxfemN ];
-    clear Bfem; clear BxfemP; clear BxfemN;
-    NP = [ Nfem NxfemP];
-    NN = [ Nfem NxfemN ];
-    clear Nfem; clear NxfemP; clear NxfemN;
 end          % end of loop on nodes
+
+BP = [ Bfem BxfemP];
+BN = [ Bfem BxfemN ];
+clear Bfem; clear BxfemP; clear BxfemN;
+NP = [ Nfem NxfemP];
+NN = [ Nfem NxfemN ];
+clear Nfem; clear NxfemP; clear NxfemN;

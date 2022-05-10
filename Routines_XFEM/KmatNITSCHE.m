@@ -34,6 +34,9 @@ end
 %if ~skip_branch
   %elems = union(elems,tip_elem);
 %end
+Gint =  zeros(size(u));
+cc = 0;
+cct = 0;
 elems = split_elem
 for kk = 1:size(xCrk,2) %what's the crack?
   for ii=1:size(elems,1)
@@ -42,27 +45,30 @@ for kk = 1:size(xCrk,2) %what's the crack?
     sctr = element(iel,:) ;
     skip = 0;
     nn = length(sctr) ;
+    if any(enr_node(sctr,:)==1)
+      continue
+    end
 
     [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
     [ap,apg,pos_l,neg_l] = f_nitsche_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
     ap = f_align_lp_gc(ap,apg,sctr);
     pos_g = node(sctr(pos_l),:);
-    neg_g = node(sctr(neg_l),:);apg);
+    neg_g = node(sctr(neg_l),:);
     if size(pos_g,1)>1
       pos_g = f_align_lp_gc(pos_g,apg,sctr);
     end
     if size(neg_g,1)>1
       neg_g = f_align_lp_gc(neg_g,apg,sctr);
     end
-    pos_g = [pos_g;apg(2,:);apg(:,1);]
-    neg_g = [neg_g;apg(2,:);apg(:,1);]
+    pos_g = [pos_g;apg(2,:);apg(1,:);]
+    neg_g = [neg_g;apg(2,:);apg(1,:);]
     measP = abs(polyarea(pos_g(:,1),pos_g(:,2)));
     measN = abs(polyarea(neg_g(:,1),neg_g(:,2)));
     
     gamma_1 = measP/(measP+measN);
     gamma_2 = measN/(measP+measN);
 
-    sctrB = assembly(iel,enrich_node(:,kk),pos(:,kk),kK,crack_node) ;
+    sctrB = assembly(iel,enr_node(:,kk),pos(:,kk),kk,crack_node) ;
     [A,~,~,~,~] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
      
     for seg = 1:length(ap)-1
@@ -70,10 +76,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
       pg = [apg(seg,:),apg(seg+1,:)];
       [W,Q] = quadrature(wall_int,'GAUSS',1) ;
       % find the distance between the two intersects (should be able to do this with det(J)
-      [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
+      [l,nv2,mv,nnt,nmt,mmt] = f_segment_dist(pg);
+      nv = [ nv2, 0 ];
       nx = -nv
       JO = l/2;
-      alpha = 2 * l *det(C)*((gamma_1^2)/measP + (gamma_2^2)/measN);
+      cv = [C(1,1),C(2,2),C(3,3),C(2,3),C(1,3),C(1,2)];
+      alpha = 2 * l *norm(cv)*((gamma_1^2)/measP + (gamma_2^2)/measN);
       d2gamd2alp = 4*l*det(C)*(1/measP+1/measN);
       am = alpha*eye(2);
 
@@ -83,24 +91,36 @@ for kk = 1:size(xCrk,2) %what's the crack?
     % find the distance between the two intersects (should be able to do this with det(J)
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         pint =  N' * node(sctr,:);
-        B = xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_node,k);
+        B = xfemBmat(gpt,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,crack_node,kk);
         Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true);
-        [NmatP,NmatN,BmatP,BmatN] = nitscheNBmat(N,pos_l,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk);
-        gn = nv*Nmat*2*u(A);
+        [NmatP,NmatN,BmatP,BmatN] = nitscheNBmat(gpt,pos_l,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,crack_node,kk,true);
+        gn = nv2*Nmat*2*u(A);
         if gn < 0
           if k_in ==1
             if seg == 1
               cct = cct + 1;
             end
           end
-          Kd1 = (NmatP'*am*NmatP - gamma_1*NmatP'*nv'*C*BmatP)*W(k_in)*det(JO); 
-          Kd2 = (NmatN'*am*NmatN - gamma_2*NmatN'*nx'*C*BmatN)*W(k_in)*det(JO); 
-          Ko1 = (-1*NmatP'*am*NmatP - gamma_2*NmatN'*nx'*C*BmatN)*W(k_in)*det(JO); 
-          Ko2 = (-1*NmatN'*am*NmatN - gamma_1*NmatP'*nv'*C*BmatP)*W(k_in)*det(JO); 
-          f1n = gamma_1*C*BmatP*nv - alpha*N'
-          elem_force(seg,iel,2*k_in-1) = -1*E_pen*gn;
-          Gint(A) = Gint(A) + (E_pen*gn)*W(k_in)*det(JO)*Nmat'*nv';
-          Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+          
+            
+          Bmat = BmatP(:,1:6);
+
+
+          Kd1 = (NmatP'*alpha*NmatP - gamma_1*(BmatP'*C)*nv'*NmatP)*W(k_in)*det(JO); 
+          Kd2 = (NmatN'*alpha*NmatN - gamma_2*(BmatN'*C)*nv'*NmatN)*W(k_in)*det(JO); 
+          K3 = -1*(nv2*Nmat)'*((Bmat'*C)*nv')'+Nmat'*am*Nmat; 
+          K4 = ((Bmat'*C)*nv')*(nv2*Nmat)-Nmat'*am*Nmat; 
+          K5 = -1*gamma_1*(nv2*Nmat)'*((Bmat'*C)*nv')' + gamma_2*((Bmat'*C)*nx')*(nv2*Nmat)+Nmat'*am*Nmat;
+          Kglobal(A,A) = Kglobal(A,A) + K3 ;
+          %Kd2 = (NmatN'*am*NmatN - gamma_2*NmatN'*nx'*C*BmatN)*W(k_in)*det(JO); 
+          %Ko1 = (-1*NmatP'*am*NmatP - gamma_2*NmatN'*nx'*C*BmatN)*W(k_in)*det(JO); 
+          %Ko2 = (-1*NmatN'*am*NmatN - gamma_1*NmatP'*nv'*C*BmatP)*W(k_in)*det(JO); 
+          p1 = gamma_1*(BmatP(:,1:6)*u(sctrB(1:6)))'*C*nv';
+          p2 = gamma_2*(BmatN(:,1:6)*u(sctrB(1:6)))'*C*nv';
+          t = (p1+p2)%-alpha*gn;
+          F = (Nmat'*nv2'.*t)*W(k_in)*det(JO)
+          elem_force(seg,iel,2*k_in-1) = p1;
+          Gint(A) = Gint(A) + F;
         end
       end
           

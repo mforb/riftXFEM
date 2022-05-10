@@ -283,6 +283,12 @@ for ipas = 1:npas
     hold on
     f_plotCrack2(crackLips,20,'r-','k-','c--')
     print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r300')
+    if ~isempty(zoom_dim)
+      xlim(zoom_dim(1,:));
+      ylim(zoom_dim(2,:));
+      figure_name = ['crack_walls_before_zoom',num2str(ipas)];
+      print([results_path,'/',figure_name],'-dpng','-r300')
+    end
     clf(f)
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
@@ -350,7 +356,7 @@ for ipas = 1:npas
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
       tol1 = 1e-20;
-      tol2 = 1e-15;
+      tol2 = 1e-10;
       cont = 1
       Du = zeros(size(u));
       Fext = F
@@ -362,7 +368,7 @@ for ipas = 1:npas
         disp(['Newton step ',num2str(cont)])
         disp(['---------------------------------------------'])
         Fint = K*u;
-        [KT,Gint,elemForce] = KTmatXFEM(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
+        [KT,Gint,elemForce] = KmatNITSCHE(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
         %[KT] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,KT,u);
         Res  = Fext - Fint - Gint ;
         nr = norm(Res,2);
@@ -376,7 +382,7 @@ for ipas = 1:npas
            disp(['Converged at step : ',num2str(cont)])
            break
         %elseif cont > 200
-        elseif cont > 200 
+        elseif cont > 4000 
            warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
            break
         end
