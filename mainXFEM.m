@@ -48,6 +48,8 @@ for ipas = 1:npas
     fprintf(output_file,[cgrow,'\n'])
     fprintf(output_file,'---------------------------------------------------\n')
     fprintf(output_file,'---------------------------------------------------\n')
+    nstr = ['Number of elements: ',num2str(numelem)];
+    fprintf(output_file,[nstr,'\n'])
     
 
     disp([num2str(toc),'    Crack processing']) ;
