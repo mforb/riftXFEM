@@ -12,8 +12,6 @@ path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
-results_path = './ISSM_xmas_1';
-mkdir(results_path);
 %copyfile('../Testcase.m',results_path);
 
 %declare global variables here
@@ -29,7 +27,8 @@ global loadstress FintX FintY FintXY
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
-epsilon = 10 
+global zoom_dim
+epsilon = 5 
 
 OPT = 2; Hidden = true;
 
@@ -64,194 +63,10 @@ ys(end) = [];
 xCr(1).coor = [xs',ys'] 
 %xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
 %{keyboard %}
-
-
-%%geometry and mesh generation
-%L = 1; D = 1 ;
-%rd = 0.0 ;
-%ndiv(1) =  5;
-%ndiv(2) = 5;
-%[node,element,bcNodes,edgNodes] = createmesh(ndiv,rd) ;
-
-load import_issm_holly1
-%element = element(1:5,:);
-% we are going to use triangulation to create a Fintx...
-% this is necessary if we plan on doing some refinement in the vicinity of the rift(s)
-TR = triangulation(element,node);
-cpos = TR.incenter;
-
-FintX = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_xx);
-FintY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_yy);
-FintXY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_xy);
-clear global ISSM_xx ISSM_yy ISSM_xy % without the global these only clear in this workspace!!
-%figure(1)
-%triplot(TR);
-
-% WARNING: This takes time
-%plotMesh(node,element,elemType,'b-','yes',figure('visible','off'))
-%print([results_path,'/original_mesh'],'-dpng','-r200')
-
-if Hidden
-  f = figure('visible','off')
-else
-  figure()
-end
-
-indx = find(cpos(:,1)>-3.18e5);
-indy = find(cpos(:,2)<-1.02e6);
-in = intersect(indx,indy);
-size(in)
-element = element(in,:);
-cpos    = cpos(in,:);
-f = figure();
-plotMesh(node,element,elemType,'b-','yes',f)
-hold on
-plot(node(bc_fix,1),node(bc_fix,2),'r*')
-plot(node(bc_front,1),node(bc_front,2),'cs')
-print([results_path,'/section_mesh'],'-dpng','-r200')
-%keyboard
-clf(f);
-
-all_node_num = unique(element);
-numnode = size(all_node_num,1); 
-node = node(all_node_num,:);
-for i=1:3*length(element)
-  element(i) = find(all_node_num==element(i));
-end
-edges_front2 = [];
-for i=1:length(edges_front)
-  if find(all_node_num==element(i,1)) & find(all_node_num==element(i,2));
-    edges_front2 = [edges_front2 ; find(all_node_num==edges_front(i)),find(all_node_num==edges_front(i,2))]
-  end
-end
-edges_front = edges_front2;
-bc_fix2 = [];
-for i = 1:length(bc_fix)
-  if find(all_node_num==bc_fix(i))
-  bc_fix2 = [ bc_fix2; find(all_node_num==bc_fix(i))];
-  end
-end
-bc_fix = bc_fix2;
-
-% refinement using ameshreF
+results_path = './ISSM_xmas_tip1_10km';
+mkdir(results_path);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
-in = f_find_points_xCr(cpos,xCr,80000)
-%indx = find(cpos(:,1)>-20e3 & cpos(:,1)<110e3 );
-%indy = find(cpos(:,2)>-1180e3 & cpos(:,2)<-1080e3 );
-
-[node,element] = TrefineRG(node,element,in);
-
-if Hidden
-  figure('visible','off')
-else
-  figure()
-end
-TR = triangulation(element,node);
-triplot(TR);
-print([results_path,'/mesh_refinement1'],'-dpng','-r200')
-
-cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,20000)
-
-
-%indx = find(cpos(:,1)>0e3 & cpos(:,1)<90e3 );
-%indy = find(cpos(:,2)>-1160e3 & cpos(:,2)<-1100e3 );
-
-%in = intersect(indx,indy);
-[node,element] = TrefineRG(node,element,in);
-
-if Hidden
-  figure('visible','off')
-else
-  figure()
-end
-TR = triangulation(element,node);
-triplot(TR);
-print([results_path,'/mesh_refinement2'],'-dpng','-r200')
-
-cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,5000,17000)
-
-
-%indx = find(cpos(:,1)>10e3 & cpos(:,1)<80e3 );
-%indy = find(cpos(:,2)>-1150e3 & cpos(:,2)<-1110e3 );
-
-%in = intersect(indx,indy);
-[node,element] = TrefineRG(node,element,in);
-
-if Hidden
-  figure('visible','off')
-else
-  figure()
-end
-TR = triangulation(element,node);
-triplot(TR);
-print([results_path,'/mesh_refinement3'],'-dpng','-r200')
-
-cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,2000,12000)
-
-
-%indx = find(cpos(:,1)>10e3 & cpos(:,1)<80e3 );
-%indy = find(cpos(:,2)>-1150e3 & cpos(:,2)<-1110e3 );
-
-%in = intersect(indx,indy);
-[node,element] = TrefineRG(node,element,in);
-
-if Hidden
-  figure('visible','off')
-else
-  figure()
-end
-TR = triangulation(element,node);
-triplot(TR);
-xlim([min(xs)-20000,max(xs)+20000])
-ylim([min(ys)-20000,max(ys)+20000])
-print([results_path,'/mesh_refinement4'],'-dpng','-r200')
-
-cpos = TR.incenter;
-figure()
-patch('faces',element,'vertices',node,'facevertexcdata',FintY(cpos)); shading flat;
-
-%in = f_find_points_xCr(cpos,xCr,4000,6000)
-%%indx = find(cpos(:,1)>39e3 & cpos(:,1)<65e3 );
-%%indy = find(cpos(:,2)>-1137e3 & cpos(:,2)<-1116e3 );
-
-%%in = intersect(indx,indy);
-%[node,element] = TrefineRG(node,element,in);
-
-all_node_num = unique(element);
-numnode = size(all_node_num,1); 
-node = node(all_node_num,:);
-for i=1:3*length(element)
-  element(i) = find(all_node_num==element(i));
-end
-
-
-if Hidden 
-  figure('visible','off')
-else
-  figure()
-end
-numelem = size(element,1) 
-TR = triangulation(element,node);
-triplot(TR);
-xlim([min(xs)-20000,max(xs)+20000])
-ylim([min(ys)-20000,max(ys)+20000])
-print([results_path,'/mesh_final'],'-dpng','-r200')
-cpos = TR.incenter;
-%if Hidden 
-  %figure('visible','off')
-%else
-  %figure()
-%end
-%patch('faces',element,'vertices',node,'facevertexcdata',FintX(cpos)); shading flat;
-%plotMesh(node,element,elemType,'b-','yes',figure())
-%keyboard
-
-bcNodes=[{bc_front} {1} {1} {bc_fix}]
-edgNodes=[{edges_front} {1} {1} {1}]
-
+run_mesh_prep
 %% Material properties and crack dimensions
 E = 9.6e9; nu = 0.3; P = 1 ;
 sigmato = P ;
@@ -296,37 +111,173 @@ if( strcmp(plotmesh,'YES') )
 end
 
 
-[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc)
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
 
 %a = 3;
 %C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
 %KAnalytical000 = C*P*sqrt(pi*a) 
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
 
-t = tiledlayout(2,2,'TileSpacing','Compact');
-% tile 1
-nexttile
-plot([1:length(Knumerical{1,1})],Knumerical{1,1})
-xlabel('step')
-title('SIFs end 1')
-legend({'K1','K2'})
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
 
-nexttile
-plot([1:length(Knumerical{1,2})],Knumerical{1,2})
-xlabel('step')
-title('SIFs end 2')
-legend({'K1','K2'})
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './ISSM_xmas_tip1_20km';
+mkdir(results_path);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
 
-nexttile
-plot([1:length(ThetaInc{1,1})],ThetaInc{1,1})
-title('propagation angle, end 1')
-xlabel('step')
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
 
-nexttile
-plot([1:length(ThetaInc{1,2})],ThetaInc{1,2})
-title('propagation angle, end 2')
-xlabel('step')
-%plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './ISSM_xmas_tip1_30km';
+mkdir(results_path);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
 
-figure_name = ['Knum_results'];
-print([results_path,'/',figure_name],'-dpng','-r300')
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './ISSM_xmas_tip1_40km';
+mkdir(results_path);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
+
+xCr(1).tip = [1,0];
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './ISSM_xmas_tip2_10km';
+mkdir(results_path);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
+
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './ISSM_xmas_tip2_20km';
+mkdir(results_path);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum

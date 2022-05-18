@@ -6,11 +6,11 @@ function [ inds ] = f_find_points_xCr( points, rift, radius, radius2)
     coords = rift.coor;
   end
   if nargin == 3
-    p_buff = polybuffer(coords,'lines',radius)
+    p_buff = polybuffer(coords,'lines',radius);
   elseif nargin ==4
-    p_buff1 = polybuffer(coords,'lines',radius)
-    p_buff2 = polybuffer([coords(1,:);coords(end,:)],'points',radius2)
-    p_buff = union(p_buff1,p_buff2)
+    p_buff1 = polybuffer(coords,'lines',radius);
+    p_buff2 = polybuffer([coords(1,:);coords(end,:)],'points',radius2);
+    p_buff = union(p_buff1,p_buff2);
   end
-  inds = find( isinterior(p_buff, points(:,1), points(:,2)) ) 
+  inds = find( isinterior(p_buff, points(:,1), points(:,2)) ) ;
 end

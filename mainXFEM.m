@@ -9,11 +9,11 @@ global epsilon loadstress
 global results_path
 global fmesh
 global output_file
-global Hidden zoom_dim
+global Hidden zoom_dim 
 global wall_int skip_branch skip_vertex
 
 output_file = fopen([results_path,'/output.log'],'w')
-if ~isfield(xCr,'tip')
+if ~isfield(xCrk,'tip')
   for i =1:size(xCrk,2)
     xCrk(i).tip = [1,1];
   end
@@ -39,6 +39,8 @@ if isempty(skip_vertex)
   skip_vertex = 0;
 end
 
+plot_stresses = 0;
+
 Knum = [ ] ; Theta = [ ] ;
 enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
 %loop over number of steps of crack growth
@@ -62,7 +64,7 @@ for ipas = 1:npas
     if ~isempty(tangentElem)
       [nodeTanfix] = f_tangent_iso_node(tangentElem,crackNode);
       tan_info = [' CRACK NODES :  ',num2str(length(crackNode)),' crack nodes, ',num2str(length(tangentElem)),' tangent elements, requiring ', num2str(length(nodeTanfix)),' fixed nodes\n'];
-      fprintf(output_file,cgrow)
+      fprintf(output_file,tan_info)
     else
       %tan_element = [];
       %tan_elemCrk = [];
@@ -255,14 +257,6 @@ for ipas = 1:npas
     
     [K,F] = feaplyc2(K,F,bcdof,bcval) ;
 
-    %if exist('fixedF') & ~isempty(fixedF)
-      %[crackLips,flagP] = f_cracklips( zeros(totalUnknown,1), xCr, enrDomain, typeElem, elemCrk, xTip, xVertex, enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-      %Fcrack = zeros(size(F));
-      %Fcrack = f_crackforce_fixed(Fcrack,fixedF,crackLips,xCr,elemCrk,xTip,pos,typeElem, enrichNode,splitElem,vertexElem,tipElem);
-      %keyboard
-      %F = F + Fcrack;
-    %end
-
     %[L,U] = lu(K) ;
     %y = L\F;
     %u = U\y;
@@ -410,71 +404,51 @@ for ipas = 1:npas
       Stduy = fu(2:2:2*numnode) ;
       %elemForce = elemForce + elemForce_orig;
       f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas)
-    end
 %     
-%     % plot displacement contour
-    figure(f);
-    trisurf(element,node(:,1),node(:,2),Stduy)
-    axis equal; view(2); shading interp; colorbar
-    title(['Y displacement after Newton solver'])
-    print([results_path,'/after_ydisp'],'-dpng')
-    clf(f)
-     
-     %save('test.mat','K','F','u')
+  %     % plot displacement contour
+      figure(f);
+      trisurf(element,node(:,1),node(:,2),Stduy)
+      axis equal; view(2); shading interp; colorbar
+      title(['Y displacement after Newton solver'])
+      print([results_path,'/after_ydisp'],'-dpng')
+      clf(f)
+       
+       %save('test.mat','K','F','u')
 
-    [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+      [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+      figure(f);
+      hold on
+      dfac = 1 ;
+      plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
+      f_plotCrack2(crackLips,20,'r-','k-','c--')
+      print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r300')
+      if ~isempty(zoom_dim)
+        xlim(zoom_dim(1,:));
+        ylim(zoom_dim(2,:));
+        figure_name = ['crack_walls_after_zoom',num2str(ipas)];
+        print([results_path,'/',figure_name],'-dpng','-r300')
+      end
+      clf(f)
+    end
+
+    if plot_stresses 
+      if strcmp(elemType,'Q4')
+         plotFieldXfem(xCrk,pos,enrichNode,u,...
+             elemCrk,vertexELem,splitElem,tipElem,xVertex,xTip,typeElem,ipas);    
+      else
+        plotFieldXfemT3(xCrk,pos,enrichNode,crackNode,u,...
+          elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,ipas) ;
+      end
+    end
+
     figure(f);
     hold on
-    dfac = 1 ;
+    dfac = 50 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-    f_plotCrack2(crackLips,20,'r-','k-','c--')
-    print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r300')
-    if ~isempty(zoom_dim)
-      xlim(zoom_dim(1,:));
-      ylim(zoom_dim(2,:));
-      figure_name = ['crack_walls_after_zoom',num2str(ipas)];
-      print([results_path,'/',figure_name],'-dpng','-r300')
-    end
+     %plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
+    figure_name = ['Disp_fact_',num2str(dfac),'_',num2str(ipas)];
+    print([results_path,'/',figure_name],'-dpng','-r300')
     clf(f)
-
-    
-%     res = [Stdux Stduy] ;
-%     
-%     
-%     % plot displacement contour
-%     figure
-%     clf
-%     trisurf(element,node(:,1),node(:,2),uyAna)
-%     axis equal; view(2); shading interp; colorbar
-%     title('Displacement from Analytical solution')
-%     
-%     % plot displacement contour
-%     figure
-%     clf
-%     trisurf(element,node(:,1),node(:,2),(Stduy-uyAna))
-%     axis equal; view(2); shading interp; colorbar
-%     title('Displacement from XFEM-Analytical solution')
-%     
-%     
-%     plotFieldXfem(xCrk,pos,enrichNode,u,...
-%         elemCrk,vertexElem,splitElem,tipElem,xVertex,xTip,typeElem) ;
-    
-     if strcmp(elemType,'Q4')
-        plotFieldXfem(xCrk,pos,enrichNode,u,...
-            elemCrk,vertexELem,splitElem,tipElem,xVertex,xTip,typeElem,ipas);    
-     else
-       plotFieldXfemT3(xCrk,pos,enrichNode,crackNode,u,...
-         elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,ipas) ;
-     end
-
-     figure(f);
-     hold on
-     dfac = 50 ;
-     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-      %plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
-     figure_name = ['Disp_fact_',num2str(dfac),'_',num2str(ipas)];
-     print([results_path,'/',figure_name],'-dpng','-r300')
-     clf(f)
 
 
    
@@ -485,6 +459,6 @@ for ipas = 1:npas
 
     %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];
-    save([results_path,'/crack_disp.mat'],'xCrk','Knum','Theta','u','element','node');
+    save(var_name,'xCrk','Knum','Theta','u','element','node');
 end
 fclose(output_file);
