@@ -27,7 +27,7 @@ global loadstress FintX FintY FintXY
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
-global zoom_dim
+global zoom_dim 
 epsilon = 5 
 
 OPT = 2; Hidden = true;
@@ -264,7 +264,7 @@ if( strcmp(plotmesh,'YES') )
     %crack plot
     for k=1:size(xCr,2)
         for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            cr = plot(xCr(k).coor(kj:kj+0,1),xCr(k).coor(kj:kj+1,2),'r-') ;
             set(cr,'LineWidth',3);
         end
         for kj = 1:size(xCr(k).coor,1)

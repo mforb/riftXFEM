@@ -11,6 +11,7 @@ cpos = TR.incenter;
 FintX = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_xx);
 FintY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_yy);
 FintXY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_xy);
+FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_H');
 clear global ISSM_xx ISSM_yy ISSM_xy % without the global these only clear in this workspace!!
 %figure(1)
 %triplot(TR);

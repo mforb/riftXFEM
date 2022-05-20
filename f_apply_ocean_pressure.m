@@ -7,8 +7,8 @@ function [ Fext, elem_force ] = f_apply_ocean_pressure( enr_node,elem_crk,type_e
 global node element numnode numelem elemType
 global plotmesh plotNode
 global gporder numtri
-global plothelp
-global rift_wall_pressure wall_int
+global plothelp 
+global rift_wall_pressure wall_int skip_branch
 
 if strcmp(elemType,'Q4') 
   intType = 'GAUSS' ;
@@ -31,6 +31,9 @@ end
 %loop over elements
 elems = union(split_elem,vertex_elem);
 elems = union(elems,tip_elem);
+
+sk_br = skip_branch;
+skip_branch = 0; % the force is applied everywhere consistently (skip_branch is for penalty forces)
 
 
 for kk = 1:size(xCrk,2) %what's the crack?
@@ -69,4 +72,6 @@ for kk = 1:size(xCrk,2) %what's the crack?
     end
   end
 end
+
+skip_branch = sk_br;
 

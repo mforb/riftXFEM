@@ -1,4 +1,4 @@
-function [Kglobal,Gint,elem_force] = KTmatXFEM(E_pen,enr_node,crack_node,elem_crk,type_elem,xTip,xVertex,...
+function [Kglobal,Gint,elem_force,ratio_c] = KTmatXFEM(E_pen,enr_node,crack_node,elem_crk,type_elem,xTip,xVertex,...
     split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,elem_force,pos,xCrk,xM,Kglobal,u)
 
 %declare global variables here
@@ -226,6 +226,7 @@ end
 % plotCrack(xCrk,enrich_node,plotmesh) ;
 % plot(q(:,1),q(:,2),'r*') ;
 % clear q
-out_str = ['The ratio of contact elements : ',num2str(cct/cc)];
-disp(out_str);
-fprintf(output_file,[out_str,'\n'])
+ratio_c = cct/cc;
+%out_str = ['The ratio of contact elements : ',num2str(cct/cc)];
+%disp(out_str);
+%fprintf(output_file,[out_str,'\n'])

@@ -4,7 +4,7 @@ function [Knum,Theta,xCrk] = mainXFEM(xCrk,npas,delta_inc)
 global numcrack xCr deltaInc numstep
 global plotmesh plotNode plothelp plotiter
 global node element numnode numelem bcNodes edgNodes typeProblem elemType
-global penalty fixedF contact melange Kpen rift_wall_pressure xM melangeforce stabilize
+global penalty fixedF contact melange Kpen rift_wall_pressure xM melangeforce stabalize
 global epsilon loadstress
 global results_path
 global fmesh
@@ -38,7 +38,7 @@ end
 if isempty(skip_vertex)
   skip_vertex = 0;
 end
-
+nitsche = 0;
 plot_stresses = 0;
 
 Knum = [ ] ; Theta = [ ] ;
@@ -298,10 +298,10 @@ for ipas = 1:npas
       penalty = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
     elseif contact & flagP
-      if ~isempty(stabilize) & stabilize
+      if ~isempty(stabalize) & stabalize
         K_orig = K;
         [K] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,K,u);
-        disp([num2str(toc),'    Recalculating u with stabilized K'])
+        disp([num2str(toc),'    Recalculating u with stabalized K'])
         u = K\F;
         fu2 = full(u);
         Stdux2 = fu2(1:2:2*numnode) ;
@@ -352,7 +352,7 @@ for ipas = 1:npas
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
       tol1 = 1e-20;
-      tol2 = 1e-10;
+      tol2 = 1e-8;
       cont = 1
       Du = zeros(size(u));
       Fext = F
@@ -364,8 +364,12 @@ for ipas = 1:npas
         disp(['Newton step ',num2str(cont)])
         disp(['---------------------------------------------'])
         Fint = K*u;
-        [KT,Gint,elemForce] = KmatNITSCHE(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
+        if nitsche
+          [KT,Gint,elemForce] = KmatNITSCHE(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
         %[KT] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,KT,u);
+        else 
+          [KT,Gint,elemForce,ratc] = KTmatXFEM(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,elemForce,pos,xCrk,xM,K,u);
+        end
         Res  = Fext - Fint - Gint ;
         nr = norm(Res,2);
         if cont == 1
@@ -374,11 +378,13 @@ for ipas = 1:npas
         rnr = nr/nr0;
         disp(['L2 norm of the residual, R =  ',num2str(nr)])
         disp(['Relative to R0 : ',num2str(rnr)])
+        out_str = ['L2 norm of residual is ',num2str(nr),' ; relative to R0 ',num2str(rnr),'. The contact ratio is: ',num2str(cct/cc),'\n'];
+        
         if rnr < tol1 | nr < tol2
            disp(['Converged at step : ',num2str(cont)])
            break
         %elseif cont > 200
-        elseif cont > 4000 
+        elseif cont > 100 
            warning(['After, ',num2str(cont),' iterations ||R||/||R0|| is still: ',num2str(rnr)])
            break
         end
@@ -406,7 +412,11 @@ for ipas = 1:npas
       f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas)
 %     
   %     % plot displacement contour
-      figure(f);
+      if Hidden 
+        f = figure('visible','off');
+      else
+        f = figure();
+      end
       trisurf(element,node(:,1),node(:,2),Stduy)
       axis equal; view(2); shading interp; colorbar
       title(['Y displacement after Newton solver'])
@@ -416,7 +426,11 @@ for ipas = 1:npas
        %save('test.mat','K','F','u')
 
       [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-      figure(f);
+      if Hidden 
+        f = figure('visible','off');
+      else
+        f = figure();
+      end
       hold on
       dfac = 1 ;
       plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
@@ -441,7 +455,11 @@ for ipas = 1:npas
       end
     end
 
-    figure(f);
+    if Hidden 
+      f = figure('visible','off');
+    else
+      f = figure();
+    end
     hold on
     dfac = 50 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
@@ -459,6 +477,6 @@ for ipas = 1:npas
 
     %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];
-    save(var_name,'xCrk','Knum','Theta','u','element','node');
+    save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip');
 end
 fclose(output_file);
