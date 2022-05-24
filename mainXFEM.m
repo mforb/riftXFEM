@@ -284,6 +284,7 @@ for ipas = 1:npas
       ylim(zoom_dim(2,:));
       figure_name = ['crack_walls_before_zoom',num2str(ipas)];
       print([results_path,'/',figure_name],'-dpng','-r300')
+      keyboard
     end
     clf(f)
     trisurf(element,node(:,1),node(:,2),Stduy)
@@ -378,7 +379,8 @@ for ipas = 1:npas
         rnr = nr/nr0;
         disp(['L2 norm of the residual, R =  ',num2str(nr)])
         disp(['Relative to R0 : ',num2str(rnr)])
-        out_str = ['L2 norm of residual is ',num2str(nr),' ; relative to R0 ',num2str(rnr),'. The contact ratio is: ',num2str(cct/cc),'\n'];
+        out_str = ['L2 norm of residual is ',num2str(nr),' ; relative to R0 ',num2str(rnr),'. The contact ratio is: ',num2str(ratc),'\n'];
+        fprintf(output_file,out_str)
         
         if rnr < tol1 | nr < tol2
            disp(['Converged at step : ',num2str(cont)])
@@ -408,7 +410,7 @@ for ipas = 1:npas
       fu = full(u);
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
-      %elemForce = elemForce + elemForce_orig;
+      elemForce = elemForce + elemForce_orig;
       f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas)
 %     
   %     % plot displacement contour
@@ -441,6 +443,7 @@ for ipas = 1:npas
         ylim(zoom_dim(2,:));
         figure_name = ['crack_walls_after_zoom',num2str(ipas)];
         print([results_path,'/',figure_name],'-dpng','-r300')
+        keyboard
       end
       clf(f)
     end

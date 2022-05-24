@@ -98,6 +98,7 @@ end
 if ~skip_branch
   elems = union(elems,tip_elem);
 end
+
 if contact
   for kk = 1:size(xCrk,2) %what's the crack?
     for ii=1:size(elems,1)
@@ -117,7 +118,6 @@ if contact
         % find the distance between the two intersects (should be able to do this with det(J)
         [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
         JO = l/2;
-
 
         for k_in = 1:length(Q)
           [N1,dNdx1]=lagrange_basis('L2',Q(k_in));
@@ -194,7 +194,6 @@ if melangeforce
           else
             continue
           end
-          keyboard
           
           for k_in = 1:length(Q)
             gpt = gpts(k_in,:) ;

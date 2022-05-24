@@ -152,7 +152,8 @@ for kk = 1:size(xCr,2) %what's the crack?
           crack_lips(ii,c_inds,4,kk) = cc_m;
           % check that there is no interpenetration
           [phi] = f_dista_point( cc_m+c_p, iel, xCrl, 1e-8 ); 
-          if phi < 0 & ~(ismember(iel, tip_elem) & gp == 2 )  % crack tips can be a problem for this 
+          gn = c_p - c_d;
+          if any(gn < 0) % crack tips can be a problem for this 
             Flag_pen = 1;
           end
         end

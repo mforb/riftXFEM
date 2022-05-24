@@ -26,7 +26,7 @@ else
   ri = rhoi;
 end
 
-F = H*g*ri*(rw-ri)/rw;
+F = -1*H*H*g*ri*(1-ri/rw);
 
 end
 
