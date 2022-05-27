@@ -284,7 +284,7 @@ for ipas = 1:npas
       ylim(zoom_dim(2,:));
       figure_name = ['crack_walls_before_zoom',num2str(ipas)];
       print([results_path,'/',figure_name],'-dpng','-r300')
-      keyboard
+      %keyboard
     end
     clf(f)
     trisurf(element,node(:,1),node(:,2),Stduy)
@@ -443,7 +443,7 @@ for ipas = 1:npas
         ylim(zoom_dim(2,:));
         figure_name = ['crack_walls_after_zoom',num2str(ipas)];
         print([results_path,'/',figure_name],'-dpng','-r300')
-        keyboard
+        %keyboard
       end
       clf(f)
     end

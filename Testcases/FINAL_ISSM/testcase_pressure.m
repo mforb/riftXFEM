@@ -64,7 +64,8 @@ xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-xCr(1).coor = [xs',ys'] 
+%keyboard
+xCr(1).coor = [fliplr(xs)',fliplr(ys)'] 
 %xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
 %{keyboard %}
 results_path = './PRES_xmas_tip1_10km';
@@ -87,7 +88,7 @@ y = [-400000,-400000];
 %%crack definition
 deltaInc = 2000; numstep = 5;
 %xCr(2).coor = [xs2',ys2'] 
-xCr(1).tip = [0,1];
+xCr(1).tip = [1,0];
 xCr_orig = xCr;
  
 typeProblem
@@ -221,7 +222,7 @@ zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
 make_knum
 
-xCr(1).tip = [1,0];
+xCr(1).tip = [0,1];
 close all;
 clf;
 if Hidden
