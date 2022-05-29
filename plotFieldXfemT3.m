@@ -28,7 +28,7 @@ strain_val = [ ] ;
 anaStress_val = [ ] ;
 fac = 0 ;
 
-for iel=1:numelem
+for iel=1:size(element,1)
     sctr = element(iel,:) ;
     nn = length(sctr) ;
     U = [ ];

@@ -1,32 +1,32 @@
-1079.3023    Crack growth number     1
+1198.9712    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 11951
  CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
 Tip 1: K1 is -11778424892.6556   K2 is -33852738.2823  and theta is -0.0057482
 Tip 2: K1 is -10513704043.6006   K2 is -195647020.8863  and theta is -0.037187
-1174.0692    Crack growth number     2
+1302.8461    Crack growth number     2
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 11951
  CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
 Tip 1: K1 is 132665681034601.2   K2 is -207373014028891  and theta is 1.0286
 Tip 2: K1 is -10752844171.5879   K2 is -191725597.6361  and theta is -0.035634
-1272.689    Crack growth number     3
+1410.5778    Crack growth number     3
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 11951
  CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
 Tip 1: K1 is -36357059103022.57   K2 is 15357084205131.32  and theta is 0.63796
 Tip 2: K1 is -10883671292.2772   K2 is -89713699.9235  and theta is -0.016483
-1372.0594    Crack growth number     4
+1518.8762    Crack growth number     4
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 11951
  CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
 Tip 1: K1 is -2131358338.8878   K2 is -2278645776.8902  and theta is -0.9447
 Tip 2: K1 is -10918495998.8087   K2 is -46940668.0727  and theta is -0.008598
-1473.6864    Crack growth number     5
+1661.4291    Crack growth number     5
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 11951
