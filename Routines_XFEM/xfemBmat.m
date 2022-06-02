@@ -61,9 +61,12 @@ else
                         Hgp =  Hgp;
                     end
                 end
-                dist = signed_distance(xCre,node(sctr(in),:),0); % nodes are always outside the triangle..easy!
-                Hi  = sign(dist);
-                
+                if ismember(sctr(in),crack_node) 
+                  Hi = sign(-1);
+                else
+                  dist = signed_distance(xCre,node(sctr(in),:),0);
+                  Hi  = sign(dist);
+                end
             else%
                 % Enrichment function, H(x) at global Gauss point
                 dist = signed_distance(xCre,Gpt,16);
