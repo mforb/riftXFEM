@@ -1,9 +1,17 @@
-ld = dir('PRES_xmas_tip*');
-results_path = './PRES_xmas_PP';
+path(path,'../../')
+path(path,'../../Crackprocessing')
+path(path,'../../Mesh')
+path(path,'../../Routines_XFEM')
+fontSize1 = 14; 
+fontSize2 = 12; 
+
+ld = dir('ISSM_xmas_tip*');
+results_path = './ISSM_xmas_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim
 global Hidden
+global fontSize2 fontSize1
 Hidden = 0;
 global E C nu P
 E = 9.6e9; nu = 0.3; P = 1 ;
@@ -24,6 +32,9 @@ xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
 xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
 
+tip1 = [ ones(1,8), zeros(1,6), ones(1,2)];
+tip2 = [ zeros(1,8), ones(1,6), ones(1,2)];
+
 knm1 = [];
 knm2 = [];
 t1 =[];
@@ -39,33 +50,84 @@ for i = 1:length(ld)
   t2 = [t2,ThetaInc{2}];
 end
 
+c1 = cbrewer2('set2',4);
+c2 = cbrewer2('dark2',4);
+rg(1) = min([knm1(1,:),knm1(2,:),knm2(1,:),knm2(2,:)]);
+rg(2) = max([knm1(1,:),knm1(2,:),knm2(1,:),knm2(2,:)]);
+ormin = floor( log10(abs(rg(1))));
+ormax = floor( log10(abs(rg(2))));
+mr = max([ormin,ormax]) - 1;
+lb = floor(rg(1)/(10^mr)) * 10 ^mr;
+ub = ceil(rg(2)/(10^mr)) * 10 ^mr;
+
+t1_cu = cumsum(t1.*tip1);
+t2_cu = cumsum(t2.*tip2);
+
+
 t = tiledlayout(2,2,'TileSpacing','Compact');
+
 % tile 1
 nexttile
-plot([1:length(knm1)],knm1)
-xlabel('step')
-title('SIFs end 1')
-legend({'K1','K2'})
+hold on
+grid on
+plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+for i = 1:2
+  plot([1:length(knm1)],knm1(i,:),'color',c1(i,:),'linewidth',3)
+end
+ylim([lb,ub]);
+xlim([1,length(knm2)]);
+xlabel('step','FontSize',fontSize2)
+title('SIFs','FontSize',fontSize1)
+l = legend({'K1','K2'})
+l.FontSize = fontSize2;
 
 nexttile
-plot([1:length(knm2)],knm2)
-xlabel('step')
-title('SIFs end 2')
-legend({'K1','K2'})
+hold on
+grid on
+plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+for i = 1:2
+  plot([1:length(knm2)],knm2(i,:),'color',c2(i,:),'linewidth',3)
+end
+ylim([lb,ub]);
+xlim([1,length(knm2)]);
+xlabel('step','FontSize',fontSize2)
+title('SIFs','FontSize',fontSize1)
+l = legend({'K1','K2'})
+l.FontSize = fontSize2;
 
 nexttile
-plot([1:length(t1)],t1)
-title('propagation angle, end 1')
-xlabel('step')
+hold on
+plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([1:length(t1_cu)],t1_cu,'color',c1(4,:),'linewidth',3)
+plot([1:length(t1)],t1,'color',c1(3,:),'linewidth',3)
+grid on
+ylim([-pi/3,pi/3]);
+xlim([1,length(knm2)]);
+xlabel('step','FontSize',fontSize2)
+title('propagation angle','FontSize',fontSize1)
+legend({'cumul angle','angle'})
+l.FontSize = fontSize2;
 
 nexttile
-plot([1:length(t2)],t2)
-title('propagation angle, end 2')
-xlabel('step')
+hold on
+plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([1:length(t2_cu)],t2_cu,'color',c2(4,:),'linewidth',3)
+plot([1:length(t2)],t2,'color',c2(3,:),'linewidth',3)
+grid on
+ylim([-pi/3,pi/3]);
+title('propagation angle','FontSize',fontSize1)
+xlim([1,length(knm2)]);
+legend({'cumul angle','angle'})
+l.FontSize = fontSize2;
 %plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
 
 figure_name = ['Knum_results'];
 print([results_path,'/',figure_name],'-dpng','-r300')
+saveas(t,[results_path,'/',figure_name],'epsc')
 
 %in the last file we loaded the final crack geometry
 xCr_final = xCr;
@@ -84,18 +146,25 @@ if 1
   load(lname)
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-20000,max(xCrk.coor(:,1))+20000];
   zoom_dim(2,:) = [min(xCrk.coor(:,2))-10000,max(xCrk.coor(:,2))+10000];
-  plotFieldXfemT3(xCrk,pos,enrichNode,crackNode,u,...
+  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
     elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1) ;
 end
 
+%reset C
+if( strcmp(stressState,'PlaneStress') )
+    C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
+else
+    C = E/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
+    Cm1 = E*0.1/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
+end
 %plots of the first time-step
 if 1
   dname = ld(end).name;
-  lname = [dname,'/crack5.mat']; 
+  lname = [dname,'/crack2.mat']; 
   load(lname)
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-20000,max(xCrk.coor(:,1))+20000];
   zoom_dim(2,:) = [min(xCrk.coor(:,2))-10000,max(xCrk.coor(:,2))+10000];
-  plotFieldXfemT3(xCrk,pos,enrichNode,crackNode,u,...
+  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
     elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
 end
 

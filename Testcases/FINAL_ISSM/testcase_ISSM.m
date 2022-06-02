@@ -60,7 +60,7 @@ xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-xCr(1).coor = [xs',ys'] 
+xCr(1).coor = [fliplr(xs)',fliplr(ys)'] 
 %xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
 %{keyboard %}
 results_path = './ISSM_xmas_tip1_10km';
@@ -81,9 +81,9 @@ x = [ -2,-0.3];
 y = [-400000,-400000];
 
 %%crack definition
-deltaInc = 2000; numstep = 5;
+deltaInc = 2500; numstep = 4;
 %xCr(2).coor = [xs2',ys2'] 
-xCr(1).tip = [0,1];
+xCr(1).tip = [1,0];
 xCr_orig = xCr;
  
 typeProblem
@@ -123,38 +123,11 @@ make_knum
 
 close all;
 clf;
-if Hidden
-  fmesh = figure('visible','off');
-else
-  fmesh = figure();
-end
-
-if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
-    
-    %crack plot
-    for k=1:size(xCr,2)
-        for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
-            set(cr,'LineWidth',3);
-        end
-        for kj = 1:size(xCr(k).coor,1)
-            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
-                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
-        end
-    end
-end
 results_path = './ISSM_xmas_tip1_20km';
 mkdir(results_path);
-run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
 zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
-[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
-save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
-make_knum
-
-close all;
-clf;
+run_mesh_prep
 if Hidden
   fmesh = figure('visible','off');
 else
@@ -176,76 +149,39 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './ISSM_xmas_tip1_30km';
-mkdir(results_path);
-run_mesh_prep
-zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
-zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
 [Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
 make_knum
 
+xCr(1).tip = [0,1];
 close all;
 clf;
-if Hidden
-  fmesh = figure('visible','off');
-else
-  fmesh = figure();
-end
-
-if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
-    
-    %crack plot
-    for k=1:size(xCr,2)
-        for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
-            set(cr,'LineWidth',3);
-        end
-        for kj = 1:size(xCr(k).coor,1)
-            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
-                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
-        end
-    end
-end
-results_path = './ISSM_xmas_tip1_40km';
-mkdir(results_path);
-run_mesh_prep
-zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
-zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
-[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
-save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
-make_knum
-
-xCr(1).tip = [1,0];
-close all;
-clf;
-if Hidden
-  fmesh = figure('visible','off');
-else
-  fmesh = figure();
-end
-
-if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
-    
-    %crack plot
-    for k=1:size(xCr,2)
-        for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
-            set(cr,'LineWidth',3);
-        end
-        for kj = 1:size(xCr(k).coor,1)
-            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
-                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
-        end
-    end
-end
 results_path = './ISSM_xmas_tip2_10km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
 zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
 [Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
 make_knum
@@ -273,7 +209,8 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './ISSM_xmas_tip2_20km';
+results_path = './ISSM_xmas_tip2_15km';
+numstep = 2;
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
@@ -281,3 +218,37 @@ zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
 [Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
 make_knum
+
+xCr(1).tip = [1,1];
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './ISSM_xmas_tip3_5km';
+mkdir(results_path);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
+

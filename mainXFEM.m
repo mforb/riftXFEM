@@ -105,6 +105,8 @@ for ipas = 1:npas
             set(n2,'MarkerSize',15);
         end
     end
+    print([results_path,'/mesh_crack_',num2str(ipas)],'-dpng','-r300')
+
     
    
     %initialize stiffness matrix, force vector
@@ -286,12 +288,12 @@ for ipas = 1:npas
       print([results_path,'/',figure_name],'-dpng','-r300')
       %keyboard
     end
-    clf(f)
+    clf();
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
     title('Y displacement before Newton solver')
     print([results_path,'/original_ydisp',num2str(ipas)],'-dpng')
-    clf(f)
+    clf();
 
 
     if contact & ~flagP

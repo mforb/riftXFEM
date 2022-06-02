@@ -1,4 +1,4 @@
-function [Knum,theta_inc] = SIF(C,tip,elem_crk,xCr,type_elem,enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,...
+function [Knum,theta_inc] = SIF(C,flag_end,tip,elem_crk,xCr,type_elem,enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,...
     tip_elem,split_elem,vertex_elem,corner_elem,elem_force)
 
 global node element elemType E nu
@@ -32,7 +32,12 @@ end
 % 6- computation of I1 and I2
 
 % Determine J domain and weight function
-xyTip = [elem_crk(tip,3) elem_crk(tip,4)] ;
+if flag_end == 1
+  xyTip = [elem_crk(tip,1) elem_crk(tip,2)] ;
+elseif flag_end == 2
+  xyTip = [elem_crk(tip,3) elem_crk(tip,4)] ;
+end
+
 [Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node);
 
 I1 = 0;
@@ -268,6 +273,7 @@ for iel = 1 : size(JWdomain,2)
       % The I integral needs to be adjusted to account for forces on the rift wall
       [ap,apg] = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,xyTip,xVertex,crack_nodes); % elem_crk in natural coordinates
       ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
+      keyboard
       for seg = 1:length(ap) - 1
         % find the distance between the two intersects (should be able to do this with det(J)
         p = ap(seg:seg+1,:);
@@ -390,6 +396,7 @@ for iel = 1 : size(JWdomain,2)
               % +++++++++++++++
               I_wall1 = -1*(sig_local1(1,2) * AuxGradDisp(1,1) + sig_local1(2,2) * AuxGradDisp(2,1) ) * qm1(2);
               % Interaction integral I
+              keyboard
               I(mode,1) = I(mode,1) + I_wall1*det(JO)*wt;
           end   %loop on mode
 
@@ -452,6 +459,7 @@ for iel = 1 : size(JWdomain,2)
               %  Surface part of the I integral 
               % +++++++++++++++
               I_wall2= (sig_local2(1,2) * AuxGradDisp(1,1) + sig_local2(2,2) * AuxGradDisp(2,1) ) * qm2(2);
+              keyboard
               
               % Interaction integral I
               I(mode,1) = I(mode,1) + I_wall2*det(JO)*wt;

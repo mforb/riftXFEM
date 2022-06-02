@@ -87,7 +87,7 @@ triplot(TR);
 print([results_path,'/mesh_refinement1'],'-dpng','-r200')
 %keyboard
 cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,20000);
+in = f_find_points_xCr(cpos,xCr,25000);
 
 
 %indx = find(cpos(:,1)>0e3 & cpos(:,1)<90e3 );
@@ -106,7 +106,7 @@ triplot(TR);
 print([results_path,'/mesh_refinement2'],'-dpng','-r200')
 
 cpos = TR.incenter;
-in = f_find_points_xCr(cpos,xCr,6000,17000);
+in = f_find_points_xCr(cpos,xCr,20000);
 
 
 %indx = find(cpos(:,1)>10e3 & cpos(:,1)<80e3 );
@@ -125,6 +125,26 @@ triplot(TR);
 print([results_path,'/mesh_refinement3'],'-dpng','-r200');
 
 cpos = TR.incenter;
+in = f_find_points_xCr(cpos,xCr,5000,14000);
+
+
+%indx = find(cpos(:,1)>10e3 & cpos(:,1)<80e3 );
+%indy = find(cpos(:,2)>-1150e3 & cpos(:,2)<-1110e3 );
+
+%in = intersect(indx,indy);
+[node,element] = TrefineRG(node,element,in);
+
+if Hidden
+  f = figure('visible','off')
+else
+  f = figure()
+end
+TR = triangulation(element,node);
+triplot(TR);
+print([results_path,'/mesh_refinement4'],'-dpng','-r200');
+clf(); close(f);
+
+cpos = TR.incenter;
 in = f_find_points_xCr(cpos,xCr,3000,12000);
 
 
@@ -135,15 +155,16 @@ in = f_find_points_xCr(cpos,xCr,3000,12000);
 [node,element] = TrefineRG(node,element,in);
 
 if Hidden
-  figure('visible','off')
+  f = figure('visible','off')
 else
-  figure()
+  f = figure()
 end
 TR = triangulation(element,node);
 triplot(TR);
 xlim([min(xs)-20000,max(xs)+20000])
 ylim([min(ys)-20000,max(ys)+20000])
 print([results_path,'/mesh_refinement4'],'-dpng','-r200')
+clf(); close(f);
 
 cpos = TR.incenter;
 figure()
@@ -165,9 +186,9 @@ end
 
 
 if Hidden 
-  figure('visible','off')
+  f = figure('visible','off')
 else
-  figure()
+  f = figure()
 end
 numelem = size(element,1);
 TR = triangulation(element,node);
@@ -175,6 +196,8 @@ triplot(TR);
 xlim([min(xs)-20000,max(xs)+20000])
 ylim([min(ys)-20000,max(ys)+20000])
 print([results_path,'/mesh_final'],'-dpng','-r200')
+clf(); close(f);
+
 cpos = TR.incenter;
 %if Hidden 
   %figure('visible','off')

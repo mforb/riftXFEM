@@ -5,11 +5,7 @@ function [ ckint_out ] = f_up_crk_int( ckint, intes, f1, f2, q1, q2, el  )
 %this function makes sure that ckint is always a 2 point crack  in the same direction as the overall crack (q1 to q2)
 global node epsilon
 
-if epsilon > 1e-6
-  in_epsi = 1e-6;
-else
-  in_epsi = epsilon/10; 
-end
+in_epsi = 1e-8;
 
 ins = intes(1,:);
 if size(intes,1)>1
@@ -42,6 +38,7 @@ if isempty(ckint)
     ckint_out = [ q1, ins ];
   else
     msg = ['Crk_int upgrade error, element ',num2str(el)]
+    keyboard
     error(msg)
   end
 else
@@ -50,6 +47,7 @@ else
    % there should be only one ins at this point
   else
     msg = ['Crk_int upgrade error, element ',num2str(el)]
+    keyboard
     error(msg)
   end
 

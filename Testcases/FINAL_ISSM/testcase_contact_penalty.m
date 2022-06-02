@@ -43,9 +43,9 @@ global wall_int stabalize Kpen penalty contact skip_branch
 wall_int = 1; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
 stabalize = 1;
 contact = 1;
-Kpen = 1e12 ;
+Kpen = 1e11 ;
 penalty = 1;
-skip_branch = 1;
+skip_branch = 0;
 
 xTip= [0,0];
 Rtip = xTip;
@@ -69,7 +69,7 @@ xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-xCr(1).coor = [xs',ys'] 
+xCr(1).coor = [fliplr(xs)',fliplr(ys)'] 
 %xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
 %{keyboard %}
 results_path = './PEN_xmas_tip1_10km';
@@ -92,7 +92,7 @@ y = [-400000,-400000];
 %%crack definition
 deltaInc = 2000; numstep = 5;
 %xCr(2).coor = [xs2',ys2'] 
-xCr(1).tip = [0,1];
+xCr(1).tip = [1,0];
 xCr_orig = xCr;
  
 typeProblem
@@ -226,7 +226,7 @@ zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
 make_knum
 
-xCr(1).tip = [1,0];
+xCr(1).tip = [0,1];
 close all;
 clf;
 if Hidden
