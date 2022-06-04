@@ -40,6 +40,7 @@ if isempty(skip_vertex)
 end
 nitsche = 0;
 plot_stresses = 0;
+TR = triangulation(element,node);
 
 Knum = [ ] ; Theta = [ ] ;
 enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
@@ -276,8 +277,7 @@ for ipas = 1:npas
     end
     hold on
     dfac = 1 ;
-    plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-    figure(f);
+    triplot(TR);
     hold on
     f_plotCrack2(crackLips,20,'r-','k-','c--')
     print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r300')
@@ -286,7 +286,7 @@ for ipas = 1:npas
       ylim(zoom_dim(2,:));
       figure_name = ['crack_walls_before_zoom',num2str(ipas)];
       print([results_path,'/',figure_name],'-dpng','-r300')
-      %keyboard
+      keyboard
     end
     clf();
     trisurf(element,node(:,1),node(:,2),Stduy)
@@ -445,7 +445,7 @@ for ipas = 1:npas
         ylim(zoom_dim(2,:));
         figure_name = ['crack_walls_after_zoom',num2str(ipas)];
         print([results_path,'/',figure_name],'-dpng','-r300')
-        %keyboard
+        keyboard
       end
       clf(f)
     end

@@ -1,5 +1,5 @@
-47.7851    Crack growth number     1
+61.8293    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
-Number of elements: 11551
- CRACK NODES :  1 crack nodes, 3 tangent elements, requiring 1 fixed nodes
+Number of elements: 23299
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes

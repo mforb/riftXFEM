@@ -80,10 +80,8 @@ for kk = 1:size(xCr,2) %what's the crack?
               [sctrn,xx] = find(element == sctr(in));
               [ele,xx] = find(type_elem(sctrn,:)==1);
               ref_elem = sctrn(ele);
-              n2 = find(enr_node(sctr==2));
-              n0 = find(enr_node(sctr==0));
-              nR = union(n2,n0);
               elem_blend = 1;
+              nR = find(enr_node(sctr)==1);
               Rpt = sum(N(nR));
             end
             % compute branch functions at Gauss point

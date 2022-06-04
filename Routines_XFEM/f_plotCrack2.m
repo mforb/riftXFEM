@@ -22,14 +22,15 @@ for kk = 1:size(crack_lips,4) %what's the crack?
        dup = [dup;dup3];
        ddown = [ddown;ddown3];
      end
-     p_up = p + 0.5*factor*(dup);
-     p_down = p - 0.5*factor*(ddown);
+     p_up = p + factor*(dup);
+     p_down = p + factor*(ddown);
      p_mid = p ; 
      plot(p_up(:,1),p_up(:,2),up_pl)
      plot(p_down(:,1),p_down(:,2),down_pl)
      if nargin > 4
        plot(p_mid(:,1),p_mid(:,2),mid_pl)
      end
+     keyboard
   end % end split or vertex elements
 end
 

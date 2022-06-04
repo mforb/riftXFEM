@@ -1,5 +1,5 @@
-function plotFieldXfem_pp(xCrk,pos,enrich_node,crack_nodes,u,...
-    elem_crk,vertex_elem,corner_elem,split_elem,tip_elem,xVertex,xTip,type_elem,ipas)
+function [ca,cax,cay] = plotFieldXfem_pp(xCrk,pos,enrich_node,crack_nodes,u,...
+    elem_crk,vertex_elem,corner_elem,split_elem,tip_elem,xVertex,xTip,type_elem,ipas,varargin)
 
 %plot stress contour.
 %
@@ -28,6 +28,17 @@ strain_pnt = [ ] ;
 strain_val = [ ] ;
 anaStress_val = [ ] ;
 fac = 0 ;
+ca = []; cax = []; cay = [];
+if length(varargin)>0
+  ca = varargin{1};
+  if length(varargin)>1
+    cax = varagin{2};
+    if length(varargin)==3
+      cay = varargin{3};
+    end
+  end
+end
+
 
 for iel=1:size(element,1)
     sctr = element(iel,:) ;
@@ -92,18 +103,25 @@ for i = 1:length(node)
   [els,~] = find(element==i);
   node_vm(i) = mean(vonmises(els));
 end
-try 
-  ca = [min(0,quantile(vonmises,0.1)) round(quantile(vonmises,0.995))];
-  mi = ca(1);
-  ma = ca(2);
-catch 
-  mi = min(vonmises(:,1,1));
-  ma = max(vonmises(:,1,1));
-  sl = (ma-mi);
-  if sl == 0
-    sl = 1;
+if isempty(ca)
+  try 
+    ca = [min(0,quantile(vonmises,0.1)) round(quantile(vonmises,0.995))];
+    mi = ca(1);
+    ma = ca(2);
+  catch 
+    mi = min(vonmises(:,1,1));
+    ma = max(vonmises(:,1,1));
+    sl = (ma-mi);
+    if sl == 0
+      sl = 1;
+    end
+    ca = [mi,ma-0.9*sl];
+    ca2 = [mi,ma];
   end
-  ca = [mi,ma-0.9*sl];
+else
+  mi = ca(1);
+  sl = 10*(ca(2)- ca(1));
+  ma = ca(1)+sl;
   ca2 = [mi,ma];
 end
 v1  = linspace(mi,ma-0.4*sl,100);
@@ -145,9 +163,9 @@ if ~isempty(zoom_dim)
   in = intersect(indx,indy);
   vm_s    = vonmises(in,1,1);
   try 
-    ca = [min(0,quantile(vonmises,0.1)) round(quantile(vonmises,0.995))]
-    mi = min(vm_s(:,1,1));
-    ma = max(vm_s(:,1,1));
+    ca2 = [min(0,quantile(vm_s,0.1)) round(quantile(vm_s,0.995))]
+    mi = ca2(1);
+    ma = ca2(2); 
   catch 
     mi = min(vm_s(:,1,1));
     ma = max(vm_s(:,1,1));
@@ -155,8 +173,7 @@ if ~isempty(zoom_dim)
     if sl == 0
       sl = 1;
     end
-    ca = [mi,ma-0.9*sl];
-    ca2 = [mi,ma];
+    ca2 = [mi,ma-0.9*sl];
   end
   figure(f);
   xlim(zoom_dim(1,:))
@@ -181,13 +198,14 @@ if ~isempty(zoom_dim)
   figure(f2);
 
   figure(f);
-  caxis(ca);
+  caxis(ca2);
   figure_name = ['Vonmises_stress_zoom2',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng','-r300')
   figure(f2);
   clf();
-  caxis(ca);
+  caxis(ca2);
   [C,h] = tricontour(element,node(:,1),node(:,2),node_vm,v1);
+  colorbar;
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
   figure_name = ['ContourVM_stress_lin_zoom2',num2str(ipas)];
@@ -197,7 +215,8 @@ if ~isempty(zoom_dim)
   figure(f3);
   clf();
   [C,h] = tricontour(element,node(:,1),node(:,2),node_vm,vl);
-  caxis(ca2);
+  colorbar;
+  caxis([mi,ma]);
   set(gca,'ColorScale','log');
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
@@ -219,8 +238,9 @@ shading flat
 colorbar
 cm = cbrewer2('RdBu', 256);
 colormap(cm);
+if isempty(cax)
 try 
-  caxis([min(0,quantile(mstress(:,1,1),0.1)) round(quantile(mstress(:,1,1),0.995))])
+  cax = [min(0,quantile(mstress(:,1,1),0.1)) round(quantile(mstress(:,1,1),0.99))];
 catch 
   mi = min(mstress(:,1,1));
   ma = max(mstress(:,1,1));
@@ -228,8 +248,10 @@ catch
   if sl == 0
     sl = 1;
   end
-  caxis([mi+0.2*sl,ma-0.2*sl])
+  cax = [mi+0.2*sl,ma-0.2*sl];
 end
+end
+caxis(cax);
 
 figure_name = ['Stress_xx_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
@@ -249,8 +271,9 @@ shading flat
 colorbar
 cm = cbrewer2('PuOr', 256);
 colormap(cm);
+if isempty(cay)
 try 
-  caxis([min(0,quantile(mstress(:,1,2),0.1)) round(quantile(mstress(:,1,2),0.995))])
+  cay = [min(0,quantile(mstress(:,1,2),0.1)) round(quantile(mstress(:,1,2),0.99))];
 catch 
   mi = min(mstress(:,1,2));
   ma = max(mstress(:,1,2));
@@ -258,9 +281,11 @@ catch
   if sl == 0
     sl = 1;
   end
-  caxis([mi+0.2*sl,ma-0.2*sl])
+  cay = [mi+0.2*sl,ma-0.2*sl];
   warning('quantile not available- caxis boundaries are arbitrary-ish')
 end
+end
+caxis(cay);
 colorbar();
 figure_name = ['Stress_yy_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')

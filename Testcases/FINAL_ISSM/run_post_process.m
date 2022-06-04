@@ -146,7 +146,7 @@ if 1
   load(lname)
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-20000,max(xCrk.coor(:,1))+20000];
   zoom_dim(2,:) = [min(xCrk.coor(:,2))-10000,max(xCrk.coor(:,2))+10000];
-  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+  [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
     elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1) ;
 end
 
@@ -165,7 +165,7 @@ if 1
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-20000,max(xCrk.coor(:,1))+20000];
   zoom_dim(2,:) = [min(xCrk.coor(:,2))-10000,max(xCrk.coor(:,2))+10000];
   plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66,ca) ;
 end
 
   
