@@ -66,7 +66,8 @@ for ii=1:length(elems)
   end
 
   % now we are going to evaluate the displacement of each point for the positive, negative and midpoint of the crack
- 
+ [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
+
 
   for gp = 1:size(p,1)
     c_inds = [2*gp - 1, 2*gp ];
