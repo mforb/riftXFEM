@@ -1,7 +1,7 @@
 No tip field for xCr defined, all tips have been activated
-18.2088    Crack growth number     1
+22.0756    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 540
  CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
-Tip 2: K1 is 2.4588   K2 is -0.21229  and theta is 0.16977
+Tip 2: K1 is 2.5553   K2 is -0.23408  and theta is 0.17975

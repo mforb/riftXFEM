@@ -1,4 +1,4 @@
-function [B] = xfemBmat(pt,e,type_elem,enrich_node,xCrl,GVertex,crack_node,cont)
+function [B] = xfemBmat(pt,e,type_elem,enr_node,xCrl,GVertex,xTip,crack_node,cont)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -12,6 +12,44 @@ J0 = node(sctr,:)'*dNdxi;                 % element Jacobian matrix
 invJ0 = inv(J0);
 dNdx  = dNdxi*invJ0;                      % derivatives of N w.r.t XY
 Gpt = N' * node(sctr,:);                  % GP in global coord, used
+
+if any(enr_node(sctr) == 1)
+  in = find(enr_node(sctr) == 1,1);
+  if type_elem(e,1) == 1   %looking for the "tip" element
+    ref_elem = e;
+    Rpt = 1;
+  else    %trovo l'elemento/fessura a cui fa riferimento il nodo (SOLO 1 RIF AUTORIZZATO!!)
+    [sctrn,xx] = find(element == sctr(in));
+    [ele,xx] = find(type_elem(sctrn,:)==1);
+    ref_elem = sctrn(ele);
+    blend_elem = 1
+    nR = find(enr_node(sctr)==1);
+    Rpt = sum(N(nR));
+  end
+  if size(xTip,1)>1
+    xTip = xTip(ref_elem,:);
+  end
+
+  if points_same_2d(xCrl(ref_elem,3:4),xTip,1e-6)   
+    xCrek  = [ xCrl(ref_elem,1:2); xCrl(ref_elem,3:4) ]; 
+  else
+    xCrek  = [ xCrl(ref_elem,3:4); xCrl(ref_elem,1:2) ]; 
+  end
+  seg   = xCrek(2,:) - xCrek(1,:);
+  alpha = atan2(seg(2),seg(1));
+  xTip  = [xCrek(2,1) xCrek(2,2)];
+  QT    = [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];
+  xp    = QT*(Gpt-xTip)';           % local coordinates
+  if abs(xp) < 1e-6
+    Rpt = 0; % the point is (in theory) the tip, so the enrichments should all be zero
+  end
+  r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
+  theta = atan2(xp(2),xp(1));
+  if ( theta > pi | theta < -pi)
+      disp (['something wrong with angle ',num2str(thet)]);
+  end
+  [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
+end
 
 %Standard B matrix is computed always...
 if cont == 1
@@ -27,7 +65,7 @@ end
 iwant = [ ] ;
 elem_blend = 0;
 %switch between non-enriched and enriched elements
-if( all(enrich_node(sctr) == 0) ) 
+if( all(enr_node(sctr) == 0) ) 
     %if (type_elem(e,cont) == 4 )
       %ref_elem = e;
       %xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
@@ -40,7 +78,7 @@ else
      
     for in = 1:nn
         %Enriched by H(x) at global gauss point
-        if ( enrich_node(sctr(in)) == 2)
+        if ( enr_node(sctr(in)) == 2)
             ref_elem = e;
             xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
             if (type_elem(e,cont) == 3)
@@ -61,22 +99,24 @@ else
                         Hgp =  Hgp;
                     end
                 end
+                dist = signed_distance(xCre,node(sctr(in),:),0);
+                Hi  = sign(dist);
                 if ismember(sctr(in),crack_node) 
-                  Hi = sign(-1);
-                else
-                  dist = signed_distance(xCre,node(sctr(in),:),0);
-                  Hi  = sign(dist);
+                  %Hi = sign(-1);
+                  %Hi = -1*Hgp;
+                  Hi = 0;
                 end
             else%
                 % Enrichment function, H(x) at global Gauss point
                 dist = signed_distance(xCre,Gpt,16);
                 Hgp  = sign(dist);
                 % Enrichment function, H(x) at node "in"
+                dist = signed_distance(xCre,node(sctr(in),:),0);
+                Hi  = sign(dist);
                 if ismember(sctr(in),crack_node) 
-                  Hi = sign(-1);
-                else
-                  dist = signed_distance(xCre,node(sctr(in),:),0);
-                  Hi  = sign(dist);
+                  %Hi = sign(-1);
+                  %Hi = -1*Hgp;
+                  Hi = 0;
                 end
             end % is vertex
             % Bxfem at node "in"
@@ -90,33 +130,8 @@ else
             clear BI_enr ;
             
             % ------------ Enriched by asymptotic functions -----------------------------------
-        elseif ( enrich_node(sctr(in)) == 1) % B(x) enriched node
-            if type_elem(e,1) == 1   %looking for the "tip" element
-                ref_elem = e;
-            else    %trovo l'elemento/fessura a cui fa riferimento il nodo (SOLO 1 RIF AUTORIZZATO!!)
-                [sctrn,xx] = find(element == sctr(in));
-                [ele,xx] = find(type_elem(sctrn,:)==1);
-                ref_elem = sctrn(ele);
-                nR = find(enrich_node(sctr)==1);
-                elem_blend = 1;
-                Rpt = sum(N(nR));
-                dRdx = sum(dNdx(nR,:),1);
-            end
+        elseif ( enr_node(sctr(in)) == 1) % B(x) enriched node
             % compute branch functions at Gauss point
-            xCre  = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];
-            seg   = xCre(2,:) - xCre(1,:);
-            alpha = atan2(seg(2),seg(1));
-            xTip  = [xCre(2,1) xCre(2,2)];
-            QT    = [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];
-            xp    = QT*(Gpt-xTip)';           % local coordinates
-            r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
-            theta = atan2(xp(2),xp(1));
-            
-            if ( theta > pi | theta < -pi)
-                disp (['something wrong with angle ',num2str(thet)]);
-            end
-            [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
-            % compute branch functions at node "in"
             xp    = QT*(node(sctr(in),:)-xTip)';
             r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
             theta = atan2(xp(2),xp(1));
@@ -166,7 +181,7 @@ else
             clear B1_enr; clear B2_enr; clear B3_enr; clear B4_enr;
             Bxfem = [Bxfem BI_enr];
             clear BI_enr ;
-        elseif( enrich_node(sctr(in)) == 3)
+        elseif( enr_node(sctr(in)) == 3)
             % compute the enrichment function and derivatives
             % at gauss point
             x = Gpt(1);

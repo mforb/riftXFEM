@@ -34,7 +34,11 @@ for p = 1:pn
         ref_elem = sctrn(ele);
     end
     % compute branch functions at Gauss point
-    xCre  = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];
+    if points_same_2d(xCrl(ref_elem,3:4),xTip(ref_elem,:),1e-6)   
+      xCre  = [ xCrl(ref_elem,1:2); xCrl(ref_elem,3:4) ]; 
+    else
+      xCre  = [ xCrl(ref_elem,3:4); xCrl(ref_elem,1:2) ]; 
+    end
     seg   = xCre(2,:) - xCre(1,:);
     alpha = atan2(seg(2),seg(1));
     Tip  = [xCre(2,1) xCre(2,2)];

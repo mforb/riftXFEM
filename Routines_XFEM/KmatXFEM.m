@@ -47,7 +47,7 @@ for iel = 1:numelem
         [N,dNdxi] = lagrange_basis(elemType,Gpt) ;
         JO = node(sctr,:)'*dNdxi ;
         for k = 1:size(xCrk,2)
-            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_nodes,k)];
+            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,xTip,crack_nodes,k)];
         end
         Ppoint =  N' * node(sctr,:);
         q = [q;Ppoint] ;

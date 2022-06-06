@@ -95,7 +95,7 @@ for iel = 1 : size(Jdomain,2)
         % +++++++++++++++++++++++++
         % need to compute u,x u,y v,x v,y, stored in matrix H
         for k = 1:size(xCr,2)
-            B = [B xfemBmat(pt,e,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_nodes,k)];
+            B = [B xfemBmat(pt,e,type_elem,enrich_node(:,k),elem_crk,xVertex,xyTip,crack_nodes,k)];
         end
 
         leB = size(B,2);

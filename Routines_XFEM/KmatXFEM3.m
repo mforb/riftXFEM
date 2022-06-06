@@ -1,4 +1,4 @@
-function [Kglobal,Fext] = KmatXFEM(enrich_node,elem_crk,type_elem,xTip,xVertex,...
+function [Kglobal,Fext] = KmatXFEM3(enrich_node,elem_crk,type_elem,xTip,xVertex,...
     split_elem,tip_elem,vertex_elem,corner_elem,crack_node,enr_domain,pos,xCrk,Kglobal,Fext)
 
 %declare global variables here
@@ -66,7 +66,7 @@ for iel = 1:numelem
         [N,dNdxi] = lagrange_basis(elemType,Gpt) ;
         JO = node(sctr,:)'*dNdxi ;
         for k = 1:size(xCrk,2)
-            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,crack_node,k)];
+            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,xTip,crack_node,k)];
         end
         Ppoint =  N' * node(sctr,:);
         q = [q;Ppoint] ;

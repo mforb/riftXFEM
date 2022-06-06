@@ -40,14 +40,14 @@ for in = 1:nn
     if ( enrich_node(sctr(in)) == 2)
         ref_elem = e;
         xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
+        dist = signed_distance(xCre,node(sctr(in),:),0);
+        Hi  = sign(dist);
+        Hgp = 1;
         if ismember(sctr(in),crack_node) 
-          Hi = sign(-1);
-        else
-          dist = signed_distance(xCre,node(sctr(in),:),0);
-          Hi  = sign(dist);
+          %Hi = sign(-1);
+          Hi = -1*Hgp;
         end
         % Bxfem at node "in"
-        Hgp = 1;
         BI_enrP = [dNdx(in,1)*(Hgp - Hi) 0 ; 0 dNdx(in,2)*(Hgp - Hi) ;
             dNdx(in,2)*(Hgp - Hi) dNdx(in,1)*(Hgp - Hi)];
         N_enrP = [N(in)*(Hgp - Hi) , N(in)*(Hgp - Hi)] ;

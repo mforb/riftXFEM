@@ -268,8 +268,9 @@ for ipas = 1:npas
     fu = full(u);
     Stdux = fu(1:2:2*numnode) ;
     Stduy = fu(2:2:2*numnode) ;
-    [crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
+    [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
     if Hidden 
       f = figure('visible','off');
     else
@@ -279,7 +280,7 @@ for ipas = 1:npas
     dfac = 1 ;
     triplot(TR);
     hold on
-    f_plotCrack2(crackLips,20,'r-','k-','c--')
+    f_plotCrack(crackLips,20,'r-','k-','c--')
     print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r300')
     if ~isempty(zoom_dim)
       xlim(zoom_dim(1,:));
@@ -328,7 +329,7 @@ for ipas = 1:npas
         [crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
         dfac = 1 ;
         plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-        f_plotCrack2(crackLips,20,'r-','k-','c--')
+        f_plotCrack(crackLips,20,'r-','k-','c--')
         print([results_path,'/crack_walls_stab',num2str(ipas)],'-dpng','-r300')
         clf(f)
         trisurf(element,node(:,1),node(:,2),Stduy2)
@@ -399,7 +400,7 @@ for ipas = 1:npas
           fu = full(u);
           Stdux = fu(1:2:2*numnode) ;
           Stduy = fu(2:2:2*numnode) ;
-          [crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+          [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
           f = figure('visible','on');
           clf
           hold on
@@ -429,7 +430,7 @@ for ipas = 1:npas
        
        %save('test.mat','K','F','u')
 
-      [crackLips,flagP] = f_cracklips( u, xCr, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+      [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
       if Hidden 
         f = figure('visible','off');
       else

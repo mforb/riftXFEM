@@ -75,18 +75,24 @@ else
                     end
                 end
                 dist = signed_distance(xCre,node(sctr(in),:),0); % nodes are always outside the triangle..easy!
-                Hi  = sign(dist);
+                Hi   = sign(dist);
+                if ismember(sctr(in),crack_node) 
+                  %Hi = sign(-1);
+                  %Hi = -1*Hgp;
+                  Hi = 0;
+                end
                 
             else%
                 % Enrichment function, H(x) at global Gauss point
                 dist = signed_distance(xCre,Gpt,16);
                 Hgp  = sign(dist);
                 % Enrichment function, H(x) at node "in"
+                dist = signed_distance(xCre,node(sctr(in),:),0);
+                Hi  = sign(dist);
                 if ismember(sctr(in),crack_node) 
-                  Hi = sign(-1);
-                else
-                  dist = signed_distance(xCre,node(sctr(in),:),0);
-                  Hi  = sign(dist);
+                  %Hi = sign(-1);
+                  %Hi = -1*Hgp;
+                  Hi = 0;
                 end
             end % is vertex
             % Bxfem at node "in"

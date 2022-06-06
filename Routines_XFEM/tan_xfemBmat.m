@@ -29,11 +29,12 @@ for in = 1:nn
   dist = signed_distance(xCre,Gpt,16);
   Hgp  = sign(dist);
   % Enrichment function, H(x) at node "in"
+  dist = signed_distance(xCre,node(sctr(in),:),0);
+  Hi  = sign(dist);
   if ismember(sctr(in),crack_node) 
-    Hi = sign(-1);
-  else
-    dist = signed_distance(xCre,node(sctr(in),:),0);
-    Hi  = sign(dist);
+    %Hi = sign(-1);
+    %Hi = -1*Hgp;
+    Hi = 0;
   end
   % Bxfem at node "in"
   BI_enr = [dNdx(in,1)*(Hgp - Hi) 0 ; 0 dNdx(in,2)*(Hgp - Hi) ;

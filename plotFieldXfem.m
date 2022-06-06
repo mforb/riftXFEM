@@ -1,5 +1,5 @@
 function plotFieldXfem(xCrk,pos,enrich_node,u,...
-    elem_crk,vertex_elem,split_elem,tip_elem,xVertex,xTip,type_elem,ipas)
+    elem_crk,vertex_elem,split_elem,tip_elem,xVertex,xTip,crack_node,type_elem,ipas)
 
 %plot stress contour.
 %
@@ -55,7 +55,7 @@ for iel=1:numelem
         %end
         
         for k = 1:size(xCrk,2)
-            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,k)] ;
+            B = [B xfemBmat(Gpt,iel,type_elem,enrich_node(:,k),elem_crk,xVertex,xTip,crack_node,k)] ;
         end
         eps_sub = B*U ;
         
