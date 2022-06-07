@@ -103,7 +103,7 @@ else
 end
 TR = triangulation(element,node);
 triplot(TR);
-print([results_path,'/mesh_refinement2'],'-dpng','-r200')
+print([results_path,'/mesh_refinement2'],'-dpng','-r300')
 
 cpos = TR.incenter;
 in = f_find_points_xCr(cpos,xCr,20000);
@@ -122,7 +122,7 @@ else
 end
 TR = triangulation(element,node);
 triplot(TR);
-print([results_path,'/mesh_refinement3'],'-dpng','-r200');
+print([results_path,'/mesh_refinement3'],'-dpng','-r300');
 
 cpos = TR.incenter;
 in = f_find_points_xCr(cpos,xCr,5000,14000);
@@ -141,7 +141,7 @@ else
 end
 TR = triangulation(element,node);
 triplot(TR);
-print([results_path,'/mesh_refinement4'],'-dpng','-r200');
+print([results_path,'/mesh_refinement4'],'-dpng','-r300');
 clf(); close(f);
 
 cpos = TR.incenter;
@@ -163,7 +163,7 @@ TR = triangulation(element,node);
 triplot(TR);
 xlim([min(xs)-20000,max(xs)+20000])
 ylim([min(ys)-20000,max(ys)+20000])
-print([results_path,'/mesh_refinement4'],'-dpng','-r200')
+print([results_path,'/mesh_refinement4'],'-dpng','-r300')
 clf(); close(f);
 
 cpos = TR.incenter;
@@ -195,7 +195,7 @@ TR = triangulation(element,node);
 triplot(TR);
 xlim([min(xs)-20000,max(xs)+20000])
 ylim([min(ys)-20000,max(ys)+20000])
-print([results_path,'/mesh_final'],'-dpng','-r200')
+print([results_path,'/mesh_final'],'-dpng','-r300')
 clf(); close(f);
 
 cpos = TR.incenter;

@@ -2,6 +2,8 @@ path(path,'../../')
 path(path,'../../Crackprocessing')
 path(path,'../../Mesh')
 path(path,'../../Routines_XFEM')
+path(path,'../../Routines_ICEM')
+path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
 
@@ -12,9 +14,11 @@ global results_path
 global zoom_dim
 global Hidden
 global fontSize2 fontSize1
+global elemType 
 Hidden = 0;
 global E C nu P
 E = 9.6e9; nu = 0.3; P = 1 ;
+elemType = 'T3';
 sigmato = P ;
 stressState = 'PlaneStrain' ;
 if( strcmp(stressState,'PlaneStress') )
@@ -141,13 +145,43 @@ shapewrite(srift_final,[results_path,'/',shapefile_name]);
 
 %plots of the first time-step
 if 1
-  dname = ld(1).name;
-  lname = [dname,'/crack1.mat']; 
+  dname = ld(end).name;
+  lname = [dname,'/crack2.mat']; 
   load(lname)
-  zoom_dim(1,:) = [min(xCrk.coor(:,1))-20000,max(xCrk.coor(:,1))+20000];
-  zoom_dim(2,:) = [min(xCrk.coor(:,2))-10000,max(xCrk.coor(:,2))+10000];
+  zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
+  zoom_dim(2,:) = [min(xCrk.coor(:,2))-30000,max(xCrk.coor(:,2))+30000];
   [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1) ;
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+  fu = full(u);
+  numnode = length(node);
+  Stdux = fu(1:2:2*numnode) ;
+  Stduy = fu(2:2:2*numnode) ;
+  %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+
+  f = figure();
+  hold on
+  %[crackLips,flagP] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+  %dfac = 1 ;
+  %triplot(TR);
+  %hold on
+  %f_plotCrack(crackLips,20,'r-','k-','c--')
+  %print([results_path,'/crack_walls_end',num2str(ipas)],'-dpng','-r300')
+  %if ~isempty(zoom_dim)
+    %xlim(zoom_dim(1,:));
+    %ylim(zoom_dim(2,:));
+    %figure_name = ['crack_walls_end_zoom',num2str(ipas)];
+    %print([results_path,'/',figure_name],'-dpng','-r300')
+    %keyboard
+  %end
+  %clf();
+  trisurf(element,node(:,1),node(:,2),Stduy)
+  axis equal; view(2); shading interp; colorbar
+  cm = flipud(cbrewer2('RdBu', 256));
+  colormap(cm);
+  caxis([-4,1]);
+  title('Y displacement')
+  print([results_path,'/end_ydisp'],'-dpng','-r300')
+  clf();
 end
 
 %reset C
@@ -159,13 +193,41 @@ else
 end
 %plots of the first time-step
 if 1
-  dname = ld(end).name;
-  lname = [dname,'/crack2.mat']; 
+  dname = ld(1).name;
+  lname = [dname,'/crack1.mat']; 
   load(lname)
-  zoom_dim(1,:) = [min(xCrk.coor(:,1))-20000,max(xCrk.coor(:,1))+20000];
-  zoom_dim(2,:) = [min(xCrk.coor(:,2))-10000,max(xCrk.coor(:,2))+10000];
   plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66,ca) ;
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  fu = full(u);
+  numnode = length(node);
+  Stdux = fu(1:2:2*numnode) ;
+  Stduy = fu(2:2:2*numnode) ;
+  %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+
+  f = figure();
+  hold on
+  %[crackLips,flagP] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+  %dfac = 1 ;
+  %triplot(TR);
+  %hold on
+  %f_plotCrack(crackLips,20,'r-','k-','c--')
+  %print([results_path,'/crack_walls_start',num2str(ipas)],'-dpng','-r300')
+  %if ~isempty(zoom_dim)
+    %xlim(zoom_dim(1,:));
+    %ylim(zoom_dim(2,:));
+    %figure_name = ['crack_walls_start_zoom',num2str(ipas)];
+    %print([results_path,'/',figure_name],'-dpng','-r300')
+    %keyboard
+  %end
+  %clf();
+  trisurf(element,node(:,1),node(:,2),Stduy)
+  axis equal; view(2); shading interp; colorbar
+  cm = flipud(cbrewer2('RdBu', 256));
+  colormap(cm);
+  caxis([-4,1]);
+  title('Y displacement')
+  print([results_path,'/start_ydisp'],'-dpng','-r300')
+  clf();
 end
 
   

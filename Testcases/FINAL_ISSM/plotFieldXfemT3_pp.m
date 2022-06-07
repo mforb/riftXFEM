@@ -32,7 +32,7 @@ ca = []; cax = []; cay = [];
 if length(varargin)>0
   ca = varargin{1};
   if length(varargin)>1
-    cax = varagin{2};
+    cax = varargin{2};
     if length(varargin)==3
       cay = varargin{3};
     end
@@ -95,6 +95,7 @@ figure(f);
 patch('faces',tri,'vertices',node,'facevertexcdata',vonmises);
 cm = cbrewer2('BuPu', 256);
 colormap(cm);
+axis equal;
 title('Vonmises','FontSize',fontSize1)
 shading flat 
 colorbar
@@ -124,12 +125,24 @@ else
   ma = ca(1)+sl;
   ca2 = [mi,ma];
 end
-v1  = linspace(mi,ma-0.4*sl,100);
-vl = logspace(max(log10(mi),1),log10(ma-0.4*sl),20);
+vl1 = logspace(3,log10(5e6),25);
+vl2 = logspace(max(log10(mi),1),log10(ma-0.4*sl),25);
 figure(f2);
-[C,h] = tricontour(element,node(:,1),node(:,2),node_vm,v1);
+[C,h] = tricontf(node(:,1),node(:,2),element,node_vm,vl1);
+set(h,'edgecolor',[0.1 0.1 0.1]);
+set(h,'edgealpha',0.5);
+axis equal;
+colormap(cm);
+caxis([vl1(1),vl1(end)]);
+set(gca,'ColorScale','log');
 figure(f3);
-[C,h] = tricontour(element,node(:,1),node(:,2),node_vm,vl);
+[C,h] = tricontf(node(:,1),node(:,2),element,node_vm,vl2);
+set(h,'edgecolor',[0.1 0.1 0.1]);
+set(h,'edgealpha',0.5);
+colormap(cm);
+caxis([vl2(1),vl2(end)]);
+axis equal;
+set(gca,'ColorScale','log');
 
 figure(f);
 colorbar
@@ -137,93 +150,36 @@ title('Vonmises','FontSize',fontSize1)
 caxis(ca);
 figure_name = ['Vonmises_stress_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
-figure(f2);
-caxis(ca);
-colorbar
-colormap(cm);
-title('Vonmises','FontSize',fontSize1)
-figure_name = ['ContourVM_stress_lin',num2str(ipas)];
-print([results_path,'/',figure_name],'-dpng','-r300');
-saveas(f2,[results_path,'/',figure_name],'epsc');
-figure(f3);
-colorbar
-caxis(ca2);
-colormap(cm);
-set(gca,'ColorScale','log');
-title('Vonmises','FontSize',fontSize1)
-figure_name = ['ContourVM_stress_log',num2str(ipas)];
-print([results_path,'/',figure_name],'-dpng','-r300');
-saveas(f3,[results_path,'/',figure_name],'epsc');
+caxis([0,3e4]);
+figure_name = ['Vonmises_stress2_',num2str(ipas)];
+print([results_path,'/',figure_name],'-dpng','-r300')
 
 if ~isempty(zoom_dim)
-  indx = find(cpos(:,1)>zoom_dim(1,1));
-  indx = find(cpos(indx,1)<zoom_dim(1,2));
-  indy = find(cpos(:,2)>zoom_dim(2,1));
-  indy = find(cpos(indy,2)<zoom_dim(2,2));
-  in = intersect(indx,indy);
-  vm_s    = vonmises(in,1,1);
-  try 
-    ca2 = [min(0,quantile(vm_s,0.1)) round(quantile(vm_s,0.995))]
-    mi = ca2(1);
-    ma = ca2(2); 
-  catch 
-    mi = min(vm_s(:,1,1));
-    ma = max(vm_s(:,1,1));
-    sl = (ma-mi);
-    if sl == 0
-      sl = 1;
-    end
-    ca2 = [mi,ma-0.9*sl];
-  end
-  figure(f);
-  xlim(zoom_dim(1,:))
-  ylim(zoom_dim(2,:))
-  figure_name = ['Vonmises_stress_zoom',num2str(ipas)];
-  print([results_path,'/',figure_name],'-dpng','-r300')
   figure(f2);
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
-  figure_name = ['ContourVM_stress_lin_zoom',num2str(ipas)];
-  print([results_path,'/',figure_name],'-dpng','-r300');
-  saveas(f2,[results_path,'/',figure_name],'epsc');
-  figure(f3);
-  xlim(zoom_dim(1,:))
-  ylim(zoom_dim(2,:))
+  colorbar;
   figure_name = ['ContourVM_stress_log_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng','-r300');
-  saveas(f3,[results_path,'/',figure_name],'epsc');
-
-  v1  = linspace(mi,ma,50);
-  vl = logspace(max(log10(mi),1),log10(ma),15);
-  figure(f2);
-
-  figure(f);
-  caxis(ca2);
-  figure_name = ['Vonmises_stress_zoom2',num2str(ipas)];
-  print([results_path,'/',figure_name],'-dpng','-r300')
-  figure(f2);
-  clf();
-  caxis(ca2);
-  [C,h] = tricontour(element,node(:,1),node(:,2),node_vm,v1);
-  colorbar;
-  xlim(zoom_dim(1,:))
-  ylim(zoom_dim(2,:))
-  figure_name = ['ContourVM_stress_lin_zoom2',num2str(ipas)];
+  %saveas(f2,[results_path,'/',figure_name],'epsc');
+  keyboard
+  [C,h] = tricont(node(:,1),node(:,2),element,node_vm,vl1);
+  clabel(C,h);
+  figure_name = ['ContourVM_labels_zoom',num2str(ipas)]; 
   print([results_path,'/',figure_name],'-dpng','-r300');
-  saveas(f2,[results_path,'/',figure_name],'epsc');
+
 
   figure(f3);
-  clf();
-  [C,h] = tricontour(element,node(:,1),node(:,2),node_vm,vl);
-  colorbar;
-  caxis([mi,ma]);
-  set(gca,'ColorScale','log');
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
-  figure_name = ['ContourVM_stress_log_zoom2',num2str(ipas)];
+  colorbar;
+  figure_name = ['ContourVM_stress_log2_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng','-r300');
-  saveas(f3,[results_path,'/',figure_name],'epsc');
-
+  %saveas(f3,[results_path,'/',figure_name],'epsc');
+  [C,h] = tricont(node(:,1),node(:,2),element,node_vm,vl2);
+  clabel(C,h);
+  figure_name = ['ContourVM_labels_zoom',num2str(ipas)]; 
+  print([results_path,'/',figure_name],'-dpng','-r300');
 end
 
 close(f2);
@@ -236,31 +192,33 @@ patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,1));
 title('Stress XX','FontSize',fontSize1)
 shading flat 
 colorbar
-cm = cbrewer2('RdBu', 256);
+cm = cbrewer2('RdYlBu', 256);
 colormap(cm);
-if isempty(cax)
-try 
-  cax = [min(0,quantile(mstress(:,1,1),0.1)) round(quantile(mstress(:,1,1),0.99))];
-catch 
-  mi = min(mstress(:,1,1));
-  ma = max(mstress(:,1,1));
-  sl = (ma-mi);
-  if sl == 0
-    sl = 1;
-  end
-  cax = [mi+0.2*sl,ma-0.2*sl];
-end
-end
+%if isempty(cax)
+%try 
+  %cax = [min(0,quantile(mstress(:,1,1),0.1)) round(quantile(mstress(:,1,1),0.99))];
+%catch 
+  %mi = min(mstress(:,1,1));
+  %ma = max(mstress(:,1,1));
+  %sl = (ma-mi);
+  %if sl == 0
+    %sl = 1;
+  %end
+  %cax = [mi+0.2*sl,ma-0.2*sl];
+%end
+%end
+cax = [-2e4,2e4];
 caxis(cax);
+axis equal;
 
 figure_name = ['Stress_xx_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
-if ~isempty(zoom_dim)
-  xlim(zoom_dim(1,:))
-  ylim(zoom_dim(2,:))
-  figure_name = ['StressZoom_xx_',num2str(ipas)];
-  print([results_path,'/',figure_name],'-dpng','-r300')
-end
+%if ~isempty(zoom_dim)
+  %xlim(zoom_dim(1,:))
+  %ylim(zoom_dim(2,:))
+  %figure_name = ['StressZoom_xx_',num2str(ipas)];
+  %print([results_path,'/',figure_name],'-dpng','-r300')
+%end
 
 figure(f);
 clf();
@@ -269,32 +227,34 @@ patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,2));
 title('Stress YY','FontSize',fontSize1)
 shading flat 
 colorbar
-cm = cbrewer2('PuOr', 256);
+cm = cbrewer2('RdYlGn', 256);
 colormap(cm);
-if isempty(cay)
-try 
-  cay = [min(0,quantile(mstress(:,1,2),0.1)) round(quantile(mstress(:,1,2),0.99))];
-catch 
-  mi = min(mstress(:,1,2));
-  ma = max(mstress(:,1,2));
-  sl = (ma-mi);
-  if sl == 0
-    sl = 1;
-  end
-  cay = [mi+0.2*sl,ma-0.2*sl];
-  warning('quantile not available- caxis boundaries are arbitrary-ish')
-end
-end
+%if isempty(cay)
+%try 
+  %cay = [min(0,quantile(mstress(:,1,2),0.1)) round(quantile(mstress(:,1,2),0.99))];
+%catch 
+  %mi = min(mstress(:,1,2));
+  %ma = max(mstress(:,1,2));
+  %sl = (ma-mi);
+  %if sl == 0
+    %sl = 1;
+  %end
+  %cay = [mi+0.2*sl,ma-0.2*sl];
+  %warning('quantile not available- caxis boundaries are arbitrary-ish')
+%end
+%end
+cay = [-2e4,2e4];
 caxis(cay);
 colorbar();
+axis equal;
 figure_name = ['Stress_yy_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
-if ~isempty(zoom_dim)
-  xlim(zoom_dim(1,:))
-  ylim(zoom_dim(2,:))
-  figure_name = ['StressZoom_yy_',num2str(ipas)];
-  print([results_path,'/',figure_name],'-dpng','-r300')
-end
+%if ~isempty(zoom_dim)
+  %xlim(zoom_dim(1,:))
+  %ylim(zoom_dim(2,:))
+  %figure_name = ['StressZoom_yy_',num2str(ipas)];
+  %print([results_path,'/',figure_name],'-dpng','-r300')
+%end
 clf(f); close(f);
 
 %figure;
