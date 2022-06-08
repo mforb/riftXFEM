@@ -60,7 +60,8 @@ for ipas = 1:npas
     [enrDomain] = crackDetect(xCrk,ipas,tipElem,splitElem,vertexElem,cornerElem,enrDomain) ;
 
     %find type of element: tip, split, vertex
-    [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,tangentElem,xTip,xVertex,enrichNode,crackNode] = nnodeDetect(xCrk,enrDomain) ;
+    [typeElem,elemCrk,tipElem,splitElem,vertexElem,cornerElem,tangentElem,xTip,xVertex,enrichNode,crackNode,xCrk] = nnodeDetect(xCrk,enrDomain) ;
+    % the crack can be slightly modified in cases where crack crosses an element twice
     % if there are any tangent elements
     if ~isempty(tangentElem)
       [nodeTanfix] = f_tangent_iso_node(tangentElem,crackNode);

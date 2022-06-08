@@ -1,4 +1,11 @@
-0.27349    Crack growth number     1
+0.24323    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 
+ CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
+Tip 1: K1 is NaN   K2 is NaN  and theta is NaN
+Tip 2: K1 is NaN   K2 is NaN  and theta is NaN
+544.8098    Crack growth number     2
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 

@@ -1,5 +1,5 @@
 function [type_elem,elem_crk,tip_elem,split_elem,vertex_elem,corner_elem,tangent_elem...
-     xTip,xVertex,enrich_node,crack_node] = nnodeDetect(xCr,elems)
+     xTip,xVertex,enrich_node,crack_node,xCr] = nnodeDetect(xCr,elems)
 
 global node element epsilon
 global plothelp elemType
@@ -39,11 +39,15 @@ end
 for kk = 1:size(xCr,2)  
   while 1
     mv_kj = 0;
+    crack_node  = [];
+    corner_elem = [] ; 
+    tangent_elem = [] ; 
+    subelems = [];
     for i = 1:length(elems)
-      [subelems, tangent_elem, corner_elem, type_elem, elem_crk, kj_track ] = find_sub_elems(elems(i),xCr, type_elem, elem_crk ) ;
-      if size(kj_track,1)>1
+      [subelems, tangent_elem, corner_elem, type_elem, elem_crk, crack_node, kj_track ] = f_find_subelems(elems(i),xCr(kk),kk,subelems, tangent_elem, corner_elem, type_elem, elem_crk, crack_node);
+      if size(kj_track,2)>1
         warn_str = ["Element ",num2str(elems(i)),"interacts with mesh twice at intersection between crack segmenets ",num2str(kj_track(1))," and ",num2str(kj_track(2))];
-        warning(warn_str);
+        warning(join(warn_str));
         mv_kj = kj_track(1);
         break;
       end
@@ -53,7 +57,9 @@ for kk = 1:size(xCr,2)
       % success!
       break;
     else
-      [xCr] = f_move_vertex(xCr,mv_kj);
+      [xCr_new] = f_move_vertex(xCr(kk),mv_kj);
+      xCr(kk) = xCr_new;
+      % this can be improved if necessary
       continue;
     end
   end
@@ -120,9 +126,6 @@ for kk = 1:size(xCr,2)
       flag5 = 0; %Can be an element around the tip element
     end
 
-    if ( e == 2182 | e == 2183 )  
-      keyboard
-    end
     %figure(f)
     %pvv = [vv;vv(1,:)] 
     %celem = plot(pvv(:,1),pvv(:,2),'r--')
