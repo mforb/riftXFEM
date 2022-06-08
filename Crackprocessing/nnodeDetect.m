@@ -37,31 +37,25 @@ end
 %elems(=elements selected for enrichment)
 % select the special elements(tip, vertex, split)
 for kk = 1:size(xCr,2)  
-  subelems = [];
-  for iel=1:length(elems)                     %loop on elems (=elements selected for enrichment)
-    for kj = 1:size(xCr(kk).coor,1)-1       %loop over the elements of the fracture
-      e = elems(iel);
-      q1 = xCr(kk).coor(kj,:); 
-      q2 = xCr(kk).coor(kj+1,:);
-      [flag1,flag2,crack_node] = crack_interact_element([q1,q2],e,crack_node);
-      if flag1
-        subelems = [subelems,e];
-        if flag2
-          corner_elem = [corner_elem,e];
-        end
-        break;
-      elseif flag2 % but not flag 1 !
-        tangent_elem = [tangent_elem,e]; % this already takes care of all the tangent elements and (most likely?) all the crack nodes
-        type_elem(e,kk) = 4; 
-        elem_crk(e,:) = [q1,q2];
+  while 1
+    mv_kj = 0;
+    for i = 1:length(elems)
+      [subelems, tangent_elem, corner_elem, type_elem, elem_crk, kj_track ] = find_sub_elems(elems(i),xCr, type_elem, elem_crk ) ;
+      if size(kj_track,1)>1
+        warn_str = ["Element ",num2str(elems(i)),"interacts with mesh twice at intersection between crack segmenets ",num2str(kj_track(1))," and ",num2str(kj_track(2))];
+        warning(warn_str);
+        mv_kj = kj_track(1);
         break;
       end
     end
-  end
-  if plothelp
-    figure(f)
-    hold on
-    plotMesh(node,element(subelems,:),elemType,'c-','no',f)
+
+    if mv_kj == 0
+      % success!
+      break;
+    else
+      [xCr] = f_move_vertex(xCr,mv_kj);
+      continue;
+    end
   end
 
   found_start = 0;
@@ -126,6 +120,9 @@ for kk = 1:size(xCr,2)
       flag5 = 0; %Can be an element around the tip element
     end
 
+    if ( e == 2182 | e == 2183 )  
+      keyboard
+    end
     %figure(f)
     %pvv = [vv;vv(1,:)] 
     %celem = plot(pvv(:,1),pvv(:,2),'r--')

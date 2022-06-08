@@ -32,7 +32,10 @@ in = intersect(indx,indy);
 element = element(in,:);
 cpos    = cpos(in,:);
 f = figure();
-plotMesh(node,element,elemType,'b-','yes',f)
+TR = triangulation(element,node);
+cpos = TR.incenter;
+%plotMesh(node,element,elemType,'b-','yes',f)
+triplot(TR)
 hold on
 plot(node(bc_fix,1),node(bc_fix,2),'r*')
 plot(node(bc_front,1),node(bc_front,2),'cs')
@@ -66,7 +69,8 @@ element1 = element;
 node1 = node;
 cpos = TR.incenter;
 f= figure();
-plotMesh(node,element,elemType,'b-','yes',f)
+triplot(TR)
+%plotMesh(node,element,elemType,'b-','yes',f)
 
 % refinement using ameshreF
 in = f_find_points_xCr(cpos,xCr,80000);
@@ -161,8 +165,8 @@ else
 end
 TR = triangulation(element,node);
 triplot(TR);
-xlim([min(xs)-20000,max(xs)+20000])
-ylim([min(ys)-20000,max(ys)+20000])
+xlim([min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000])
+ylim([min(xCr.coor(:,2))-20000,max(xCr.coor(:,2))+20000])
 print([results_path,'/mesh_refinement4'],'-dpng','-r300')
 clf(); close(f);
 
@@ -193,8 +197,8 @@ end
 numelem = size(element,1);
 TR = triangulation(element,node);
 triplot(TR);
-xlim([min(xs)-20000,max(xs)+20000])
-ylim([min(ys)-20000,max(ys)+20000])
+xlim([min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000])
+ylim([min(xCr.coor(:,2))-20000,max(xCr.coor(:,2))+20000])
 print([results_path,'/mesh_final'],'-dpng','-r300')
 clf(); close(f);
 

@@ -18,8 +18,8 @@ if any(psi1 < epsilon) & any(psi2 < epsilon)
   [ phi  ] = dista(e,[q1,q2]);
   for i = 1:length(sctr)
     if abs(phi(i)) < epsilon
-      ni = [ni,i];
       if psi1(i) < 0 & psi2(i) < 0
+        ni = [ni,i];
         flag2 = 1;
         crack_node = [ crack_node, sctr(i) ]; % only the cracknodes within the segment
       end
