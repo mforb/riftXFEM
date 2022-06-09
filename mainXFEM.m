@@ -326,13 +326,15 @@ for ipas = 1:npas
           figure_name = ['stab_ydiff_zoom_',num2str(ipas)];
           print([results_path,'/',figure_name],'-dpng','-r300')
         end
-        clf(f)
+        figure(f)
+        clf()
         [crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
         dfac = 1 ;
         plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
         f_plotCrack(crackLips,20,'r-','k-','c--')
         print([results_path,'/crack_walls_stab',num2str(ipas)],'-dpng','-r300')
-        clf(f)
+        figure(f)
+        clf()
         trisurf(element,node(:,1),node(:,2),Stduy2)
         axis equal; view(2); shading interp; colorbar
         title('Y displacement after stabilizing')
