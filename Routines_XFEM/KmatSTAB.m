@@ -70,6 +70,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         pint =  N' * node(sctr,:);
         Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true);
+        [Nmat,Gpt] = xfemNmat(gpt,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,crack_node,kk);
         gn = nv*Nmat*2*u(A);
         if gn < 0
           if k_in == 1

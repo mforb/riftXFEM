@@ -345,7 +345,7 @@ for ipas = 1:npas
           figure_name = ['stab_ydisp_zoom_',num2str(ipas)];
           print([results_path,'/',figure_name],'-dpng','-r300')
         end
-        clf(f)
+        clf()
       end
       penalty = 1;
     end
