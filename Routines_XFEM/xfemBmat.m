@@ -14,41 +14,7 @@ dNdx  = dNdxi*invJ0;                      % derivatives of N w.r.t XY
 Gpt = N' * node(sctr,:);                  % GP in global coord, used
 
 if any(enr_node(sctr) == 1)
-  in = find(enr_node(sctr) == 1,1);
-  if type_elem(e,1) == 1   %looking for the "tip" element
-    ref_elem = e;
-    Rpt = 1;
-  else    %trovo l'elemento/fessura a cui fa riferimento il nodo (SOLO 1 RIF AUTORIZZATO!!)
-    [sctrn,xx] = find(element == sctr(in));
-    [ele,xx] = find(type_elem(sctrn,:)==1);
-    ref_elem = sctrn(ele);
-    blend_elem = 1
-    nR = find(enr_node(sctr)==1);
-    Rpt = sum(N(nR));
-  end
-  if size(xTip,1)>1
-    xTip = xTip(ref_elem,:);
-  end
-
-  if points_same_2d(xCrl(ref_elem,3:4),xTip,1e-6)   
-    xCrek  = [ xCrl(ref_elem,1:2); xCrl(ref_elem,3:4) ]; 
-  else
-    xCrek  = [ xCrl(ref_elem,3:4); xCrl(ref_elem,1:2) ]; 
-  end
-  seg   = xCrek(2,:) - xCrek(1,:);
-  alpha = atan2(seg(2),seg(1));
-  xTip  = [xCrek(2,1) xCrek(2,2)];
-  QT    = [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];
-  xp    = QT*(Gpt-xTip)';           % local coordinates
-  if abs(xp) < 1e-6
-    Rpt = 0; % the point is (in theory) the tip, so the enrichments should all be zero
-  end
-  r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
-  theta = atan2(xp(2),xp(1));
-  if ( theta > pi | theta < -pi)
-      disp (['something wrong with angle ',num2str(thet)]);
-  end
-  [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
+  [QT,tip,Rpt,dRdx,Br,dBdx,dBdy] = f_tip_enrichment_param(e,Gpt,N,dNdx,sctr,xTip,xCrl,type_elem,enr_node);
 end
 
 %Standard B matrix is computed always...
@@ -132,7 +98,7 @@ else
             % ------------ Enriched by asymptotic functions -----------------------------------
         elseif ( enr_node(sctr(in)) == 1) % B(x) enriched node
             % compute branch functions at Gauss point
-            xp    = QT*(node(sctr(in),:)-xTip)';
+            xp    = QT*(node(sctr(in),:)-tip)';
             r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
             theta = atan2(xp(2),xp(1));
             
@@ -142,39 +108,21 @@ else
             [BrI] = branch_node(r,theta);
             
             % composants of Benr matrix
-            if ~elem_blend 
-              aa = dNdx(in,1)*(Br(1)-BrI(1)) + N(in)*dBdx(1) ;
-              bb = dNdx(in,2)*(Br(1)-BrI(1)) + N(in)*dBdy(1) ;
-              B1_enr = [aa 0 ; 0 bb ; bb aa];
-              
-              aa = dNdx(in,1)*(Br(2)-BrI(2)) + N(in)*dBdx(2) ;
-              bb = dNdx(in,2)*(Br(2)-BrI(2)) + N(in)*dBdy(2) ;
-              B2_enr = [aa 0 ; 0 bb ; bb aa];
-              
-              aa = dNdx(in,1)*(Br(3)-BrI(3)) + N(in)*dBdx(3) ;
-              bb = dNdx(in,2)*(Br(3)-BrI(3)) + N(in)*dBdy(3) ;
-              B3_enr = [aa 0 ; 0 bb ; bb aa];
-              
-              aa = dNdx(in,1)*(Br(4)-BrI(4)) + N(in)*dBdx(4) ;
-              bb = dNdx(in,2)*(Br(4)-BrI(4)) + N(in)*dBdy(4) ;
-              B4_enr = [aa 0 ; 0 bb ; bb aa];
-            else
-              aa = Rpt*(dNdx(in,1)*(Br(1)-BrI(1)) + N(in)*dBdx(1)) + dRdx(1)*N(in)*(Br(1)-BrI(1)) ;
-              bb = Rpt*(dNdx(in,2)*(Br(1)-BrI(1)) + N(in)*dBdy(1)) + dRdx(2)*N(in)*(Br(1)-BrI(1)) ;
-              B1_enr = [aa 0 ; 0 bb ; bb aa];
-              
-              aa = Rpt*(dNdx(in,1)*(Br(2)-BrI(2)) + N(in)*dBdx(2)) + dRdx(1)*N(in)*(Br(2)-BrI(2)) ;
-              bb = Rpt*(dNdx(in,2)*(Br(2)-BrI(2)) + N(in)*dBdy(2)) + dRdx(2)*N(in)*(Br(2)-BrI(2)) ;
-              B2_enr = [aa 0 ; 0 bb ; bb aa];
-              
-              aa = Rpt*(dNdx(in,1)*(Br(3)-BrI(3)) + N(in)*dBdx(3)) + dRdx(1)*N(in)*(Br(3)-BrI(3)) ;
-              bb = Rpt*(dNdx(in,2)*(Br(3)-BrI(3)) + N(in)*dBdy(3)) + dRdx(2)*N(in)*(Br(3)-BrI(3)) ;
-              B3_enr = [aa 0 ; 0 bb ; bb aa];
-              
-              aa = Rpt*(dNdx(in,1)*(Br(4)-BrI(4)) + N(in)*dBdx(4)) + dRdx(1)*N(in)*(Br(4)-BrI(4)) ;
-              bb = Rpt*(dNdx(in,2)*(Br(4)-BrI(4)) + N(in)*dBdy(4)) + dRdx(2)*N(in)*(Br(4)-BrI(4)) ;
-              B4_enr = [aa 0 ; 0 bb ; bb aa];
-            end
+            aa = Rpt*(dNdx(in,1)*(Br(1)-BrI(1)) + N(in)*dBdx(1)) + dRdx(1)*N(in)*(Br(1)-BrI(1)) ;
+            bb = Rpt*(dNdx(in,2)*(Br(1)-BrI(1)) + N(in)*dBdy(1)) + dRdx(2)*N(in)*(Br(1)-BrI(1)) ;
+            B1_enr = [aa 0 ; 0 bb ; bb aa];
+            
+            aa = Rpt*(dNdx(in,1)*(Br(2)-BrI(2)) + N(in)*dBdx(2)) + dRdx(1)*N(in)*(Br(2)-BrI(2)) ;
+            bb = Rpt*(dNdx(in,2)*(Br(2)-BrI(2)) + N(in)*dBdy(2)) + dRdx(2)*N(in)*(Br(2)-BrI(2)) ;
+            B2_enr = [aa 0 ; 0 bb ; bb aa];
+            
+            aa = Rpt*(dNdx(in,1)*(Br(3)-BrI(3)) + N(in)*dBdx(3)) + dRdx(1)*N(in)*(Br(3)-BrI(3)) ;
+            bb = Rpt*(dNdx(in,2)*(Br(3)-BrI(3)) + N(in)*dBdy(3)) + dRdx(2)*N(in)*(Br(3)-BrI(3)) ;
+            B3_enr = [aa 0 ; 0 bb ; bb aa];
+            
+            aa = Rpt*(dNdx(in,1)*(Br(4)-BrI(4)) + N(in)*dBdx(4)) + dRdx(1)*N(in)*(Br(4)-BrI(4)) ;
+            bb = Rpt*(dNdx(in,2)*(Br(4)-BrI(4)) + N(in)*dBdy(4)) + dRdx(2)*N(in)*(Br(4)-BrI(4)) ;
+            B4_enr = [aa 0 ; 0 bb ; bb aa];
 
             
             BI_enr = [B1_enr B2_enr B3_enr B4_enr];

@@ -57,14 +57,15 @@ else
     Cm1 = E*0.1/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
 end
 
-load('ISSM_xmas_test/crack1.mat')
-xCr = xCrk;
-numnode = length(node);
+%load('ISSM_xmas_test/crack1.mat')
+%xCr = xCrk;
+%numnode = length(node);
 
+load('ISSM_xmas_tip1_10km/crack.mat')
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
-%run_mesh_prep % redoes the process 
-%xs = xCr.coor(:,1);
-%ys = xCr.coor(:,2);%}
+run_mesh_prep % redoes the refinement process 
+xs = xCr.coor(:,1);
+ys = xCr.coor(:,2);%}
 
 %%crack definition
 deltaInc = 2500; numstep = 2;

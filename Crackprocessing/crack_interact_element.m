@@ -30,10 +30,10 @@ if any(psi1 < 0 ) & any(psi2 < 0 )
   if any(diff(sign(phi)))
     flag1 = 1;
     if any(psi1 > 0)
-      vv = node(sctr,:)
+      vv = node(sctr,:);
       flag3 = inhull(q1,vv,[]) ; 
     elseif any(psi2>0) 
-      vv = node(sctr,:)
+      vv = node(sctr,:);
       flag3 = inhull(q2,vv,[]) ; 
     end
     if sum(psi1 > 0) > 1 | sum(psi2 > 0) > 1

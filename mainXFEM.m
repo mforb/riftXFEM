@@ -287,7 +287,6 @@ for ipas = 1:npas
       xlim(zoom_dim(1,:));
       ylim(zoom_dim(2,:));
       figure_name = ['crack_walls_before_zoom',num2str(ipas)];
-      keyboard
       print([results_path,'/',figure_name],'-dpng','-r300')
       %keyboard
     end

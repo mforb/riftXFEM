@@ -3,6 +3,7 @@ function [type_elem,elem_crk,tip_elem,split_elem,vertex_elem,corner_elem,tangent
 
 global node element epsilon
 global plothelp elemType
+global output_file
 
 type_elem = zeros(size(element,1),size(xCr,2)) ;
 elem_crk = zeros(size(element,1),4) ;
@@ -37,6 +38,8 @@ end
 %elems(=elements selected for enrichment)
 % select the special elements(tip, vertex, split)
 for kk = 1:size(xCr,2)  
+  mv_kj_old = 0;
+  clear f_move_vertex;
   while 1
     mv_kj = 0;
     crack_node  = [];
@@ -46,8 +49,9 @@ for kk = 1:size(xCr,2)
     for i = 1:length(elems)
       [subelems, tangent_elem, corner_elem, type_elem, elem_crk, crack_node, kj_track ] = f_find_subelems(elems(i),xCr(kk),kk,subelems, tangent_elem, corner_elem, type_elem, elem_crk, crack_node);
       if size(kj_track,2)>1
-        warn_str = ["Element ",num2str(elems(i)),"interacts with mesh twice at intersection between crack segmenets ",num2str(kj_track(1))," and ",num2str(kj_track(2))];
+        warn_str = ['Element ',num2str(elems(i)),': interacts with mesh twice at intersection between crack segmenets ',num2str(kj_track(1)),' and ',num2str(kj_track(2))];
         warning(join(warn_str));
+        fprintf(output_file,[warn_str,'\n'])
         mv_kj = kj_track(1);
         break;
       end
@@ -57,7 +61,11 @@ for kk = 1:size(xCr,2)
       % success!
       break;
     else
+      if mv_kj ~= mv_kj_old
+        clear f_move_vertex % we want to find a new direction to move vertex kj
+      end
       [xCr_new] = f_move_vertex(xCr(kk),mv_kj);
+      mv_kj_old = mv_kj;
       xCr(kk) = xCr_new;
       % this can be improved if necessary
       continue;

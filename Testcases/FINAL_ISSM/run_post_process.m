@@ -6,6 +6,7 @@ path(path,'../../Routines_ICEM')
 path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
+mag       = 2000;
 
 ld = dir('ISSM_xmas_tip*');
 results_path = './ISSM_xmas_PP';
@@ -151,8 +152,8 @@ if 1
   TR = triangulation(element,node);
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
   zoom_dim(2,:) = [min(xCrk.coor(:,2))-30000,max(xCrk.coor(:,2))+30000];
-  %[ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+  [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -164,13 +165,13 @@ if 1
   dfac = 1 ;
   triplot(TR);
   hold on
-  f_plotCrack(crackLips,20,'r-','k-','c--')
-  print([results_path,'/crack_walls_end'],'-dpng','-r300')
+  axis equal;
+  f_plotCrack_pp(crackLips,mag)
+  print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng','-r300')
   if ~isempty(zoom_dim)
     xlim(zoom_dim(1,:));
     ylim(zoom_dim(2,:));
-    figure_name = ['crack_walls_end_zoom'];
-    keyboard
+    figure_name = ['crackwalls',num2str(mag),'_end_zoom'];
     print([results_path,'/',figure_name],'-dpng','-r300')
   end
   clf();
@@ -211,12 +212,13 @@ if 1
   dfac = 1 ;
   triplot(TR);
   hold on
-  f_plotCrack(crackLips,20,'r-','k-','c--')
-  print([results_path,'/crack_walls_start'],'-dpng','-r300')
+  axis equal;
+  f_plotCrack_pp(crackLips,mag)
+  print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
   if ~isempty(zoom_dim)
     xlim(zoom_dim(1,:));
     ylim(zoom_dim(2,:));
-    figure_name = ['crack_walls_start_zoom'];
+    figure_name = ['crackwalls',num2str(mag),'_start_zoom'];
     print([results_path,'/',figure_name],'-dpng','-r300')
   end
   clf();

@@ -1,6 +1,7 @@
 function [xCr] = f_move_vertex(xCr,move_kj);
 persistent direction
 global epsilon
+global output_file
 
 if isempty(direction)
   q1 = xCr.coor(move_kj,:)
@@ -18,6 +19,8 @@ if isempty(direction)
 
   direction = v3/n3;
 end
+kj_str = ['Crack vertex ',num2str(move_kj),': moved ',num2str(2*epsilon),' units in direction [',num2str(direction(1)),',',num2str(direction(2)),']'];
+fprintf(output_file,[kj_str,'\n'])
 
 xCr.coor(move_kj+1,:) = xCr.coor(move_kj+1,:) + direction*2*epsilon; %that simple!
 

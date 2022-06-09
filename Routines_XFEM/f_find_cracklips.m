@@ -32,8 +32,14 @@ for ii=1:length(elems)
     tip = xTip(iel,:);
     ntip = f_naturalpoint(tip,vv,20,1e-6);
     psi = f_dista2(iel,xCrl,tip);
-    [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
-     p = [nnodes(end,:) ; ntip ];
+    inter = intersect(sctr,crack_node);
+    if any(inter);
+      int = find(sctr==inter);
+      p = [nnodes(int,:) ; ntip ];
+    else
+      [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
+      p = [nnodes(end,:) ; ntip ];
+    end
   else 
     [cutEdge, nnodes] = f_edgedetect(nnode, corner,  phi) ;
     nEdge = length(cutEdge);
@@ -57,7 +63,7 @@ for ii=1:length(elems)
 
   % now we are going to evaluate the displacement of each point for the positive, negative and midpoint of the crack
  %[A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,xCrl,enr_node);
- AB = assembly(iel,enr_node,pos,kk,crack_node)
+ AB = assembly(iel,enr_node,pos,kk,crack_node);
  uAB = u(AB); 
 
  for gp = 1:size(p,1) 
