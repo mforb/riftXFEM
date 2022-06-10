@@ -34,8 +34,8 @@ else
   corner = [1 2 3 1] ;
   nnode = [0 0;1 0;0 1] ;
 end
-[W2,Q2] = quadrature(2,intType,2) ;
 % number of non-enriched df
+[W2,Q2] = quadrature(2,intType,2) ;
 dfn = size(W2,1)*2;
 
 
@@ -70,11 +70,7 @@ for iel = 1:numelem
         end
         Ppoint =  N' * node(sctr,:);
         q = [q;Ppoint] ;
-        try
-          Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
-        catch
-          keyboard
-        end
+        Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
 
         switch OPT
         case 1
@@ -99,12 +95,9 @@ for iel = 1:numelem
               %J0 = node(sctr,:)'*dNdxi;                 % element Jacobian matrix
               invJO = inv(JO);
               dNdx  = dNdxi*invJO;                      % derivatives of N w.r.t XY
-              B2 = zeros(3,2*nn) ;
-              B2(1,1:2:2*nn) = dNdx(:,1)' ;
-              B2(2,2:2:2*nn) = dNdx(:,2)' ;
-              B2(3,1:2:2*nn) = dNdx(:,2)' ;
-              B2(3,2:2:2*nn) = dNdx(:,1)' ;
-              Fext(sctrB(1:dfn)) = Fext(sctrB(1:dfn)) + B2'*sigma*W2(kk)*det(JO); % same jacobian
+              B2 = B(:,1:2*nn);
+              sctrB2 = sctrB(1:2*nn);
+              Fext(sctrB2) = Fext(sctrB2) + B2'*sigma*W2(kk)*det(JO); % same jacobian
             end
           else
             Fext(sctrB) = Fext(sctrB) + B'*sigma*W(kk)*det(JO);
@@ -112,61 +105,5 @@ for iel = 1:numelem
         end
     end
 
-    %if plothelp
-      %figure(2)
-      %%plotMesh(node,element(iel,:),'T3','r-','no')
-      %%if ismember(iel,split_elem)   
-
-        %%ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
-        %%%keyboard
-        %%delete(ppl)
-      %%end
-      %plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
-      
-    %end
 end
 
-%Plot Gauss points for checking
-% plot mesh with crack and enriched nodes
-% plotCrack(xCrk,enrich_node,plotmesh) ;
-% plot(q(:,1),q(:,2),'r*') ;
-% clear q
-%if ~isempty(tan_element)
-  %ntan = size(tan_element,1);
-  %for iel = 1:ntan
-      %sctr = tan_element(iel,:) ;
-      %nn = length(sctr) ;
-      %ke = 0 ;
-
-      %%choose Gauss quadrature rules for elements
-      %if strcmp(elemType,'Q4') 
-        %intType = 'GAUSS' ;
-      %elseif strcmp(elemType,'T3')
-        %intType = 'TRIANGULAR' ;
-      %end
-      %[W,Q] = quadrature(IntOrder,intType,2) ;
-
-      %%split_corner = ismember(iel,corner_elem) & ismember(iel,split_elem)
-
-      %sctrB = [ ] ;
-      %for k = 1:size(xCrk,2)
-          %sctrB = [sctrB tan_assembly(iel,tan_element,pos(:,k))] ;
-      %end
-
-      %%loop over Gauss points
-      %for kk = 1:size(W,1)
-        %B = [] ;
-        %Gpt = Q(kk,:) ;
-        %[N,dNdxi] = lagrange_basis(elemType,Gpt) ;
-        %JO = node(sctr,:)'*dNdxi ;
-        %for k = 1:size(xCrk,2)
-            %B = [B tan_xfemBmat(Gpt,iel,tan_elem,tan_elem_crk,crack_nodes)];
-        %end
-        %Kglobal(sctrB,sctrB) = Kglobal(sctrB,sctrB) + B'*C*B*W(kk)*det(JO) ;
-        %if OPT == 1
-          %sigma = f_extractStress(Ppoint)';
-          %Fext(sctrB) = Fext(sctrB) + B'*sigma*W(kk)*det(JO);
-        %end
-      %end
-  %end
-%end

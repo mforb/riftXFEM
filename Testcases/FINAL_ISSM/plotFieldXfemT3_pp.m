@@ -126,7 +126,7 @@ else
   ca2 = [mi,ma];
 end
 vl1 = logspace(3,log10(5e6),25);
-vl2 = logspace(max(log10(mi),1),log10(ma-0.4*sl),25);
+vl2 = logspace(2,7,6);
 figure(f2);
 [C,h] = tricontf(node(:,1),node(:,2),element,node_vm,vl1);
 set(h,'edgecolor',[0.1 0.1 0.1]);
@@ -136,14 +136,14 @@ colormap(cm);
 caxis([vl1(1),vl1(end)]);
 writematrix(vl1,'levels.dat','Delimiter',',')
 set(gca,'ColorScale','log');
-%figure(f3);
-%[C,h] = tricontf(node(:,1),node(:,2),element,node_vm,vl2);
-%set(h,'edgecolor',[0.1 0.1 0.1]);
-%set(h,'edgealpha',0.5);
-%colormap(cm);
-%caxis([vl2(1),vl2(end)]);
-%axis equal;
-%set(gca,'ColorScale','log');
+figure(f3);
+[C,h] = tricontf(node(:,1),node(:,2),element,node_vm,vl2);
+set(h,'edgecolor',[0.1 0.1 0.1]);
+set(h,'edgealpha',0.5);
+colormap(cm);
+caxis([vl2(1),vl2(end)]);
+axis equal;
+set(gca,'ColorScale','log');
 
 figure(f);
 colorbar
@@ -159,6 +159,7 @@ if ~isempty(zoom_dim)
   figure(f2);
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
+  keyboard;
   colorbar;
   figure_name = ['ContourVM_stress_log1_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng','-r300');
@@ -171,19 +172,20 @@ if ~isempty(zoom_dim)
   print([results_path,'/',figure_name],'-dpng','-r500');
 
 
-  %figure(f3);
-  %xlim(zoom_dim(1,:))
-  %ylim(zoom_dim(2,:))
-  %colorbar;
-  %figure_name = ['ContourVM_stress_log2_zoom',num2str(ipas)];
-  %print([results_path,'/',figure_name],'-dpng','-r300');
-  %%saveas(f3,[results_path,'/',figure_name],'epsc');
-  %[C,h] = tricont(node(:,1),node(:,2),element,node_vm,vl2);
-  %clabel(C);
-  %xlim([zoom_dim(1,1)-10000,zoom_dim(1,2)+10000])
-  %ylim([zoom_dim(2,1)-10000,zoom_dim(2,2)+10000])
-  %figure_name = ['ContourVM_labels2_zoom',num2str(ipas)]; 
-  %print([results_path,'/',figure_name],'-dpng','-r500');
+  figure(f3);
+  xlim(zoom_dim(1,:))
+  ylim(zoom_dim(2,:))
+  keyboard;
+  colorbar;
+  figure_name = ['ContourVM_stress_log2_zoom',num2str(ipas)];
+  print([results_path,'/',figure_name],'-dpng','-r300');
+  %saveas(f3,[results_path,'/',figure_name],'epsc');
+  [C,h] = tricont(node(:,1),node(:,2),element,node_vm,vl2);
+  clabel(C);
+  xlim([zoom_dim(1,1)-10000,zoom_dim(1,2)+10000])
+  ylim([zoom_dim(2,1)-10000,zoom_dim(2,2)+10000])
+  figure_name = ['ContourVM_labels2_zoom',num2str(ipas)]; 
+  print([results_path,'/',figure_name],'-dpng','-r500');
 end
 
 close(f2);

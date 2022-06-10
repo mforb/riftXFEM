@@ -53,7 +53,6 @@ if abs(r) < 1e-8
 end
 
 if size(varargin,1)>0
-  theta = pi*varargin{1}*f_op;
   [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
 else
   [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);

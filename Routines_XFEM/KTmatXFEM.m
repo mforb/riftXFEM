@@ -139,30 +139,30 @@ if contact
           end
         end
             
-        if plothelp
-          % this needs fixing
-            Ppoint =  N' * node(sctr,:);
-            Pvect = -1*det(JO)*nv;
-            Np = node(sctr,:);
-            Nvect = -1*det(JO)*N*nv;
-            figure(2)
-            %plotMesh(node,element(iel,:),'T3','r-','no')
-            %if ismember(iel,split_elem)   
+        %if plothelp
+          %% this needs fixing
+            %Ppoint =  N' * node(sctr,:);
+            %Pvect = -1*det(JO)*nv;
+            %Np = node(sctr,:);
+            %Nvect = -1*det(JO)*N*nv;
+            %figure(2)
+            %%plotMesh(node,element(iel,:),'T3','r-','no')
+            %%if ismember(iel,split_elem)   
 
-              %ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
-              %%keyboard
-              %delete(ppl)
+              %%ppl = plot(Ppoint(1),Ppoint(2),'*m','linestyle','none','markersize',2)
+              %%%keyboard
+              %%delete(ppl)
+            %%end
+            %plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
+            %quiver(Ppoint(1),Ppoint(2),Pvect(1),Pvect(2),'r')
+            %quiver(Np(:,1),Np(:,2),Nvect(:,1),Nvect(:,2),'g')
+            %if frictionB
+              %Fvect = -1*det(JO)*mu*mv;
+              %NFvect = -1*det(JO)*N*mv;
+              %quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
+              %quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
             %end
-            plot(Ppoint(1),Ppoint(2),'*c','linestyle','none','markersize',1)
-            quiver(Ppoint(1),Ppoint(2),Pvect(1),Pvect(2),'r')
-            quiver(Np(:,1),Np(:,2),Nvect(:,1),Nvect(:,2),'g')
-            if frictionB
-              Fvect = -1*det(JO)*mu*mv;
-              NFvect = -1*det(JO)*N*mv;
-              quiver(Ppoint(1),Ppoint(2),Fvect(1),Fvect(2),'k')
-              quiver(Np(:,1),Np(:,2),NFvect(:,1),NFvect(:,2),'o')
-            end
-        end
+        %end
       end
     end
   end
