@@ -1,0 +1,28 @@
+No tip field for xCr defined, all tips have been activated
+3.1123    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 1604
+ CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
+L2 norm of residual is 156.9895 ; relative to R0 1. The contact ratio is: 0.91667
+L2 norm of residual is 8.0251e-13 ; relative to R0 5.1119e-15. The contact ratio is: 0.91667
+Tip 1: K1 is -26.8246   K2 is 0.05401  and theta is 0.0040269
+Tip 2: K1 is -15.3476   K2 is -0.10459  and theta is -0.013628
+63.8625    Crack growth number     2
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 1604
+ CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
+L2 norm of residual is 359.1581 ; relative to R0 1. The contact ratio is: 0.88235
+L2 norm of residual is 8.3694e-13 ; relative to R0 2.3303e-15. The contact ratio is: 0.88235
+Tip 2: K1 is -35.7357   K2 is 0.28685  and theta is 0.016052
+Tip 1: K1 is -13.3494   K2 is 0.10584  and theta is 0.015855
+99.4697    Crack growth number     3
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 1604
+ CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
+L2 norm of residual is 605.855 ; relative to R0 1. The contact ratio is: 0.91667
+L2 norm of residual is 9.2096e-13 ; relative to R0 1.5201e-15. The contact ratio is: 0.91667
+Tip 2: K1 is -19.3816   K2 is 0.01469  and theta is 0.0015159
+Tip 1: K1 is -26.4868   K2 is -0.3734  and theta is -0.028182

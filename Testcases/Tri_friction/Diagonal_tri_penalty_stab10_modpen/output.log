@@ -1,0 +1,34 @@
+No tip field for xCr defined, all tips have been activated
+2.1245    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 1604
+ CRACK NODES :  1 crack nodes, 5 tangent elements, requiring 3 fixed nodes
+The ratio of elements stabilized: 0.93939
+L2 norm of residual is 0.30696 ; relative to R0 1. The contact ratio is: 0.60606
+L2 norm of residual is 4.6509e-12 ; relative to R0 1.5152e-11. The contact ratio is: 0.60606
+Tip 2: K1 is -21.9278   K2 is -55.7698  and theta is -1.1036
+Tip 1: K1 is -20.1175   K2 is -53.278  and theta is -1.1085
+32.4392    Crack growth number     2
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 1604
+ CRACK NODES :  1 crack nodes, 5 tangent elements, requiring 3 fixed nodes
+The ratio of elements stabilized: 0.91892
+L2 norm of residual is 284.371 ; relative to R0 1. The contact ratio is: 0.59459
+L2 norm of residual is 2.4639 ; relative to R0 0.0086644. The contact ratio is: 0.56757
+L2 norm of residual is 0.42523 ; relative to R0 0.0014953. The contact ratio is: 0.54054
+L2 norm of residual is 7.7151e-12 ; relative to R0 2.7131e-14. The contact ratio is: 0.54054
+Tip 1: K1 is -69.0012   K2 is 4.8018  and theta is 0.13764
+Tip 2: K1 is -72.3545   K2 is 8.5168  and theta is 0.22824
+61.1668    Crack growth number     3
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 1604
+ CRACK NODES :  1 crack nodes, 5 tangent elements, requiring 3 fixed nodes
+The ratio of elements stabilized: 0.95238
+L2 norm of residual is 200.925 ; relative to R0 1. The contact ratio is: 0.64286
+L2 norm of residual is 0.014082 ; relative to R0 7.0087e-05. The contact ratio is: 0.61905
+L2 norm of residual is 4.9644e-12 ; relative to R0 2.4708e-14. The contact ratio is: 0.61905
+Tip 1: K1 is -38.4135   K2 is -9.9381  and theta is -0.4542
+Tip 2: K1 is -47.7426   K2 is -13.8465  and theta is -0.49545
