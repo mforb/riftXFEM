@@ -108,7 +108,7 @@ if contact
       skip = 0;
       nn = length(sctr) ;
 
-      [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
+      [A,~,~,~,~] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
       [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
       ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
       for seg = 1:length(ap)-1
@@ -125,7 +125,7 @@ if contact
       % find the distance between the two intersects (should be able to do this with det(J)
           [N,dNdxi] = lagrange_basis(elemType,gpt) ;
           pint =  N' * node(sctr,:);
-          Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true);
+          Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,true);
           gn = nv*Nmat*2*u(A);
           if gn < 0
             if k_in ==1
@@ -136,6 +136,8 @@ if contact
             elem_force(seg,iel,2*k_in-1) = -1*E_pen*gn;
             Gint(A) = Gint(A) + (E_pen*gn)*W(k_in)*det(JO)*Nmat'*nv';
             Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+          else          
+            elem_force(seg,iel,2*k_in-1) = 0;
           end
         end
             

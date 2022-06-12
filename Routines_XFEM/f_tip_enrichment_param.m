@@ -31,12 +31,13 @@ end
 
 if points_same_2d(xCrl(ref_elem,3:4),tip,1e-6)   
   xCrek  = [ xCrl(ref_elem,1:2); xCrl(ref_elem,3:4) ]; 
+  seg   = xCrek(2,:) - xCrek(1,:);
 else
   xCrek  = [ xCrl(ref_elem,3:4); xCrl(ref_elem,1:2) ]; 
+  seg   = xCrek(1,:) - xCrek(2,:);
   f_op = -1;
 end
 
-seg   = xCrek(2,:) - xCrek(1,:);
 alpha = atan2(seg(2),seg(1));
 tip  = [xCrek(2,1) xCrek(2,2)];
 QT    = [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];
@@ -53,6 +54,7 @@ if abs(r) < 1e-8
 end
 
 if size(varargin,1)>0
+  theta = pi*varargin{1};
   [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
 else
   [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);

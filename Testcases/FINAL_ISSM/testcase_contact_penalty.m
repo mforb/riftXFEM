@@ -40,7 +40,7 @@ melange = 0
 melangeforce = 0
 
 global wall_int stabalize Kpen penalty contact skip_branch
-wall_int = 1; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
+wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
 stabalize = 1;
 contact = 1;
 Kpen = 1e11 ;

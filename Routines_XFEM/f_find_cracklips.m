@@ -83,9 +83,12 @@ for ii=1:length(elems)
    crack_lips(ii,c_inds,2,kk) = Ntop*uAB;
    crack_lips(ii,c_inds,3,kk) = Nbot*uAB;
    crack_lips(ii,c_inds,4,kk) = Nmid*uAB;
+   %if ismember(iel, tip_elem)
+     %keyboard
+   %end
    % check that there is no interpenetration
-   [~,nv,~,~,~,~] = f_segment_dist(xCrl(iel,:))
-   gn = (Ntop*uAB - Nbot*uAB)*nv;
+   [~,nv,~,~,~,~] = f_segment_dist(xCrl(iel,:));
+   gn = nv*(Ntop*uAB - Nbot*uAB);
    if gn < 0 % crack tips can be a problem for this 
      Flag_pen = 1;
    end

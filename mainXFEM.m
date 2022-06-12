@@ -305,7 +305,11 @@ for ipas = 1:npas
     elseif contact & flagP
       if ~isempty(stabalize) & stabalize
         K_orig = K;
+        %Rc1 = rcond(full(K));
         [K] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,K,u);
+        %Rc2 = rcond(full(K));
+        %stab_str = ['STABALIZATION: enriched dofs. Rcond is originally ',num2str(Rc1),' and then becomes ',num2str(Rc2),'\n'];
+        %fprintf(output_file,stab_str)
         disp([num2str(toc),'    Recalculating u with stabalized K'])
         u = K\F;
         fu2 = full(u);
@@ -328,10 +332,14 @@ for ipas = 1:npas
         end
         figure(f)
         clf()
-        [crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+        [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
         dfac = 1 ;
         plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
         f_plotCrack(crackLips,20,'r-','k-','c--')
+        if ~isempty(zoom_dim)
+          xlim(zoom_dim(1,:));
+          ylim(zoom_dim(2,:));
+        end
         print([results_path,'/crack_walls_stab',num2str(ipas)],'-dpng','-r300')
         figure(f)
         clf()
@@ -358,7 +366,7 @@ for ipas = 1:npas
     if penalty 
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
-      tol1 = 1e-20;
+      tol1 = 1e-39;
       tol2 = 1e-8;
       cont = 1
       Du = zeros(size(u));
@@ -442,7 +450,7 @@ for ipas = 1:npas
       hold on
       dfac = 1 ;
       plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-      f_plotCrack2(crackLips,20,'r-','k-','c--')
+      f_plotCrack(crackLips,20,'r-','k-','c--')
       print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r300')
       if ~isempty(zoom_dim)
         xlim(zoom_dim(1,:));
@@ -486,6 +494,6 @@ for ipas = 1:npas
 
     %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];
-    save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes');
+    save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce');
 end
 fclose(output_file);

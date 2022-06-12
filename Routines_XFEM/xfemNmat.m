@@ -13,13 +13,13 @@ xCre = xCrl(e,:);                 %each element has its crack!
 if size(varargin,1)>0
   Hgp = varargin{1};
   if any(enr_node(sctr) == 1)
-    [QT,tip,Rpt,~,Br,~,~] = f_tip_enrichment_param(e,Gpt,N,[],sctr,xTip,xCrl,type_elem,enr_node,Hgp)
+    [QT,tip,Rpt,~,Br,~,~] = f_tip_enrichment_param(e,Gpt,N,[],sctr,xTip,xCrl,type_elem,enr_node,Hgp);
   end
 else
   dist = signed_distance(xCre,Gpt,0);
   Hgp  = sign(dist);
   if any(enr_node(sctr) == 1)
-    [QT,tip,Rpt,~,Br,~,~] = f_tip_enrichment_param(e,Gpt,N,[],sctr,xTip,xCrl,type_elem,enr_node)
+    [QT,tip,Rpt,~,Br,~,~] = f_tip_enrichment_param(e,Gpt,N,[],sctr,xTip,xCrl,type_elem,enr_node);
   end
 end
 
@@ -98,18 +98,25 @@ else
       end
       [BrI] = branch_node(r,theta);
       
-      % composants of Benr matrix
-      aa = N(in)*(Br(1)-BrI(1));
-      N1_enr = [aa 0 ; 0 aa ];
-      
-      aa = N(in)*(Br(2)-BrI(2));
-      N2_enr = [aa 0 ; 0 aa];
-      
-      aa = N(in)*(Br(3)-BrI(3));
-      N3_enr = [aa 0 ; 0 aa];
-      
-      aa = N(in)*(Br(4)-BrI(4)) ;
-      N4_enr = [aa 0 ; 0 aa];
+      if size(varargin,1)>0
+        aa = N(in)*Br(1);
+        N1_enr = [aa 0 ; 0 aa ];
+        N2_enr = [0 0 ; 0 0];
+        N3_enr = [0 0 ; 0 0];
+        N4_enr = [0 0 ; 0 0];
+      else
+        aa = N(in)*(Br(1)-BrI(1));
+        N1_enr = [aa 0 ; 0 aa ];
+        
+        aa = N(in)*(Br(2)-BrI(2));
+        N2_enr = [aa 0 ; 0 aa];
+        
+        aa = N(in)*(Br(3)-BrI(3));
+        N3_enr = [aa 0 ; 0 aa];
+        
+        aa = N(in)*(Br(4)-BrI(4)) ;
+        N4_enr = [aa 0 ; 0 aa];
+      end
       
       NI_enr = Rpt*[N1_enr N2_enr N3_enr N4_enr];
       clear N1_enr; clear N2_enr; clear N3_enr; clear N4_enr;

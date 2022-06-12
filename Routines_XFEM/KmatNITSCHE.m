@@ -92,7 +92,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         pint =  N' * node(sctr,:);
         B = xfemBmat(gpt,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,crack_node,kk);
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true);
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,true);
         [NmatP,NmatN,BmatP,BmatN] = nitscheNBmat(gpt,pos_l,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,crack_node,kk,true);
         gn = nv2*Nmat*2*u(A);
         if gn < 0

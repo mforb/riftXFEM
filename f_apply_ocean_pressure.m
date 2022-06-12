@@ -30,7 +30,7 @@ end
 
 %loop over elements
 elems = union(split_elem,vertex_elem);
-elems = union(elems,tip_elem);
+%elems = union(elems,tip_elem);
 
 sk_br = skip_branch;
 skip_branch = 0; % the force is applied everywhere consistently (skip_branch is for penalty forces)
@@ -60,14 +60,14 @@ for kk = 1:size(xCrk,2) %what's the crack?
       nn = length(sctr) ;
       n1 = zeros(1,nn);
 
-      [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
+      [A,~,~,~,~] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
 
       for k_in = 1:length(Q)
         [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
         gpt = Np'*p;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,false);
-        Fext(A) = Fext(A) + fh*W(k_in)*det(JO)*Nmat'*nv';
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,false);
+        Fext(A) = Fext(A) + 2*fh*W(k_in)*det(JO)*Nmat'*nv';
       end
     end
   end

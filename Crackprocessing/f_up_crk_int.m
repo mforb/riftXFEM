@@ -37,8 +37,7 @@ if isempty(ckint)
   elseif f1
     ckint_out = [ q1, ins ];
   else
-    msg = ['Crk_int upgrade error, element ',num2str(el)]
-    keyboard
+    msg = ['Crk_int upgrade error 1, element ',num2str(el)]
     error(msg)
   end
 else
@@ -46,8 +45,7 @@ else
     ckint_out = [ ckint(1:2),ins(1,:) ];   % because we should always be going in the same direction n the rik
    % there should be only one ins at this point
   else
-    msg = ['Crk_int upgrade error, element ',num2str(el)]
-    keyboard
+    msg = ['Crk_int upgrade error 2, element ',num2str(el)]
     error(msg)
   end
 

@@ -12,8 +12,14 @@ if ismember(iel, tip_elem)
   end
   ntip = f_naturalpoint(tip,vv,20,1e-6);
   psi = f_dista2(iel,elem_crk,tip);
-  [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
-  p = [nnodes(end,:); ntip ];
+  crack_n = intersect(sctr,crack_node);
+  if any(crack_n);
+    crack_c = find(sctr==crack_n);
+    p = [nnodes(crack_c,:) ; ntip ];
+  else
+    [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
+    p = [nnodes(end,:) ; ntip ];
+  end
   pg = [elem_crk(iel,1:2); elem_crk(iel,3:4)];
 else 
   [cutEdge, nnodes] = f_edgedetect(nnode, corner,  phi) ;

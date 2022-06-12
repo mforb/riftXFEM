@@ -46,7 +46,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     skip = 0;
     nn = length(sctr) ;
 
-    [A,BrI,QT,Tip,alpha] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
+    [A,BrI,~,~,~] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
     [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
     ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
     if skip_branch
@@ -69,7 +69,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         gpt = Np'*p ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         pint =  N' * node(sctr,:);
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,kk,true);
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,true);
         gn = nv*Nmat*2*u(A);
         if gn < 0
           if k_in == 1
@@ -78,7 +78,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
             end
           end
           % stabalization term
-          Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(1*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
+          Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(0.01*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
         end
       end
     end
