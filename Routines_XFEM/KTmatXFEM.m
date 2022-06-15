@@ -13,7 +13,7 @@ global frictionB friction_mu
 global melangeforce contact Cm1
 global wall_int
 global rift_wall_pressure output_file
-global skip_branch skip_vertex
+global skip_branch skip_vertex modpen
 
 mu = friction_mu;
 
@@ -125,7 +125,7 @@ if contact
       % find the distance between the two intersects (should be able to do this with det(J)
           [N,dNdxi] = lagrange_basis(elemType,gpt) ;
           pint =  N' * node(sctr,:);
-          Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,true);
+          Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modpen);
           gn = nv*Nmat*2*u(A);
           if gn < 0
             if k_in ==1

@@ -12,8 +12,11 @@ global orig_nn
 global frictionB friction_mu
 global melangeforce contact Cm1 wall_int
 global skip_branch skip_vertex
-global output_file
+global output_file modpen stab_mu
 
+if isempty(stab_mu)
+  stab_mu = 0.1;
+end
 mu = friction_mu;
 
 % we are adding the gradient dt/du to K
@@ -69,7 +72,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         gpt = Np'*p ;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         pint =  N' * node(sctr,:);
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,true);
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modpen);
         gn = nv*Nmat*2*u(A);
         if gn < 0
           if k_in == 1
@@ -78,7 +81,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
             end
           end
           % stabalization term
-          Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(0.01*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
+          Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(stab_mu*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
         end
       end
     end

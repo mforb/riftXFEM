@@ -12,7 +12,7 @@ path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 
 %define (and make) a path for results
-results_path = './Diagonal_tri_penalty_stab10_modpen_nobranch';
+results_path = './Diagonal_test';
 mkdir(results_path);
 %copyfile('../Testcase.m',results_path);
 
@@ -28,7 +28,8 @@ global penalty fixedF contact Kpen stabalize
 global frictionB friction_mu epsilon FintH wall_int
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global fmesh results_path same_coords skip_branch skip_vertex
-epsilon = 1e-4
+global modpen
+epsilon = 1e-6
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 0
@@ -41,8 +42,9 @@ stressState = 'PlaneStrain' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
 contact = 1;
 stabalize = 1;
-wall_int = 1;
-skip_branch = 1;
+wall_int = 2;
+modpen = 0;
+skip_branch = 0;
 skip_vertex = 0;
 
 
@@ -59,7 +61,7 @@ numnode = size(node,1) ;
 numelem = size(element,1) ;
 
 E = 1e6; nu = 0.3; P = 1 ;
-sigmato = -100. ;
+sigmato = -1000. ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
     Cm1 = E/10*(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
@@ -69,7 +71,7 @@ end
 
 %crack definition
 deltaInc = 0.05; numstep = 3;
-xCr(1).coor = [-.2 -.2;.2, .2] ;
+xCr(1).coor = [-.2 -.02;.2, .02] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];

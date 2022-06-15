@@ -1,5 +1,5 @@
 %Square_mesh
-friction
+friction2
 
 %[node,element,bcNodes,edgNodes]
 

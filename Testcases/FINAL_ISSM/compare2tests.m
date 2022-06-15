@@ -38,9 +38,9 @@ hold on
 axis equal;
 xlim(zoom_dim(1,:));
 ylim(zoom_dim(2,:));
-f_plotCrack(crackLips,1000,'r-','k-','c--')
+f_plotCrack(crackLips,1e8,'r-','k-','c--')
 
-lname = ['./Test1','/crack1.mat']; 
+lname = ['./Test5','/crack1.mat']; 
 load(lname)
 TR = triangulation(element,node);
 [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
@@ -48,13 +48,13 @@ zoom_dim(1,:) = [min(xCrk.coor(:,1))-20000,max(xCrk.coor(:,1))+20000];
 zoom_dim(2,:) = [min(xCrk.coor(:,2))-10000,max(xCrk.coor(:,2))+10000];
 
 nexttile
-xlabel('test1')
+xlabel('test5')
 triplot(TR);
 hold on
 axis equal;
 xlim(zoom_dim(1,:));
 ylim(zoom_dim(2,:));
-f_plotCrack(crackLips,1000,'r-','k-','c--')
+f_plotCrack(crackLips,1e6,'r-','k-','c--')
 
 
 %lname = ['./Test5','/crack1.mat']; 

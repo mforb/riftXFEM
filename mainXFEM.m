@@ -10,7 +10,7 @@ global results_path
 global fmesh
 global output_file
 global Hidden zoom_dim 
-global wall_int skip_branch skip_vertex
+global wall_int skip_branch skip_vertex modpen modocean
 
 output_file = fopen([results_path,'/output.log'],'w')
 if ~isfield(xCrk,'tip')
@@ -37,6 +37,12 @@ if isempty(skip_branch)
 end
 if isempty(skip_vertex)
   skip_vertex = 0;
+end
+if isempty(modpen)
+  modpen = 0;
+end
+if isempty(modocean)
+  modpen = 0;
 end
 nitsche = 0;
 plot_stresses = 0;
@@ -107,7 +113,7 @@ for ipas = 1:npas
             set(n2,'MarkerSize',15);
         end
     end
-    print([results_path,'/mesh_crack_',num2str(ipas)],'-dpng','-r300')
+    print([results_path,'/mesh_crack_',num2str(ipas)],'-dpng','-r500')
 
     
    
@@ -282,12 +288,12 @@ for ipas = 1:npas
     triplot(TR);
     hold on
     f_plotCrack(crackLips,20,'r-','k-','c--')
-    print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r300')
+    print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r500')
     if ~isempty(zoom_dim)
       xlim(zoom_dim(1,:));
       ylim(zoom_dim(2,:));
       figure_name = ['crack_walls_before_zoom',num2str(ipas)];
-      print([results_path,'/',figure_name],'-dpng','-r300')
+      print([results_path,'/',figure_name],'-dpng','-r500')
       %keyboard
     end
     clf();
@@ -328,7 +334,7 @@ for ipas = 1:npas
           xlim(zoom_dim(1,:));
           ylim(zoom_dim(2,:));
           figure_name = ['stab_ydiff_zoom_',num2str(ipas)];
-          print([results_path,'/',figure_name],'-dpng','-r300')
+          print([results_path,'/',figure_name],'-dpng','-r500')
         end
         figure(f)
         clf()
@@ -340,7 +346,7 @@ for ipas = 1:npas
           xlim(zoom_dim(1,:));
           ylim(zoom_dim(2,:));
         end
-        print([results_path,'/crack_walls_stab',num2str(ipas)],'-dpng','-r300')
+        print([results_path,'/crack_walls_stab',num2str(ipas)],'-dpng','-r500')
         figure(f)
         clf()
         trisurf(element,node(:,1),node(:,2),Stduy2)
@@ -418,14 +424,16 @@ for ipas = 1:npas
           dfac = 1 ;
           plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
           f_plotCrack(crackLips,1,'r-','k-','m--')
-          print(['crack_iter',num2str(cont)],'-dpng','-r300')
+          print(['crack_iter',num2str(cont)],'-dpng','-r500')
         end
       end
       fu = full(u);
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
-      elemForce = elemForce + elemForce_orig;
       f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas)
+      elemForce = elemForce + elemForce_orig;
+      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas+100);
+
 %     
   %     % plot displacement contour
       if Hidden 
@@ -449,14 +457,16 @@ for ipas = 1:npas
       end
       hold on
       dfac = 1 ;
-      plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-      f_plotCrack(crackLips,20,'r-','k-','c--')
-      print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r300')
+      %plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
+      triplot(TR);
+      f_plotCrack(crackLips,200,'r-','k-','c--')
+      %keyboard
+      print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r500')
       if ~isempty(zoom_dim)
         xlim(zoom_dim(1,:));
         ylim(zoom_dim(2,:));
         figure_name = ['crack_walls_after_zoom',num2str(ipas)];
-        print([results_path,'/',figure_name],'-dpng','-r300')
+        print([results_path,'/',figure_name],'-dpng','-r500')
         %keyboard
       end
       clf(f)
@@ -469,6 +479,7 @@ for ipas = 1:npas
       else
         plotFieldXfemT3(xCrk,pos,enrichNode,crackNode,u,...
           elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,ipas) ;
+        %keyboard
       end
     end
 

@@ -1,0 +1,2 @@
+mod_penalty,penalty_stiffness,stabalizing_param,integration_points
+3,1000000000000,0.01,4

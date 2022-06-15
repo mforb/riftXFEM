@@ -15,7 +15,7 @@ if ismember(iel, tip_elem)
   crack_n = intersect(sctr,crack_node);
   if any(crack_n);
     crack_c = find(sctr==crack_n);
-    p = [nnodes(crack_c,:) ; ntip ];
+    p = [nnode(crack_c,:) ; ntip ];
   else
     [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
     p = [nnodes(end,:) ; ntip ];

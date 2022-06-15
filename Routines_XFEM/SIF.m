@@ -6,7 +6,7 @@ global iMethod iParam
 global incR xc yc phiN
 global lambda1 lambda2 nu1 nu2
 global elemType typeMesh typeProblem typeCrack stressState
-global wall_int
+global wall_int output_file
 
 plotNode = 'NO' ;
 
@@ -263,6 +263,13 @@ for iel = 1 : size(Jdomain,2)
     end       % of quadrature loop
 end
 Knum = I.*E / (2*(1-nu^2)) % plain strain
+KI = Knum(1);
+KII = Knum(2);
+theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
+theta_inc = theta_inc * pi / 180.;%rad
+
+kstr = ['Tip,',num2str(flag_end),' before crack wall forces included : K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+fprintf(output_file,kstr)
 
 for iel = 1 : size(JWdomain,2)
     e = JWdomain(iel) ; % current element
@@ -281,6 +288,9 @@ for iel = 1 : size(JWdomain,2)
         [W,Q] = quadrature(wall_int,'GAUSS',1) ;
         % find the distance between the two intersects (should be able to do this with det(J)
         [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
+        if flag_end == 1
+          nv = -1*nv;
+        end
 
         JO = l/2;
         nlocal = QT*nv';
@@ -304,20 +314,20 @@ for iel = 1 : size(JWdomain,2)
           % ++++++++++++++
           % q at pt 
           % ++++++++++++++
-          qpt = N'*q';
-          qm1 = nv*qpt;
-          qm2 = -1*nv*qpt;
+          qm2 = N'*q';
+          %qm1 = nv*qpt;
+          %qm2 = -1*nv*qpt;
 
           % ++++++++++++++++++
           % stress at crack lip 
           % ++++++++++++++++++
-          sig_elem = [elem_force(seg,e,2*gq-1) elem_force(seg,e,2*gq); elem_force(seg,e,2*gq) 0];
-          angl = atan2(nv(2),nv(1));
-          rotQT = [ cos(angl), sin(angl); -sin(angl), cos(angl) ]; 
-          sig_global = rotQT*sig_elem*rotQT';
-          sig_local = QT*sig_global*QT';
-          sig_local1 = sig_local/2;
-          sig_local2 = sig_local/-2;
+          sig_elem = [0 elem_force(seg,e,2*gq); elem_force(seg,e,2*gq) elem_force(seg,e,2*gq-1)];
+          %angl = atan2(nv(2),nv(1));
+          %rotQT = [ cos(angl), sin(angl); -sin(angl), cos(angl) ]; 
+          %sig_global = rotQT*sig_elem*rotQT';
+          %sig_local = QT*sig_global*QT';
+          sig_local1 = sig_elem/-1;
+          sig_local2 = sig_elem/1;
 
           % ++++++++++++++++++
           %  Auxiliary fields
@@ -325,11 +335,11 @@ for iel = 1 : size(JWdomain,2)
           
           xp    = QT *(Gpt - xyTip)';           % local coordinate to tip
           r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2)) ;
-          theta = atan2(xp(2),xp(1)) ;
+          theta = pi;
           % if theta is equal to pi then we have to force one side to be consistently positive
-          if abs(abs(theta)-pi) < 1e-8 
-            theta = pi;
-          end
+          %if abs(abs(theta)-pi) < 1e-8 
+            %theta = pi;
+          %end
 
           K1 = 1.0 ;
           K2 = K1  ;
@@ -351,7 +361,7 @@ for iel = 1 : size(JWdomain,2)
           dtdy = CT/r;
           for mode = 1:2
             if (mode == 1)
-                  
+
                   u1    = K1*FACDisp1*SQR*CT2*(kappa - CT);
                   du1dr = K1*FACDisp1*0.5/SQR*CT2*(kappa - CT);
                   du1dt = K1*FACDisp1*SQR*(-0.5*ST2*(kappa - CT) + CT2*ST);
@@ -394,13 +404,15 @@ for iel = 1 : size(JWdomain,2)
               % +++++++++++++++
               %  Surface part of the I integral 
               % +++++++++++++++
-              I_wall1 = -1*(sig_local1(1,2) * AuxGradDisp(1,1) + sig_local1(2,2) * AuxGradDisp(2,1) ) * qm1(2);
+              %keyboard
+              I_wall1 = (sig_local1(1,2) * AuxGradDisp(1,1) + sig_local1(2,2) * AuxGradDisp(2,1) ) * qm2;
+              %keyboard
               % Interaction integral I
               %keyboard
               I(mode,1) = I(mode,1) + I_wall1*det(JO)*wt;
           end   %loop on mode
 
-          theta =-1*(2*pi - theta);
+          theta =-1*theta;
 
           CT   = cos(theta);
           ST   = sin(theta);
@@ -458,7 +470,7 @@ for iel = 1 : size(JWdomain,2)
               % +++++++++++++++
               %  Surface part of the I integral 
               % +++++++++++++++
-              I_wall2= (sig_local2(1,2) * AuxGradDisp(1,1) + sig_local2(2,2) * AuxGradDisp(2,1) ) * qm2(2);
+              I_wall2= (sig_local2(1,2) * AuxGradDisp(1,1) + sig_local2(2,2) * AuxGradDisp(2,1) ) * qm2;
               %keyboard
               
               % Interaction integral I

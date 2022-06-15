@@ -13,7 +13,7 @@ path(path,'../../Mesh')
 path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
 %------------------
-results_path = './Ice_shelf_no_pressure';
+results_path = './Ice_shelf_only_pressure';
 mkdir(results_path);
 
 %declare global variables here
@@ -32,21 +32,20 @@ global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon
 global results_path rift_wall_pressure
 
-rift_wall_pressure = 'y'
+rift_wall_pressure = 1 
 
 epsilon = 5 
 epsilon = 1e-7
 frictionB = 1
 friction_mu = 0.1
 plothelp = 1
-contact = 1
+contact = 0
 Kpen = 1e7
-penalty = 1;
+penalty = 0;
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
 stressState = 'PlaneStress' ;
-epsilon = 1e-3
 
 OPT = 2; Hidden = true;
 
@@ -72,7 +71,7 @@ cpos = TR.incenter;
 FintX = scatteredInterpolant(cpos(:,1),cpos(:,2),1e4*ones(size(cpos,1),1));
 FintY = scatteredInterpolant(cpos(:,1),cpos(:,2),2.9e6*ones(size(cpos,1),1));
 FintXY = scatteredInterpolant(cpos(:,1),cpos(:,2),0.3e3*ones(size(cpos,1),1));
-FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),300*ones(size(cpos,1),1));
+FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),100*ones(size(cpos,1),1));
 
 
 
@@ -86,7 +85,7 @@ numnode = size(node,1) ;
 numelem = size(element,1) ;
 
 E =0.9e9; nu = 0.3; P = 1 ;
-sigmato = -1. ;
+sigmato = 0 ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
     Cm1 = E/10*(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];

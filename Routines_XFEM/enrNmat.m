@@ -13,7 +13,7 @@ Gpt = N' * node(sctr,:);                  % GP in global coord, used
 Nxfem = [ ] ;
 %loop on nodes, check is node is enriched........
 if any(enr_node(sctr) == 1)
-    [QT,tip,Rpt,~,Br,~,~] = f_tip_enrichment_param(e,Gpt,N,[],sctr,xTip,xCrl,type_elem,enr_node,1); % this is the positive side ( needs to be multiplied by two to represent the gap)
+    [QT,tip,Rpt,~,Br,~,~] = f_tip_enrichment_param(e,Gpt,N,[],sctr,xTip,xCrl,type_elem,enr_node,1); % this is always the "positive" sideas defined by the crack orientation 
 end
 
 for in = 1:nn
@@ -28,8 +28,7 @@ for in = 1:nn
     elseif ( enr_node(sctr(in)) == 1) % B(x) enriched node
        if ~skip_branch
           % compute branch functions at node "in"
-          %if pen 
-          if 0 
+          if pen 
             aa = Rpt*N(in); % (Br(1))/sqrt(r) should equal 1 in this case
             %aa = Rpt*N(in)*(Br(1))/r;
           else

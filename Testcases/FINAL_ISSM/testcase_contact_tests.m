@@ -27,7 +27,7 @@ global loadstress FintX FintY FintXY FintH
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
-global zoom_dim 
+global zoom_dim modpen modocean stab_mu
 epsilon = 5 
 
 OPT = 2; 
@@ -42,10 +42,13 @@ melangeforce = 0
 global wall_int stabalize Kpen penalty contact skip_branch skip_vertex
 wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
 stabalize = 1;
+stab_mu = 1;
 contact = 1;
-Kpen = 1e11 ;
+Kpen = 1e12 ;
 penalty = 1;
 skip_branch = 0;
+skip_vertex = 0;
+modpen = 0;
 
 xTip= [0,0];
 Rtip = xTip;
@@ -94,190 +97,243 @@ deltaInc = 2500; numstep = 1;
 %xCr(2).coor = [xs2',ys2'] 
 xCr(1).tip = [1,0];
 xCr_orig = xCr;
+
+count = 1
+
+for mpen = 1:3 
+  for Kpen_i = 1:2 
+    for stab_i = 1:3 
+      for wall_ints = 1:2
  
-typeProblem
-plotmesh = 'YES' ; plotNode = 'no' ;
-if Hidden
-  fmesh = figure('visible','off');
-else
-  fmesh = figure();
-end
+      wall_int = wall_ints*wall_ints; 
+      sv = [10,1,0.01];
+      stab_mu = sv(stab_i);
+      %stab_mu = 0.1;
+      contact = 1;
+      Kv = [1e12,1e14];
+      Kpen = Kv(Kpen_i) ;
+      penalty = 1;
+      skip_branch = 0;
+      skip_vertex = 0;
+      if mpen == 1
+        modpen = 0;
+        modocean = 0;
+      elseif mpen == 2
+        modpen = 1;
+        modocean = 0;
+      else mpen == 3
+        modpen = 1;
+        modocean = 1;
+      end
+      %a = 3;
+      %C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
+      %KAnalytical000 = C*P*sqrt(pi*a) 
 
-if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
-    
-    %crack plot
-    for k=1:size(xCr,2)
-        for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
-            set(cr,'LineWidth',3);
-        end
-        for kj = 1:size(xCr(k).coor,1)
-            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
-                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
-        end
+      results_path = ['./Batch2Test',num2str(count)];
+      mkdir(results_path);
+      % Create a table with the data and variable names
+      T = table(mpen, Kpen, stab_mu, wall_int,'VariableNames', { 'mod_penalty', 'penalty_stiffness','stabalizing_param','integration_points'} );
+      writetable(T, [results_path,'/Conditions.txt']);
+      plotmesh = 'YES' ; plotNode = 'no' ;
+      if Hidden
+        fmesh = figure('visible','off');
+      else
+        fmesh = figure();
+      end
+
+      if( strcmp(plotmesh,'YES') )
+          plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+          
+          %crack plot
+          for k=1:size(xCr,2)
+              for kj = 1:size(xCr(k).coor,1)-1
+                  cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+                  set(cr,'LineWidth',3);
+              end
+              for kj = 1:size(xCr(k).coor,1)
+                  %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                      %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+              end
+          end
+      end
+
+
+      zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+      zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+      [Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
+      save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+      make_knum
+
+      close all;
+      count = 1 + count;
+      end
     end
+  end
 end
 
 
-zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
-zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
-[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
-save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
-make_knum
+%wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
+%stabalize = 1;
+%stab_mu = 0.1;
+%contact = 1;
+%Kpen = 1e12 ;
+%penalty = 1;
+%skip_branch = 0;
+%skip_vertex = 0;
+%modpen = 0;
+%%a = 3;
+%%C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
+%%KAnalytical000 = C*P*sqrt(pi*a) 
 
-close all;
+%results_path = './Test2';
+%mkdir(results_path);
+%if Hidden
+  %fmesh = figure('visible','off');
+%else
+  %fmesh = figure();
+%end
 
-wall_int = 5; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
-stabalize = 1;
-contact = 1;
-Kpen = 1e11 ;
-penalty = 1;
-skip_branch = 0;
-%a = 3;
-%C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
-%KAnalytical000 = C*P*sqrt(pi*a) 
-
-results_path = './Test2';
-mkdir(results_path);
-if Hidden
-  fmesh = figure('visible','off');
-else
-  fmesh = figure();
-end
-
-if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+%if( strcmp(plotmesh,'YES') )
+    %plotMesh(node,element,elemType,'b-',plotNode,fmesh)
     
-    %crack plot
-    for k=1:size(xCr,2)
-        for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
-            set(cr,'LineWidth',3);
-        end
-        for kj = 1:size(xCr(k).coor,1)
-            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
-                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
-        end
-    end
-end
-[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
-save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
-make_knum
+    %%crack plot
+    %for k=1:size(xCr,2)
+        %for kj = 1:size(xCr(k).coor,1)-1
+            %cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            %set(cr,'LineWidth',3);
+        %end
+        %for kj = 1:size(xCr(k).coor,1)
+            %%plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %%'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        %end
+    %end
+%end
+%[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
+%save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+%make_knum
 
-close all;
+%close all;
 
-wall_int = 5; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
-stabalize = 0;
-contact = 1;
-Kpen = 1e11 ;
-penalty = 1;
-skip_branch = 0;
-%a = 3;
-%C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
-%KAnalytical000 = C*P*sqrt(pi*a) 
+%wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
+%stabalize = 1;
+%stab_mu = 0.1;
+%contact = 1;
+%Kpen = 1e13 ;
+%penalty = 1;
+%skip_branch = 0;
+%skip_vertex = 0;
+%modpen = 0;
+%%a = 3;
+%%C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
+%%KAnalytical000 = C*P*sqrt(pi*a) 
 
-results_path = './Test3';
-mkdir(results_path);
-if Hidden
-  fmesh = figure('visible','off');
-else
-  fmesh = figure();
-end
+%results_path = './Test3';
+%mkdir(results_path);
+%if Hidden
+  %fmesh = figure('visible','off');
+%else
+  %fmesh = figure();
+%end
 
-if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+%if( strcmp(plotmesh,'YES') )
+    %plotMesh(node,element,elemType,'b-',plotNode,fmesh)
     
-    %crack plot
-    for k=1:size(xCr,2)
-        for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
-            set(cr,'LineWidth',3);
-        end
-        for kj = 1:size(xCr(k).coor,1)
-            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
-                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
-        end
-    end
-end
-[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
-save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
-make_knum
+    %%crack plot
+    %for k=1:size(xCr,2)
+        %for kj = 1:size(xCr(k).coor,1)-1
+            %cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            %set(cr,'LineWidth',3);
+        %end
+        %for kj = 1:size(xCr(k).coor,1)
+            %%plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %%'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        %end
+    %end
+%end
+%[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
+%save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+%make_knum
 
-close all;
+%close all;
 
-wall_int = 1; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
-stabalize = 0;
-contact = 1;
-Kpen = 1e13 ;
-penalty = 1;
-skip_branch = 0;
-%a = 3;
-%C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
-%KAnalytical000 = C*P*sqrt(pi*a) 
+%wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
+%stabalize = 1;
+%stab_mu = 0.1;
+%contact = 1;
+%Kpen = 1e14 ;
+%penalty = 1;
+%skip_branch = 0;
+%skip_vertex = 0;
+%modpen = 0;
 
-results_path = './Test4';
-mkdir(results_path);
-if Hidden
-  fmesh = figure('visible','off');
-else
-  fmesh = figure();
-end
+%%a = 3;
+%%C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
+%%KAnalytical000 = C*P*sqrt(pi*a) 
 
-if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+%results_path = './Test4';
+%mkdir(results_path);
+%if Hidden
+  %fmesh = figure('visible','off');
+%else
+  %fmesh = figure();
+%end
+
+%if( strcmp(plotmesh,'YES') )
+    %plotMesh(node,element,elemType,'b-',plotNode,fmesh)
     
-    %crack plot
-    for k=1:size(xCr,2)
-        for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
-            set(cr,'LineWidth',3);
-        end
-        for kj = 1:size(xCr(k).coor,1)
-            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
-                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
-        end
-    end
-end
-[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
-save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
-make_knum
+    %%crack plot
+    %for k=1:size(xCr,2)
+        %for kj = 1:size(xCr(k).coor,1)-1
+            %cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            %set(cr,'LineWidth',3);
+        %end
+        %for kj = 1:size(xCr(k).coor,1)
+            %%plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %%'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        %end
+    %end
+%end
+%[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
+%save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+%make_knum
 
-close all;
-wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
-stabalize = 1;
-contact = 1;
-Kpen = 1e11 ;
-penalty = 1;
-skip_branch = 1;
-skip_vertex = 1;
-%a = 3;
-%C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
-%KAnalytical000 = C*P*sqrt(pi*a) 
+%close all;
+%wall_int = 4; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
+%stabalize = 1;
+%stab_mu = 0.1;
+%contact = 1;
+%Kpen = 1e12 ;
+%penalty = 1;
+%skip_branch = 0;
+%skip_vertex = 0;
+%modpen = 1;
+%%a = 3;
+%%C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
+%%KAnalytical000 = C*P*sqrt(pi*a) 
 
-results_path = './Test5';
-mkdir(results_path);
-if Hidden
-  fmesh = figure('visible','off');
-else
-  fmesh = figure();
-end
+%results_path = './Test5';
+%mkdir(results_path);
+%if Hidden
+  %fmesh = figure('visible','off');
+%else
+  %fmesh = figure();
+%end
 
-if( strcmp(plotmesh,'YES') )
-    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+%if( strcmp(plotmesh,'YES') )
+    %plotMesh(node,element,elemType,'b-',plotNode,fmesh)
     
-    %crack plot
-    for k=1:size(xCr,2)
-        for kj = 1:size(xCr(k).coor,1)-1
-            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
-            set(cr,'LineWidth',3);
-        end
-        for kj = 1:size(xCr(k).coor,1)
-            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
-                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
-        end
-    end
-end
-[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
-save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
-make_knum
+    %%crack plot
+    %for k=1:size(xCr,2)
+        %for kj = 1:size(xCr(k).coor,1)-1
+            %cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            %set(cr,'LineWidth',3);
+        %end
+        %for kj = 1:size(xCr(k).coor,1)
+            %%plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %%'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        %end
+    %end
+%end
+%[Knumerical,ThetaInc,xCrt] = mainXFEM(xCr,numstep,deltaInc);
+%save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+%make_knum

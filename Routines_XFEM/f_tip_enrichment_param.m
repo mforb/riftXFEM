@@ -1,7 +1,7 @@
 function [QT,tip,R,dRdx,Br,dBdx,dBdy] = f_tip_enrichment_param(e,Gpt,N,dNdx,sctr,xTip,xCrl,type_elem,enr_node,varargin)
 global element 
 
-f_op = 1;
+%f_op = 1;
 
 in = find(enr_node(sctr) == 1,1);
 if type_elem(e,1) == 1   %looking for the "tip" element
@@ -35,7 +35,7 @@ if points_same_2d(xCrl(ref_elem,3:4),tip,1e-6)
 else
   xCrek  = [ xCrl(ref_elem,3:4); xCrl(ref_elem,1:2) ]; 
   seg   = xCrek(1,:) - xCrek(2,:);
-  f_op = -1;
+  %f_op = -1;
 end
 
 alpha = atan2(seg(2),seg(1));
@@ -54,7 +54,7 @@ if abs(r) < 1e-8
 end
 
 if size(varargin,1)>0
-  theta = pi*varargin{1};
+  theta = pi*varargin{1}; %this means the "positive" side (look at Haeviside) is always called when varargin{1} = 1
   [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);
 else
   [Br,dBdx,dBdy] = branch_gp(r,theta,alpha);

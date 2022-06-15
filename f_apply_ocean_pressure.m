@@ -9,6 +9,7 @@ global plotmesh plotNode
 global gporder numtri
 global plothelp 
 global rift_wall_pressure wall_int skip_branch
+global modocean
 
 if strcmp(elemType,'Q4') 
   intType = 'GAUSS' ;
@@ -30,7 +31,7 @@ end
 
 %loop over elements
 elems = union(split_elem,vertex_elem);
-%elems = union(elems,tip_elem);
+elems = union(elems,tip_elem);
 
 sk_br = skip_branch;
 skip_branch = 0; % the force is applied everywhere consistently (skip_branch is for penalty forces)
@@ -48,7 +49,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
       p = ap(seg:seg+1,:);
       pg = [apg(seg,:),apg(seg+1,:)];
       fh = f_getHeightF(iel);
-      elem_force(seg,iel,1:2:wall_int*2) = elem_force(seg,iel,1:2:wall_int*2) + fh;
+      elem_force(seg,iel,1:2:wall_int*2) = elem_force(seg,iel,1:2:wall_int*2) + 2*fh;
 
       [W,Q] = quadrature(wall_int,'GAUSS',1) ;
       % find the distance between the two intersects (should be able to do this with det(J)
@@ -66,7 +67,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
         gpt = Np'*p;
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,false);
+        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modocean);
         Fext(A) = Fext(A) + 2*fh*W(k_in)*det(JO)*Nmat'*nv';
       end
     end

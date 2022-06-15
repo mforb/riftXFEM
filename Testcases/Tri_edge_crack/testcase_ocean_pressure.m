@@ -36,7 +36,7 @@ global fmesh
 
 same_coords = 1
 
-rift_wall_pressure = 1
+rift_wall_pressure = 0
 
 epsilon = 2 
 plothelp = 0
@@ -72,7 +72,7 @@ cpos = TR.incenter;
 FintX = scatteredInterpolant(cpos(:,1),cpos(:,2),1e4*ones(size(cpos,1),1));
 FintY = scatteredInterpolant(cpos(:,1),cpos(:,2),2.9e6*ones(size(cpos,1),1));
 FintXY = scatteredInterpolant(cpos(:,1),cpos(:,2),0.3e3*ones(size(cpos,1),1));
-FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),300*ones(size(cpos,1),1));
+FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),100*ones(size(cpos,1),1));
 
 
 
@@ -89,9 +89,10 @@ rw = 1027;
 ri = 917;
 g = 9.81;
 
-E =1e10; nu = 0.3; P = 1 ;
+E =1e10; nu = 0.33; P = 1 ;
 %sigmato = 300*g*ri*(rw-ri)/rw;
-sigmato = 2e5;
+%sigmato = 2e5;
+sigmato = 0.5*100*100*g*ri*(1-ri/rw);
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
     Cm1 = E/10*(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
@@ -101,7 +102,8 @@ end
 
 %crack definition
 deltaInc = 100; numstep = 1;
-xCr(1).coor = [-1501 0; -500 0 ] ;
+%xCr(1).coor = [-1501 0; -500 0 ] ;
+xCr(1).coor = [500 0; 1501 0 ] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];
