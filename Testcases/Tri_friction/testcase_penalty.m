@@ -28,12 +28,12 @@ global penalty fixedF contact Kpen stabalize
 global frictionB friction_mu epsilon FintH wall_int
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global fmesh results_path same_coords skip_branch skip_vertex
-global modpen
+global modpen FintH stab_mu
 epsilon = 1e-6
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 0
-Kpen = 1e8
+Kpen = 1e8;
 
 %problem flags
 elemType = 'T3' ;
@@ -41,9 +41,11 @@ typeCrack = 'Static' ;
 stressState = 'PlaneStrain' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
 contact = 1;
-stabalize = 1;
+stabalize = 0;
+stab_mu = 10;
 wall_int = 2;
 modpen = 0;
+modocean = 0;
 skip_branch = 0;
 skip_vertex = 0;
 
@@ -54,7 +56,7 @@ read_gmesh
 TR = triangulation(element,node);
 cpos = TR.incenter;
 
-FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),ones(length(cpos),1));
+FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),2*ones(length(cpos),1));
 
 element = tricheck(node,element);
 numnode = size(node,1) ;
@@ -70,8 +72,8 @@ else
 end
 
 %crack definition
-deltaInc = 0.05; numstep = 3;
-xCr(1).coor = [-.2 -.02;.2, .02] ;
+deltaInc = 0.05; numstep = 1;
+xCr(1).coor = [-.2 -.02;.195, .02] ;
 %xCr(1).coor = [-0.2 0;0.2 0] ;
 numcrack = size(xCr,2) ;
 fixedF = [];

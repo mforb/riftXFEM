@@ -1,4 +1,4 @@
-function [ ] = f_plotCrack2( crack_lips, factor,up_pl,down_pl, mid_pl )
+function [ ] = f_plotCrack2( crack_lips, factor1,factor2,up_pl,down_pl, mid_pl )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Mon Nov 29 18:30:31 NZDT 2021
 
@@ -27,9 +27,9 @@ for kk = 1:size(crack_lips,4) %what's the crack?
        ddown = [ddown;ddown3];
        dm = [dm;dm3];
      end
-     p_up = p + factor*(dm + dup);
-     p_down = p + factor*(dm + ddown);
-     p_mid = p + factor* dm; 
+     p_up = p + factor1*dm + factor2*dup;
+     p_down = p + factor1*dm + factor2*ddown;
+     p_mid = p + factor1*dm; 
      plot(p_up(:,1),p_up(:,2),up_pl)
      plot(p_down(:,1),p_down(:,2),down_pl)
      if nargin > 4

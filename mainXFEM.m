@@ -433,6 +433,7 @@ for ipas = 1:npas
       f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas)
       elemForce = elemForce + elemForce_orig;
       f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas+100);
+      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemCrk,splitElem,vertexElem,tipElem,ipas+200)
 
 %     
   %     % plot displacement contour
