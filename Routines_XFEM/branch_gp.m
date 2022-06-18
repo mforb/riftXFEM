@@ -3,12 +3,13 @@
 %                            Nguyen Vinh Phu
 %                        LTDS, ENISE, Juillet 2006
 % *************************************************************************
-function [f,dfdx,dfdy] = branch_gp(r,theta,alpha)
+function [f,dfdx,dfdy] = branch_gp(r,theta,alpha,fl)
 % Compute the branch functions spanning the near tip field for LEFM
 % Inputs: 
 %   (r,theta) : polar coordinates of points where the branch
 %               functions are to be evaluated
 %   alpha     : inclination of the crack tip segment w.r.t x axis
+%   fl        : a matrix for mirroring about the access (required when the tip in a the begninning rather then the end of the crack segment
 
 if( r ~=0 )
     r2 = sqrt(r);
@@ -65,8 +66,8 @@ dPhi4dx2  = fac * (ct2 + c3t2 * ct);
 %   Derivatives in global coords (x,y)
 % ---------------------------------------
 
-dx1dx = cos(alpha); dx2dx = -sin(alpha);
-dx1dy = sin(alpha); dx2dy = cos(alpha);
+dx1dx = cos(alpha)*fl(1,1); dx2dx = -sin(alpha)*fl(2,2);
+dx1dy = sin(alpha)*fl(1,1); dx2dy = cos(alpha)*fl(2,2);
 
 dfdx(1) = dPhi1dx1 * dx1dx + dPhi1dx2 * dx2dx  ;
 dfdy(1) = dPhi1dx1 * dx1dy + dPhi1dx2 * dx2dy  ;

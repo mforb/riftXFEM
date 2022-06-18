@@ -1,12 +1,11 @@
 No tip field for xCr defined, all tips have been activated
-5.6724    Crack growth number     1
+5.6883    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 6350
-The ratio of elements stabilized: 1
-L2 norm of residual is 1243.7286 ; relative to R0 1. The contact ratio is: 1
-L2 norm of residual is 7.059e-11 ; relative to R0 5.6756e-14. The contact ratio is: 1
-Tip,2 before crack wall forces included : K1 is -337.326   K2 is -37.6519  and theta is -0.21708
-Tip 2: K1 is -30.9736   K2 is -37.6519  and theta is -0.97589
-Tip,1 before crack wall forces included : K1 is -328.8348   K2 is -35.5821  and theta is -0.21079
-Tip 1: K1 is -5.6044   K2 is -35.5821  and theta is -1.179
+L2 norm of residual is 44212.6567 ; relative to R0 1. The contact ratio is: 1
+L2 norm of residual is 2.256e-11 ; relative to R0 5.1026e-16. The contact ratio is: 1
+Tip,2 before crack wall forces included : K1 is -325.3243   K2 is -86.1162  and theta is -0.46234
+Tip 2: K1 is 206.6486   K2 is -86.1162  and theta is 0.63279
+Tip,1 before crack wall forces included : K1 is -312.4999   K2 is -86.9097  and theta is -0.48013
+Tip 1: K1 is 221.476   K2 is -86.9097  and theta is 0.60976

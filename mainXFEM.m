@@ -164,8 +164,7 @@ for ipas = 1:npas
     %keyboard
 
     if exist('melange') & melange 
-      if ~exist('xM') 
-        xM = xCrk; % this means that all of the crack including the tip elements will be infilled with melange
+      if ~isfield(xCrk,'melange') 
         np = size(xM.coor,1);
         if np < 4
           warning('Not enough coordinates in the crack for generic melange aproach')
@@ -173,13 +172,12 @@ for ipas = 1:npas
           xM.melange = ones(1,np-1);
           xM.melange(1) = 0;
           xM.melange(end) = 0;
-          xM.width = ones(500,np-1);
+          xM.width = ones(100,np-1);
         end
       end
-      Kt = K;
-      Kt = K - Kt;
-      [Kt] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
-        splitElem,tipElem,vertexElem,cornerElem,tangentElem,crackNode,pos,xM,xCrk,Kt) ;
+      Kt = sparse(zeros(size(K)));
+      [Kt,nodeTanfix] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
+        splitElem,tipElem,vertexElem,cornerElem,tangentElem,crackNode,pos,xM,xCrk,Kt,nodeTanfix) ;
       K = K + Kt;
       %keyboard
     end

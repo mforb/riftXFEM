@@ -34,8 +34,10 @@ end
 % Determine J domain and weight function
 if flag_end == 1
   xyTip = [elem_crk(tip,1) elem_crk(tip,2)] ;
+  fl = [1 0; 0 -1];
 elseif flag_end == 2
   xyTip = [elem_crk(tip,3) elem_crk(tip,4)] ;
+  fl = [1 0; 0 1];
 end
 
 [Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node);
@@ -44,7 +46,7 @@ I1 = 0;
 I2 = 0;
 I  = [zeros(2,1)];
 
-QT  =[cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];           % for the transformation to local coordinate
+QT  = fl * [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];           % for the transformation to local coordinate
 
 % ---------------------------
 % Starting LOOP over ELEMENTS
@@ -412,7 +414,7 @@ for iel = 1 : size(JWdomain,2)
               I(mode,1) = I(mode,1) + I_wall1*det(JO)*wt;
           end   %loop on mode
 
-          theta =-1*theta;
+          theta =-1*pi;
 
           CT   = cos(theta);
           ST   = sin(theta);

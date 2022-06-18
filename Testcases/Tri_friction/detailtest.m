@@ -33,5 +33,6 @@ xlabel('test4')
 triplot(TR);
 hold on
 axis equal;
-f_plotCrack2(crackLips,10,1e3,'r-','k-','c--')
+f_plotCrack2(crackLips,10,1e2,'r-','k-','c--')
+%f_plotCrack(crackLips,1e3,'r-','k-','c--')
 

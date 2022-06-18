@@ -1,4 +1,4 @@
-function [ dist ] = f_dista2(iel,elem_crk,tip)
+function [ dist, mdist ] = f_dista2(iel,elem_crk,tip)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Thu Nov 11 16:12:12 NZDT 2021
 
@@ -36,6 +36,17 @@ for i=1:size(sctr,2)
      dist(i) = 0;
     else
      dist(i) = psi; 
+    end
+end
+if nargout > 1
+    x = mean(node(sctr,1)) ;
+    y = mean(node(sctr,2)) ;
+    psi = (x-x1)*(x1-x0)+(y-y1)*(y1-y0);
+    psi = psi/l;
+    if abs(psi) < EPS
+     mdist = 0;
+    else
+     mdist = psi; 
     end
 end
 

@@ -33,7 +33,7 @@ epsilon = 1e-6
 same_coords = 1
 plothelp = 0
 rift_wall_pressure = 0
-Kpen = 1e8;
+Kpen = 1e9;
 
 %problem flags
 elemType = 'T3' ;

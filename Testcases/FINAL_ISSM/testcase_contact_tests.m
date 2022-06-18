@@ -105,12 +105,13 @@ for mpen = 1:3
     for stab_i = 1:3 
       for wall_ints = 1:2
  
-      wall_int = wall_ints*wall_ints; 
+      %wall_int = wall_ints*wall_ints; 
+      wall_int = wall_ints; 
       sv = [10,1,0.01];
       stab_mu = sv(stab_i);
       %stab_mu = 0.1;
       contact = 1;
-      Kv = [1e12,1e14];
+      Kv = [1e11,1e15];
       Kpen = Kv(Kpen_i) ;
       penalty = 1;
       skip_branch = 0;
@@ -129,7 +130,7 @@ for mpen = 1:3
       %C = 1.12 - 0.231*(a/D) + 10.55*(a/D)^2 - 21.72*(a/D)^3 + 30.39*(a/D)^4 ;
       %KAnalytical000 = C*P*sqrt(pi*a) 
 
-      results_path = ['./Batch2Test',num2str(count)];
+      results_path = ['./BatchTest',num2str(count)];
       mkdir(results_path);
       % Create a table with the data and variable names
       T = table(mpen, Kpen, stab_mu, wall_int,'VariableNames', { 'mod_penalty', 'penalty_stiffness','stabalizing_param','integration_points'} );
