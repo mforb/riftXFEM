@@ -29,6 +29,9 @@ end
 if isempty(melangeforce)
   melangeforce = 0;
 end
+if isempty(melange)
+  melange = 0;
+end
 if isempty(wall_int)
   wall_int = 2;
 end

@@ -1,4 +1,4 @@
-function [B,dJO] = xfemBmel(pt,e,type_elem,enrich_node,xCrl,GVertex,crack_node,cont,QT,mT)
+function [B,dJO] = xfemBmel(pt,e,type_elem,enrich_node,xCrl,GVertex,crack_node,cont,QT,mT,mE)
 
 
 %declare global variables here
@@ -12,8 +12,11 @@ sctr = element(e,:);
 nn   = length(sctr);
 [N,dNdxi] = lagrange_basis(elemType,pt);  % element shape functions
 J0 = node(sctr,:)'*dNdxi;                 % element Jacobian matrix
-nodeN = node(sctr,:)*vN';            % nodes in coordinate system perp
-rN = max(nodeN)-min(nodeN);                        % distance between nodes and this is what we want to use to stretch/shrink the elements transform
+nodeN = fnode(sctr,:)*vN';            % nodes in coordinate system perp
+[ phi  ] = dista(e,xCrl);
+
+keyboard
+rN = max(phi)-min(phi);                        % distance between nodes and this is what we want to use to stretch/shrink the elements transform
 invJ0 = inv(J0);
 dNdx  = dNdxi*invJ0;                      % derivatives of N w.r.t XY
 % now we want to rotate using QT

@@ -27,7 +27,7 @@ global loadstress FintX FintY FintXY FintH
 global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
-global zoom_dim modpen modocean
+global zoom_dim modpen modocean stab_mu
 epsilon = 5 
 
 OPT = 2; 
@@ -36,18 +36,18 @@ Hidden = true;
 same_coords = 1
 
 rift_wall_pressure = 1
-melange = 0 
+melange = 1 
 melangeforce = 0
 
 global wall_int stabalize Kpen penalty contact skip_branch
 wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
 stabalize = 1;
-stab_mu = 10;
-contact = 1;
+stab_mu = 2;
+contact = 0;
 Kpen = 1e12 ;
-penalty = 1;
+penalty = 0;
 skip_branch = 0;
-modpen = 1;
+modpen = 0;
 modocean = 0;
 
 xTip= [0,0];
@@ -75,8 +75,10 @@ ys(end) = [];
 xCr(1).coor = [fliplr(xs)',fliplr(ys)'] 
 %xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
 %{keyboard %}
-xCr(1).melange = ones(length(xCr(1).coor),1);
-xCr(1).width = [0 0 150 200 0 0 ] ;
+xCr(1).melange = ones(length(xCr(1).coor)-1,1);
+xCr(1).melange(1) = 0;
+xCr(1).melange(end) = 0;
+xCr(1).width = [0.1 5 5 150 200 5 0.1 ] ;
 results_path = './MEL1_xmas_tip1_10km';
 mkdir(results_path);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')

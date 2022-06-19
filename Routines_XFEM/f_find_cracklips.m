@@ -4,7 +4,7 @@ function [ crack_lips, Flag_pen ] = f_find_cracklips( u, xCr, kk, enr_dom, type_
 global node element elemType
 global E nu C sigmato
 global Jint iMethod
-global epsilon
+global epsilon melange melangeforce
 
 if strcmp(elemType,'Q4')
   corner = [1 2 3 4 1] ;
@@ -23,6 +23,12 @@ Flag_pen = 0;
 for ii=1:length(elems)
   p = [];
   iel = elems(ii) ;
+  if ( melange | melangeforce ) 
+    [flag1,width] = f_find_melange(iel,xCr);
+    gn_lim = width;
+  else
+    gn_lim = 0;
+  end
   sctr=element(iel,:);
   nn = length(sctr);
   vv = node(sctr,:);
@@ -88,7 +94,7 @@ for ii=1:length(elems)
    %end
    % check that there is no interpenetration
    [~,nv,~,~,~,~] = f_segment_dist(xCrl(iel,:));
-   gn = nv*(Ntop*uAB - Nbot*uAB);
+   gn = nv*(Ntop*uAB - Nbot*uAB) + gn_lim;
    if gn < 0 % crack tips can be a problem for this 
      Flag_pen = 1;
    end

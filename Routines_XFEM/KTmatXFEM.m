@@ -10,7 +10,7 @@ global gporder numtri
 global plothelp
 global orig_nn
 global frictionB friction_mu
-global melangeforce contact Cm1
+global melangeforce melange contact Cm1
 global wall_int
 global rift_wall_pressure output_file
 global skip_branch skip_vertex modpen
@@ -102,8 +102,15 @@ end
 if contact
   for kk = 1:size(xCrk,2) %what's the crack?
     for ii=1:size(elems,1)
-      cc = cc + 1;
       iel = elems(ii) ;
+      if ( melange | melangeforce ) 
+        [flag1,width] = f_find_melange(iel,xCrk);
+        gn_lim = width
+      else
+        gn_lim = 0;
+      end
+
+      cc = cc + 1;
       sctr = element(iel,:) ;
       skip = 0;
       nn = length(sctr) ;
@@ -126,8 +133,8 @@ if contact
           [N,dNdxi] = lagrange_basis(elemType,gpt) ;
           pint =  N' * node(sctr,:);
           Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modpen);
-          gn = nv*Nmat*2*u(A);
-          if gn < 0
+          gn = nv*Nmat*2*u(A) + gn_lim;
+          if gn < 0 
             if k_in ==1
               if seg == 1
                 cct = cct + 1;

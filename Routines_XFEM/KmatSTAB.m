@@ -10,7 +10,7 @@ global gporder numtri
 global plothelp
 global orig_nn
 global frictionB friction_mu
-global melangeforce contact Cm1 wall_int
+global melangeforce melange contact Cm1 wall_int
 global skip_branch skip_vertex
 global output_file modpen stab_mu
 
@@ -48,6 +48,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
     sctr = element(iel,:) ;
     skip = 0;
     nn = length(sctr) ;
+    if ( melange | melangeforce ) 
+      [flag1,width] = f_find_melange(iel,xCrk);
+      gn_lim = width;
+    else
+      gn_lim = 0;
+    end
 
     [A,BrI,~,~,~] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
     [ap,apg] = f_crack_wall(iel,nnode,corner,tip_elem,vertex_elem,elem_crk,xTip,xVertex,crack_node); % elem_crk in natural coordinates
@@ -73,7 +79,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         [N,dNdxi] = lagrange_basis(elemType,gpt) ;
         pint =  N' * node(sctr,:);
         Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modpen);
-        gn = nv*Nmat*2*u(A);
+        gn = nv*Nmat*2*u(A) + gn_lim ;
         if gn < 0
           if k_in == 1
             if seg == 1
