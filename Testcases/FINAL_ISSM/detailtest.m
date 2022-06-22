@@ -22,7 +22,8 @@ E = 9.6e9; nu = 0.3; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
 stressState = 'PlaneStrain' ;
-lname = ['./MEL1_xmas_tip1_10km','/crack1.mat']; 
+%lname = ['./MEL1_xmas_tip1_10km','/crack1.mat']; 
+lname = ['./MEL2_xmas','/crack1.mat']; 
 load(lname)
 if isfield(xCrk,'melange')
   xCrk.melange = [ 0; xCrk.melange ];
@@ -39,5 +40,5 @@ hold on
 axis equal;
 xlim(zoom_dim(1,:));
 ylim(zoom_dim(2,:));
-f_plotCrack(crackLips,1e2,'r-','k-','c--')
+f_plotCrack(crackLips,1e3,'r-','k-','c--')
 

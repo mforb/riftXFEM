@@ -17,7 +17,7 @@ for kj = 1:size(xCrk.coor,1)-1       %loop over the elements of the fracture
         width = xCrk.width(kj+1);
         break
       else
-        width = xCrk.width(kj)*d_r(1)+xCrk.width(kj+1)*d_r(2) ;
+        width = xCrk.width(kj)*d_r(2)+xCrk.width(kj+1)*d_r(1) ;
       end
     elseif ~isempty(cn)
       if xCrk.melange(kj)  

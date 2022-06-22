@@ -1,5 +1,5 @@
 function [Kglobal] = KmatSTAB(E_pen,enr_node,crack_node,elem_crk,type_elem,xTip,xVertex,...
-    split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,pos,xCrk,Kglobal,u)
+    split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,pos,xCrk,Kglobal,u,melange_stab)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -89,6 +89,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
           % stabalization term
           Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(stab_mu*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
         end
+        elseif melange_stab
+          if flag1
+            Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(stab_mu*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
+          end
+        end
+
       end
     end
   end

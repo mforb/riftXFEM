@@ -11,6 +11,7 @@ global fmesh
 global output_file
 global Hidden zoom_dim 
 global wall_int skip_branch skip_vertex modpen modocean
+global melange_stab
 
 output_file = fopen([results_path,'/output.log'],'w')
 if ~isfield(xCrk,'tip')
@@ -46,6 +47,9 @@ if isempty(modpen)
 end
 if isempty(modocean)
   modpen = 0;
+end
+if isempty(melange_stab)
+  melange_stab = 0;
 end
 nitsche = 0;
 plot_stresses = 0;
@@ -309,11 +313,11 @@ for ipas = 1:npas
       % first we need to find out if there is any interpenetration
       penalty = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
-    elseif contact & flagP
+    elseif ( contact & flagP ) | melange_stab
       if ~isempty(stabalize) & stabalize
         K_orig = K;
         %Rc1 = rcond(full(K));
-        [K] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,K,u);
+        [K] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,K,u,melange_stab);
         %Rc2 = rcond(full(K));
         %stab_str = ['STABALIZATION: enriched dofs. Rcond is originally ',num2str(Rc1),' and then becomes ',num2str(Rc2),'\n'];
         %fprintf(output_file,stab_str)
@@ -431,10 +435,10 @@ for ipas = 1:npas
       fu = full(u);
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
-      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas)
+      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas)
       elemForce = elemForce + elemForce_orig;
-      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,ipas+100);
-      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemCrk,splitElem,vertexElem,tipElem,ipas+200)
+      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas+100);
+      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas+200)
 
 %     
   %     % plot displacement contour

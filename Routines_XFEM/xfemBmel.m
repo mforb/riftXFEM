@@ -1,4 +1,4 @@
-function [B,dJO] = xfemBmel(pt,e,type_elem,enrich_node,xCrl,GVertex,crack_node,cont,QT,mT,mE)
+function [B,dJO] = xfemBmel(pt,e,type_elem,enr_node,xCrl,GVertex,xTip,crack_node,cont,QT,mT,mE)
 
 
 %declare global variables here
@@ -12,11 +12,11 @@ sctr = element(e,:);
 nn   = length(sctr);
 [N,dNdxi] = lagrange_basis(elemType,pt);  % element shape functions
 J0 = node(sctr,:)'*dNdxi;                 % element Jacobian matrix
-nodeN = fnode(sctr,:)*vN';            % nodes in coordinate system perp
 [ phi  ] = dista(e,xCrl);
 
-keyboard
 rN = max(phi)-min(phi);                        % distance between nodes and this is what we want to use to stretch/shrink the elements transform
+mT = rN/mE * mT; %the width compared to the average width of melange elements
+
 invJ0 = inv(J0);
 dNdx  = dNdxi*invJ0;                      % derivatives of N w.r.t XY
 % now we want to rotate using QT
@@ -27,6 +27,10 @@ dNdx = ( QT'*dNdxN )';
 dJO = det(J0)*rN/mT;
 
 Gpt = N' * node(sctr,:);                  % GP in global coord, used
+
+if any(enr_node(sctr) == 1)
+  [QT,tip,Rpt,dRdx,Br,dBdx,dBdy] = f_tip_enrichment_param(e,Gpt,N,dNdx,sctr,xTip,xCrl,type_elem,enr_node);
+end
 
 %%Standard B matrix is computed always...
 %if cont == 1
@@ -43,7 +47,7 @@ Bfem = [] ;
 
 %iwant = [ ] ;
 %switch between non-enriched and enriched elements
-if( any(enrich_node(sctr)) == 0 ) & isempty(intersect(crack_node,sctr)) 
+if( any(enr_node(sctr)) == 0 ) & isempty(intersect(crack_node,sctr)) 
     %if (type_elem(e,cont) == 4 )
       %ref_elem = e;
       %xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
@@ -56,7 +60,7 @@ else
     
     for in = 1:nn
         %Enriched by H(x) at global gauss point
-        if ( enrich_node(sctr(in)) == 2)
+        if ( enr_node(sctr(in)) == 2)
             ref_elem = e;
             xCre = [xCrl(ref_elem,1) xCrl(ref_elem,2); xCrl(ref_elem,3) xCrl(ref_elem,4)];                 %each element has its crack!
             if (type_elem(e,cont) == 3)
@@ -111,8 +115,26 @@ else
             clear BI_enr ;
             
             % ------------ Enriched by asymptotic functions -----------------------------------
-        elseif ( enrich_node(sctr(in)) == 1) % B(x) enriched node
+        elseif ( enr_node(sctr(in)) == 1) % B(x) enriched node
           warning('Enrichment 1 in melange set-up')
+          xp    = QT*(node(sctr(in),:)-tip)';
+          r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2));
+          theta = atan2(xp(2),xp(1));
+          
+          if ( theta > pi | theta < -pi)
+              disp (['something wrong with angle ',num2str(thet)]);
+          end
+          [BrI] = branch_node(r,theta);
+          
+          % composants of Benr matrix
+          aa = Rpt*(dNdx(in,1)*(Br(1)-BrI(1)) + N(in)*dBdx(1)) + dRdx(1)*N(in)*(Br(1)-BrI(1)) ;
+          bb = Rpt*(dNdx(in,2)*(Br(1)-BrI(1)) + N(in)*dBdy(1)) + dRdx(2)*N(in)*(Br(1)-BrI(1)) ;
+          B1_enr = [aa 0 ; 0 bb ; bb aa];
+          
+          BI_enr = [B1_enr];
+          clear B1_enr; 
+          Bxfem = [Bxfem BI_enr];
+          clear BI_enr ;
         end
     end          % end of loop on nodes
     % B matrix

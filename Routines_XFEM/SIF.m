@@ -290,9 +290,9 @@ for iel = 1 : size(JWdomain,2)
         [W,Q] = quadrature(wall_int,'GAUSS',1) ;
         % find the distance between the two intersects (should be able to do this with det(J)
         [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
-        if flag_end == 1
-          nv = -1*nv;
-        end
+        %if flag_end == 1
+          %nv = -1*nv;
+        %end
 
         JO = l/2;
         nlocal = QT*nv';

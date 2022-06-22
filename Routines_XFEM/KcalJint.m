@@ -7,6 +7,7 @@ global node element elemType
 global E nu C sigmato
 global Jint iMethod
 global output_file
+global quick_freeze
 
 % ThetaInc = [] ;
 for kk = 1:size(xCr,2) %what's the crack?
@@ -87,6 +88,32 @@ for kk = 1:size(xCr,2) %what's the crack?
         end
     end
     xCr(kk).coor = [xCr(kk).coornew1;xCr(kk).coor;xCr(kk).coornew2] ;
+    if isfield(xCr,'melange')
+      mn1 = []; mn2 = [];
+      w1 = []; w2 = [];
+      if ~isempty(xCr(kk).coornew1)
+        if quick_freeze
+          mn1 = 1 ;
+        else
+          mn1 = 0 ;
+        end
+        w1 = -5;
+      end
+      if ~isempty(xCr(kk).coornew2)
+        if quick_freeze
+          mn2 = 1;
+        else
+          mn2 = 0;
+        end
+        mn2 = 1 ;
+        w2 = -5 ;
+      end
+      xCr(kk).melange = [ mn1; xCr(kk).melange; mn2 ];
+      xCr(kk).width = [ w1 , xCr(kk).width, w2 ];
+      xCr(kk).width = xCr(kk).width + 5*ones(size(xCr(kk).width)) ;
+    end
+      
+
     ThetaInc{kk,1} = ti1;
     ThetaInc{kk,2} = ti2;
     Knumerical{kk,1} = K1_num;

@@ -20,7 +20,8 @@ end
 elems = union(split_elem,vertex_elem);
 elemst = tan_elem;
 
-mel_elems = []
+mel_elems = [];
+tot_phi = 0;
 for kk = 1:size(xCrk,2)
   for i=1:length(elems)                     %loop on elems (=elements selected for enrichment)
     iel = elems(i);
@@ -58,7 +59,7 @@ for ii=1:size(mel_elems,1)
   for kk = 1:size(W,1)
       B = [] ;
       Gpt = Q(kk,:) ;
-      [B, dJ] = xfemBmel(Gpt,iel,type_elem,enr_node(:,kn),elem_crk,xVertex,crack_node,kn,JN,mT,mE);
+      [B, dJ] = xfemBmel(Gpt,iel,type_elem,enr_node(:,kn),elem_crk,xVertex,xTip,crack_node,kn,JN,mT,mE);
       % for now
       % now we want to rotate this so that is is 
       %Ppoint =  N' * node(sctr,:);

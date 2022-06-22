@@ -1,4 +1,4 @@
-function [ ] = f_plot_wall_forces( u,xCrk,enrDomain,typeElem,elem_force,elem_crk,split_elem,vertex_elem,tip_elem,stepnum)
+function [ ] = f_plot_wall_forces( u,xCrk,enrDomain,typeElem,elem_force,elem_crk,elem_gap,split_elem,vertex_elem,tip_elem,stepnum)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Mar 18 18:39:27 NZDT 2022
 
@@ -30,13 +30,16 @@ for kk = 1:size(xCrk,2) %what's the crack?
   crack_coord = {};
   f_app = {};
   f_tra = {};
+  gap   = {};
   if ns == 2
     f_app{1} = [0,0] ;
     f_tra{1} = [0,0] ; 
+    gap{1}  = [0,0] ;
     crack_coord{1} = [0 lseg]; 
   else
     f_app{1} = 0; f_app{ns-1} = 0;
     f_tra{1} = 0; f_tra{ns-1} = 0;
+    gap{1}  = [0,0] ;
     crack_coord{1} = 0; crack_coord{ns-1} = lseg;
   end
   for ii = 1:length(tip_elem)

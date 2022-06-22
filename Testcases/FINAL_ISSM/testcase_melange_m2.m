@@ -28,8 +28,8 @@ global Rtip QT xTip Tfact
 global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global zoom_dim modpen modocean stab_mu
-global quick_freeze
-quick_freeze = 1
+global mel_tan
+
 epsilon = 5 
 
 OPT = 2; 
@@ -38,12 +38,13 @@ Hidden = true;
 same_coords = 1
 
 rift_wall_pressure = 0
-melange = 1 
-melangeforce = 0
+melange = 0 
+melangeforce = 1
+mel_tan = 0
 
 global wall_int stabalize Kpen penalty contact skip_branch
 wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
-stabalize = 10;
+stabalize = 1;
 stab_mu = 2;
 contact = 0;
 Kpen = 1e12 ;
@@ -81,7 +82,7 @@ xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
 xCr(1).width = [0 10 10 150 200 10 0 ] ;
-results_path = './MEL1_xmas_tip1_10km';
+results_path = './MEL2_xmas';
 mkdir(results_path);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
 run_mesh_prep
