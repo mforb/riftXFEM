@@ -1,4 +1,4 @@
-function [ crack_lips, Flag_pen ] = f_find_cracklips( u, xCr, kk, enr_dom, type_elem, xCrl,xTip,xVertex,enr_node,crack_node,pos,split_elem, vertex_elem, tip_elem)
+function [ crack_lips, Flag_pen, elem_gap ] = f_find_cracklips( u, xCr, kk, enr_dom, type_elem, xCrl,xTip,xVertex,enr_node,crack_node,pos,split_elem, vertex_elem, tip_elem);
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Thu Nov 25 11:49:40 NZDT 2021
 global node element elemType
@@ -16,6 +16,7 @@ end
 
 elems = union(split_elem,vertex_elem);
 elems = union(elems,tip_elem);
+elem_gap = zeros(size(element,1),7);
 
 crack_lips = zeros( size(elems,1),6,4,size(xCr,2));
 Flag_pen = 0;
@@ -26,6 +27,7 @@ for ii=1:length(elems)
   if ( melange | melangeforce ) 
     [flag1,width] = f_find_melange(iel,xCr);
     gn_lim = width;
+    elem_gap(iel,7) = width;
   else
     gn_lim = 0;
   end
@@ -93,8 +95,12 @@ for ii=1:length(elems)
      %keyboard
    %end
    % check that there is no interpenetration
-   [~,nv,~,~,~,~] = f_segment_dist(xCrl(iel,:));
-   gn = nv*(Ntop*uAB - Nbot*uAB) + gn_lim;
+   [~,nv,mv,~,~,~] = f_segment_dist(xCrl(iel,:));
+   gn = nv*(Ntop*uAB - Nbot*uAB); 
+   tn = mv*(Ntop*uAB - Nbot*uAB); 
+   elem_gap(iel,2*gp) = gn;
+   elem_gap(iel,2*gp-1) = tn;
+   gn = gn + gn_lim;
    if gn < 0 % crack tips can be a problem for this 
      Flag_pen = 1;
    end

@@ -432,13 +432,18 @@ for ipas = 1:npas
           print(['crack_iter',num2str(cont)],'-dpng','-r500')
         end
       end
+      [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
       fu = full(u);
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
-      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas)
-      elemForce = elemForce + elemForce_orig;
-      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas+100);
-      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas+200)
+      try
+        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas)
+        elemForce = elemForce + elemForce_orig;
+        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas+100);
+        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemGap,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas+200)
+      catch
+        keyboard
+      end
 
 %     
   %     % plot displacement contour
@@ -455,7 +460,6 @@ for ipas = 1:npas
        
        %save('test.mat','K','F','u')
 
-      [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
       if Hidden 
         f = figure('visible','off');
       else
