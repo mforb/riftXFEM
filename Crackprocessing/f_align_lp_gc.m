@@ -1,4 +1,4 @@
-function p = f_align_lp_lc(p,elemck,sctr)
+function p = f_align_lp_gc(p,elemck,sctr)
 global node elemType
 
 crkdir = elemck(3:4) - elemck(1:2);

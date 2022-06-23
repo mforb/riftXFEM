@@ -85,6 +85,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
             crack_gapc{i} = [crack_gapc{i},l];
             gapn{i}  = [ gapn{i},elem_gap(iel,4)];
             gapt{i}  = [ gapt{i},elem_gap(iel,3)];
+            gapw{i}  = [ gapw{i},0];
           else
             ccoord = lseg-ccoord; 
             [ccoord,so] = sort(ccoord);
@@ -94,6 +95,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
             f_tra{i} = [  ft(so), f_tra{i}];
             gapn{i}  = [ elem_gap(iel,2), gapn{i}];
             gapt{i}  = [ elem_gap(iel,1), gapt{i}];
+            gapw{i}  = [ 0, gapw{i}];
           end
         end
       end
@@ -116,7 +118,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         [nl,~,~,~,~,~] = f_segment_dist(nseg);
         ccoord = (l/2).*(Q+1)'+nl;
         ccoord = ccoord(so);
-        gc     = [nl,nl+l]
+        gc     = [nl,nl+l];
         fp = elem_force(1,iel,1:2:wall_int*2); fp = fp(so); fp = reshape(fp,1,wall_int);
         ft = elem_force(1,iel,2:2:wall_int*2); ft = ft(so); ft = reshape(ft,1,wall_int);
         %fp = (fp)/l;
@@ -131,7 +133,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         ind = find(seg_coord>ccoord(end),1);
         if isempty(ind)
           seg_coord = [seg_coord, ccoord];
-          seg_gc   = [gc,seg_gc];
+          seg_gc   = [seg_gc,gc];
           seg_f = [seg_f,fp];
           seg_t = [seg_t,ft];
           seg_gn = [seg_gn,elem_gap(iel,[2,4])];
@@ -139,14 +141,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
           seg_w = [seg_w,width,width];
         elseif ind == 1
           seg_coord = [ccoord, seg_coord];
-          seg_gc   = [seg_gc,gc];
-          seg_f = [seg_f,fp];
+          seg_gc   = [gc,seg_gc];
           seg_f = [fp, seg_f];
           seg_t = [ft, seg_t];
           seg_gn = [elem_gap(iel,[2,4]),seg_gn];
           seg_gt = [elem_gap(iel,[1,3]),seg_gt];
           seg_w = [width,width,seg_w];
-        elseif ind == 1
         else
           seg_coord = [seg_coord(1:ind-1),ccoord,seg_coord(ind:end)];
           seg_gc   = [seg_gc(1:ind-1),gc,seg_gc(ind:end)];
@@ -187,8 +187,8 @@ for kk = 1:size(xCrk,2) %what's the crack?
         ccoord1 =ccoord1(so);
         ccoord2 = (d2/2).*(Q+1)';
         ccoord2 =ccoord2(so);
-        gc1 = [lseg-l1,lseg];
-        gc2 = [0,l2];
+        gc1 = [lseg-d1,lseg];
+        gc2 = [0,d2];
         fp1 = elem_force(1,iel,1:2:wall_int*2); fp1 = fp1(so); fp1 = reshape(fp1,1,wall_int);
         ft1 = elem_force(1,iel,2:2:wall_int*2); ft1 = ft1(so); ft1 = reshape(ft1,1,wall_int);
         %fp1 = (fp1)/d1;
@@ -205,12 +205,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
         gapt{i} = [ gapt{i}, elem_gap(iel,[1,3]) ];
         gapw{i} = [ gapw{i}, width,width ];
         crack_coord{i+1} = [ ccoord2, crack_coord{i+1} ];
-        f_app{i+1} = [ fp, f_app{i+1}];
-        f_tra{i+1} = [ ft, f_tra{i+1}];
+        f_app{i+1} = [ fp2, f_app{i+1}];
+        f_tra{i+1} = [ ft2, f_tra{i+1}];
         crack_gapc{i+1} = [ gc2, crack_gapc{i+1} ];
         gapn{i+1} = [ elem_gap(iel,[4,6]), gapn{i+1} ];
         gapt{i+1} = [ elem_gap(iel,[3,5]),  gapt{i+1} ];
-        gapw{i+1} = [ elem_gap(iel,[3,5]), gapw{i+1}  ];
+        gapw{i+1} = [ width,width, gapw{i+1}  ];
         break
       end
     end
@@ -274,7 +274,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   t = tiledlayout(3,1,'TileSpacing','Compact');
   nexttile
 
-  plot(gc,gn,'linewidth',3,'DisplayName','normal gap')
+  plot(gc,gn,'color',[0.1,0.1,0.6],'linewidth',3,'DisplayName','normal gap')
   yl = ylim();
   hold on
   for i = 1: length(inters)
@@ -287,7 +287,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   title(tstr);
 
   nexttile
-  plot(gc,gt,'color',[1,0.1,0],'linewidth',2,'DisplayName','tangential disp')
+  plot(gc,gt,'color',[0.9,.2,0.3],'linewidth',3,'DisplayName','tangential disp')
   hold on
   yl = ylim();
   for i = 1: length(inters)
@@ -300,7 +300,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   title(tstr);
 
   nexttile
-  plot(gw+gn,gt,'color',[0,0.7,0.1],'linewidth',2,'DisplayName','rift wall distance')
+  plot(gc,(gw+gn),'color',[0.2,0.1,0.3],'linewidth',3,'DisplayName','rift wall distance')
   hold on
   yl = ylim();
   for i = 1: length(inters)
@@ -308,13 +308,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
   end
   ylim(yl);
   xlabel('distance along crack (m)')
-  ylabel('distance (m)')
+  ylabel('wall to wall "distance" (m)')
   tstr = ['"melange" distance between rift walls ',num2str(kk)];
   title(tstr);
 
-
-
-  nstr = ['rift',num2str(kk),'gaps_step',num2str(stepnum)];
+  nstr = ['rift',num2str(kk),'_gaps_step',num2str(stepnum)];
   print([results_path,'/',nstr],'-dpng','-r300')
+
 end
 

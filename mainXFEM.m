@@ -282,7 +282,7 @@ for ipas = 1:npas
     Stduy = fu(2:2:2*numnode) ;
     %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
-    [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
     if Hidden 
       f = figure('visible','off');
     else
@@ -378,7 +378,8 @@ for ipas = 1:npas
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
       tol1 = 1e-39;
-      tol2 = 1e-8;
+      %tol2 = 1e-8;
+      tol2 = 1e-2;
       cont = 1
       Du = zeros(size(u));
       Fext = F
@@ -437,10 +438,10 @@ for ipas = 1:npas
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
       try
-        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas)
+        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas)
         elemForce = elemForce + elemForce_orig;
-        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas+100);
-        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemGap,elemCrk,splitElem,vertexElem,tipElem,pos,enrichNode,ipas+200)
+        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas+100);
+        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas+200)
       catch
         keyboard
       end
@@ -515,6 +516,6 @@ for ipas = 1:npas
 
     %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];
-    save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce');
+    save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap');
 end
 fclose(output_file);

@@ -8,8 +8,8 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('ISSM_xmas_tip*');
-results_path = './ISSM_xmas_PP';
+ld = dir('FISSM_xmas_tip*');
+results_path = './FISSM_xmas_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim

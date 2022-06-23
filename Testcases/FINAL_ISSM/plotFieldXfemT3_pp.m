@@ -159,7 +159,6 @@ if ~isempty(zoom_dim)
   figure(f2);
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
-  keyboard;
   colorbar;
   figure_name = ['ContourVM_stress_log1_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng','-r300');
@@ -175,7 +174,6 @@ if ~isempty(zoom_dim)
   figure(f3);
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
-  keyboard;
   colorbar;
   figure_name = ['ContourVM_stress_log2_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng','-r300');

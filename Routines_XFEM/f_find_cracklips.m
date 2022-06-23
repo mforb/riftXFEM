@@ -24,6 +24,7 @@ Flag_pen = 0;
 for ii=1:length(elems)
   p = [];
   iel = elems(ii) ;
+  pg = xCrl(iel,:); 
   if ( melange | melangeforce ) 
     [flag1,width] = f_find_melange(iel,xCr);
     gn_lim = width;
@@ -48,6 +49,7 @@ for ii=1:length(elems)
       [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
       p = [nnodes(end,:) ; ntip ];
     end
+    p = f_align_lp_gc(p,pg,sctr);
   else 
     [cutEdge, nnodes] = f_edgedetect(nnode, corner,  phi) ;
     nEdge = length(cutEdge);
@@ -61,6 +63,7 @@ for ii=1:length(elems)
     end
 
     p = [nnodes(end-1,:);nnodes(end,:)];
+    p = f_align_lp_gc(p,pg,sctr);
 
     if ismember(iel,vertex_elem)
       tip = xVertex(iel,:);
