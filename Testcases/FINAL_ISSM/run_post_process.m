@@ -8,8 +8,8 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('FISSM_xmas_tip*');
-results_path = './FISSM_xmas_PP';
+ld = dir('ISSM2_xmas_tip*');
+results_path = './ISSM2_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -18,6 +18,9 @@ global fontSize2 fontSize1
 global elemType 
 Hidden = 0;
 global E C nu P
+global melange
+melange = 0
+melangeforce = 0
 E = 9.6e9; nu = 0.3; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
@@ -161,7 +164,7 @@ if 1
 
   f = figure();
   hold on
-  [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+  [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
   triplot(TR);
   hold on
@@ -175,6 +178,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng','-r300')
   end
   clf();
+  f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));
@@ -208,7 +212,7 @@ if 1
 
   f = figure();
   hold on
-  [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+  [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
   triplot(TR);
   hold on
@@ -222,6 +226,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng','-r300')
   end
   clf();
+  f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));

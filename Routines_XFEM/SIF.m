@@ -273,6 +273,8 @@ theta_inc = theta_inc * pi / 180.;%rad
 kstr = ['Tip,',num2str(flag_end),' before crack wall forces included : K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
 fprintf(output_file,kstr)
 
+wall_force = 0;
+if wall_force
 for iel = 1 : size(JWdomain,2)
     e = JWdomain(iel) ; % current element
     sctr = element(e,:);
@@ -493,7 +495,7 @@ KII = Knum(2);
 theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
 theta_inc = theta_inc * pi / 180.;%rad
 
-
+end
 %
 % figure
 % hold on

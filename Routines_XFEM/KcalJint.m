@@ -43,13 +43,15 @@ for kk = 1:size(xCr,2) %what's the crack?
             [Knum,theta_inc] = SIF(C,1,iel,elem_crk,xCr,type_elem,...
                 enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,elem_force) ;
 
+            theta_inc = -1*theta_inc; 
             K1_num = [K1_num, Knum] ;
-            ti1 = [ti1, theta_inc] ;
+            ti1 = [ti1, theta_inc] ; % because of flipped y-axis 
             kstr = ['Tip 1: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
             if xCr(kk).tip(1)
               inc_x = xCr(kk).coor(1,1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
               [a,b] = find(node(:,1) == inc_x);
-              inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
+              %inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
+              inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha)); % y is flipped in the coordinate system used in SIF so that the "positive" side is the same
               [a] = find(node(a,2) == inc_y);
               % if a crack increment passes exaclty througha node, let's give
               % a small perturbation...

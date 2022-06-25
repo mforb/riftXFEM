@@ -1,0 +1,60 @@
+1729.1932    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 24535
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+L2 norm of residual is 271977402387.0947 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0018311 ; relative to R0 6.7327e-15. The contact ratio is: NaN
+Tip,1 before crack wall forces included : K1 is 4883623.402   K2 is -1628797.3178  and theta is 0.54767
+Tip 1: K1 is 4883623.402   K2 is -1628797.3178  and theta is -0.54767
+Tip,2 before crack wall forces included : K1 is 4714889.265   K2 is 2242592.7641  and theta is -0.68304
+Tip 2: K1 is 4714889.265   K2 is 2242592.7641  and theta is -0.68304
+1942.8895    Crack growth number     2
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 24535
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+L2 norm of residual is 77213193841.6125 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0018361 ; relative to R0 2.3779e-14. The contact ratio is: NaN
+Tip,1 before crack wall forces included : K1 is 4911608.1109   K2 is -1632973.0802  and theta is 0.54648
+Tip 1: K1 is 4911608.1109   K2 is -1632973.0802  and theta is -0.54648
+Tip,2 before crack wall forces included : K1 is 3249009.2502   K2 is -2798981.4847  and theta is 0.8855
+Tip 2: K1 is 3249009.2502   K2 is -2798981.4847  and theta is 0.8855
+2160.5109    Crack growth number     3
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 24535
+Element 8186: interacts with mesh twice at intersection between crack segmenets 15 and 16
+Crack vertex 15: moved 10 units in direction [0.30428,0.95258]
+Element 8186: interacts with mesh twice at intersection between crack segmenets 15 and 16
+Crack vertex 15: moved 10 units in direction [0.30428,0.95258]
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+L2 norm of residual is 326113274715.6801 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0018543 ; relative to R0 5.6861e-15. The contact ratio is: NaN
+Tip,1 before crack wall forces included : K1 is 4937265.9412   K2 is -1639801.8087  and theta is 0.54608
+Tip 1: K1 is 4937265.9412   K2 is -1639801.8087  and theta is -0.54608
+Tip,2 before crack wall forces included : K1 is 3877338.9243   K2 is 2144339.3212  and theta is -0.73886
+Tip 2: K1 is 3877338.9243   K2 is 2144339.3212  and theta is -0.73886
+2391.0454    Crack growth number     4
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 24535
+Element 7543: interacts with mesh twice at intersection between crack segmenets 16 and 17
+Crack vertex 16: moved 10 units in direction [-0.24499,-0.96952]
+Element 7543: interacts with mesh twice at intersection between crack segmenets 16 and 17
+Crack vertex 16: moved 10 units in direction [-0.24499,-0.96952]
+Element 7543: interacts with mesh twice at intersection between crack segmenets 16 and 17
+Crack vertex 16: moved 10 units in direction [-0.24499,-0.96952]
+Element 7543: interacts with mesh twice at intersection between crack segmenets 16 and 17
+Crack vertex 16: moved 10 units in direction [-0.24499,-0.96952]
+Element 7543: interacts with mesh twice at intersection between crack segmenets 16 and 17
+Crack vertex 16: moved 10 units in direction [-0.24499,-0.96952]
+Element 7543: interacts with mesh twice at intersection between crack segmenets 16 and 17
+Crack vertex 16: moved 10 units in direction [-0.24499,-0.96952]
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+L2 norm of residual is 258074599562.7123 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0018556 ; relative to R0 7.1901e-15. The contact ratio is: NaN
+Tip,1 before crack wall forces included : K1 is 4965155.6283   K2 is -1641871.921  and theta is 0.54443
+Tip 1: K1 is 4965155.6283   K2 is -1641871.921  and theta is -0.54443
+Tip,2 before crack wall forces included : K1 is 3384482.8531   K2 is -2223733.8574  and theta is 0.79948
+Tip 2: K1 is 3384482.8531   K2 is -2223733.8574  and theta is 0.79948

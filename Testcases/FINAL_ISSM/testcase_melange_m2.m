@@ -29,6 +29,7 @@ global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global zoom_dim modpen modocean stab_mu
 global mel_tan
+global quick_freeze
 
 epsilon = 5 
 
@@ -40,7 +41,8 @@ same_coords = 1
 rift_wall_pressure = 0
 melange = 0 
 melangeforce = 1
-mel_tan = 0
+mel_tan = 1
+quick_freeze = 1
 
 global wall_int stabalize Kpen penalty contact skip_branch
 wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
@@ -82,7 +84,7 @@ xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
 xCr(1).width = [0 10 10 150 200 10 0 ] ;
-results_path = './MEL2_xmas';
+results_path = './MEL2_YES_tip1_10km';
 mkdir(results_path);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
 run_mesh_prep
@@ -100,7 +102,7 @@ x = [ -2,-0.3];
 y = [-400000,-400000];
 
 %%crack definition
-deltaInc = 2500; numstep =1;% numstep = 4;
+deltaInc = 2500; numstep =4;% numstep = 4;
 %xCr(2).coor = [xs2',ys2'] 
 xCr(1).tip = [1,0];
 xCr_orig = xCr;
@@ -139,7 +141,6 @@ zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
 %KAnalytical000 = C*P*sqrt(pi*a) 
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
 make_knum
-keyboard
 close all;
 clf;
 if Hidden
@@ -163,7 +164,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL1_xmas_tip1_20km';
+results_path = './MEL2_YES_tip1_20km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
@@ -196,7 +197,7 @@ if( strcmp(plotmesh,'YES') )
     end
 end
 xCr(1).tip = [0,1];
-results_path = './MEL1_xmas_tip2_10km';
+results_path = './MEL2_YES_tip2_10km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
@@ -228,7 +229,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL1_xmas_tip2_15km';
+results_path = './MEL2_YES_tip2_15km';
 numstep = 2
 mkdir(results_path);
 run_mesh_prep
@@ -262,7 +263,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL1_xmas_tip3_5km';
+results_path = './MEL2_YES_tip3_5km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];

@@ -9,6 +9,7 @@ global gporder numtri
 global plothelp Hidden results_path
 global rift_wall_pressure
 global wall_int
+global melange melangeforce
 
 
 
@@ -107,7 +108,11 @@ for kk = 1:size(xCrk,2) %what's the crack?
     sctr = element(iel,:) ;
     segment = elem_crk(iel,:);
     [l,~,~,~,~,~] = f_segment_dist(segment);
-    [~,width] = f_find_melange(iel,xCrk(kk));
+    if ( melange | melangeforce )
+      [~,width] = f_find_melange(iel,xCrk(kk));
+    else
+      width = 0;
+    end
     % if there is ocean force
     for i=1:ns-1
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
@@ -170,7 +175,11 @@ for kk = 1:size(xCrk,2) %what's the crack?
     iel = vertex_elem(ii);
     sctr = element(iel,:);
     segment = elem_crk(iel,:);
-    [~,width] = f_find_melange(iel,xCrk(kk));
+    if (melange | melangeforce )
+      [~,width] = f_find_melange(iel,xCrk(kk));
+    else
+      width = 0;
+    end
     for i=1:ns-1
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
       [lseg,~,~,~,~,~] = f_segment_dist(xseg);

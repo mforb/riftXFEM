@@ -63,7 +63,7 @@ ys(end) = [];
 xCr(1).coor = [fliplr(xs)',fliplr(ys)'] 
 %xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
 %{keyboard %}
-results_path = './ISSM_xmas_tip1_10km';
+results_path = './ISSM2_xmas_tip1_10km';
 mkdir(results_path);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
 run_mesh_prep
@@ -123,7 +123,7 @@ make_knum
 
 close all;
 clf;
-results_path = './ISSM_xmas_tip1_20km';
+results_path = './ISSM2_xmas_tip1_20km';
 mkdir(results_path);
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
 zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
@@ -156,7 +156,7 @@ make_knum
 xCr(1).tip = [0,1];
 close all;
 clf;
-results_path = './ISSM_xmas_tip2_10km';
+results_path = './ISSM2_xmas_tip2_10km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
@@ -209,7 +209,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './ISSM_xmas_tip2_15km';
+results_path = './ISSM2_xmas_tip2_15km';
 numstep = 2;
 mkdir(results_path);
 run_mesh_prep
@@ -243,7 +243,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './ISSM_xmas_tip3_5km';
+results_path = './ISSM2_xmas_tip3_5km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
