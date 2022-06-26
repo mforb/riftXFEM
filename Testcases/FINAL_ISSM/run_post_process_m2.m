@@ -8,8 +8,8 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('MEL2_NO_tip*');
-results_path = './MEL2_PP';
+ld = dir('MEL2_YES_tip*');
+results_path = './MEL2Y_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -19,6 +19,8 @@ global elemType
 Hidden = 0;
 global E C nu P
 global melange melangeforce
+global wall_int
+wall_int = 2
 melange = 0
 melangeforce = 1
 E = 9.6e9; nu = 0.3; P = 1 ;

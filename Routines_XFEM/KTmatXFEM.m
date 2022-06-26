@@ -14,7 +14,7 @@ global melangeforce melange contact Cm1
 global wall_int
 global rift_wall_pressure output_file
 global skip_branch skip_vertex modpen
-global elem_tan
+global mel_tan
 
 mu = friction_mu;
 
@@ -149,12 +149,12 @@ if melangeforce
         elem_force(seg,iel,2*k_in-1) = -1*fn;
         Gint(A) = Gint(A) + (fn)*W(k_in)*det(JO)*Nmat'*nv';
         Kglobal(A,A) = Kglobal(A,A) + 2*(Cm1(1,1)/mT)*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
-        if elem_tan
+        if mel_tan
           gt = mv*Nmat*2*u(A);
           ft = Cm1(1,2)*(gt/mT);
           elem_force(seg,iel,2*k_in) = -1*ft;
           Gint(A) = Gint(A) + (ft)*W(k_in)*det(JO)*Nmat'*mv';
-          Kglobal(A,A) = Kglobal(A,A) + 2*(Cm1(1,2)/mT)*W(k_in)*Nmat'*mmt*Nmat*det(JO)/mT ;
+          Kglobal(A,A) = Kglobal(A,A) + 2*(Cm1(1,2)/mT)*W(k_in)*Nmat'*mmt*Nmat*det(JO) ;
         end
       end
       %disp(['iel is ',num2str(iel)]);

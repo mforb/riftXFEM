@@ -44,10 +44,11 @@ melangeforce = 1
 mel_tan = 1
 quick_freeze = 1
 
-global wall_int stabalize Kpen penalty contact skip_branch
+global wall_int stabilize Kpen penalty contact skip_branch melange_stab
+melange_stab = 1
 wall_int = 2; % H is evaluated on a per element basis, therefore there is no reason to use more then interface guass point
-stabalize = 1;
-stab_mu = 2;
+stabilize = 1;
+stab_mu = 1;
 contact = 0;
 Kpen = 1e12 ;
 penalty = 0;
@@ -83,8 +84,8 @@ xCr(1).coor = [fliplr(xs)',fliplr(ys)']
 xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
-xCr(1).width = [0 10 10 150 200 10 0 ] ;
-results_path = './MEL2_YES_tip1_10km';
+xCr(1).width = [0 10 30 150 200 30 0 ] ;
+results_path = './MEL2ST_YES_tip1_10km';
 mkdir(results_path);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
 run_mesh_prep
@@ -164,7 +165,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL2_YES_tip1_20km';
+results_path = './MEL2ST_YES_tip1_20km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
@@ -197,7 +198,7 @@ if( strcmp(plotmesh,'YES') )
     end
 end
 xCr(1).tip = [0,1];
-results_path = './MEL2_YES_tip2_10km';
+results_path = './MEL2ST_YES_tip2_10km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
@@ -229,7 +230,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL2_YES_tip2_15km';
+results_path = './MEL2ST_YES_tip2_15km';
 numstep = 2
 mkdir(results_path);
 run_mesh_prep
@@ -263,7 +264,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL2_YES_tip3_5km';
+results_path = './MEL2ST_YES_tip3_5km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];

@@ -88,10 +88,11 @@ for kk = 1:size(xCrk,2) %what's the crack?
           end
           % stabalization term
           Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(stab_mu*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
-        end
         elseif melange_stab
+          En = C(1,1);
+          Et = C(1,2);
           if flag1
-            Kglobal(A,A) = Kglobal(A,A) + W(k_in)*(stab_mu*(E_pen^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO);
+            Kglobal(A,A) = Kglobal(A,A) + 0.5*W(k_in)*(stab_mu*(En^2)/(2*E))*((Nmat'-1/3)*nnt*(Nmat-1/3))*det(JO) + 0.5*W(k_in)*(stab_mu*(Et^2)/(2*E))*((Nmat'-1/3)*mmt*(Nmat-1/3))*det(JO);
           end
         end
 

@@ -4,7 +4,7 @@ function [Knum,Theta,xCrk] = mainXFEM(xCrk,npas,delta_inc)
 global numcrack xCr deltaInc numstep
 global plotmesh plotNode plothelp plotiter
 global node element numnode numelem bcNodes edgNodes typeProblem elemType
-global penalty fixedF contact melange Kpen rift_wall_pressure xM melangeforce stabalize
+global penalty fixedF contact melange Kpen rift_wall_pressure xM melangeforce stabilize
 global epsilon loadstress
 global results_path
 global fmesh
@@ -314,7 +314,7 @@ for ipas = 1:npas
       penalty = 0
       disp([num2str(toc),'    No contact therefore penalty method was not applied'])
     elseif ( contact & flagP ) | melange_stab
-      if ~isempty(stabalize) & stabalize
+      if ~isempty(stabilize) & stabilize
         K_orig = K;
         %Rc1 = rcond(full(K));
         [K] = KmatSTAB(Kpen,enrichNode,crackNode,elemCrk,typeElem,xTip,xVertex,splitElem,tipElem,vertexElem,cornerElem,tangentElem,pos,xCrk,K,u,melange_stab);
@@ -379,7 +379,7 @@ for ipas = 1:npas
       elemForce = zeros(size(elemForce));
       tol1 = 1e-39;
       %tol2 = 1e-8;
-      tol2 = 1e-2;
+      tol2 = 1e-3;
       cont = 1
       Du = zeros(size(u));
       Fext = F
