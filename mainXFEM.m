@@ -1,4 +1,4 @@
-function [Knum,Theta,xCrk] = mainXFEM(xCrk,npas,delta_inc)
+function [Knum,Theta,xCrk,stop] = mainXFEM(xCrk,npas,delta_inc)
 
 %-- Declare global variables here global elemType stressState typeCrack global L D E nu C P sigmato
 global numcrack xCr deltaInc numstep
@@ -482,6 +482,9 @@ for ipas = 1:npas
       end
       clf(f)
     end
+    if melange
+      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas)
+    end
 
     if plot_stresses 
       if strcmp(elemType,'Q4')
@@ -509,7 +512,7 @@ for ipas = 1:npas
 
 
    
-    [Knum,Theta,xCrk] = KcalJint(xCrk,...
+    [Knum,Theta,xCrk,stop] = KcalJint(xCrk,...
         typeElem,enrDomain,elemCrk,enrichNode,crackNode,xVertex,...
         vertexElem,pos,u,ipas,delta_inc,Knum,Theta,...
         tipElem,splitElem,cornerElem,elemForce) ;
@@ -517,5 +520,8 @@ for ipas = 1:npas
     %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];
     save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap');
+    if stop
+      break;
+    end
 end
 fclose(output_file);

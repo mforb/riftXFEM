@@ -1,0 +1,111 @@
+7938.3152    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23299
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+The ratio of elements stabilized: 1
+L2 norm of residual is 733745372617285.8 ; relative to R0 1. The contact ratio is: 1
+L2 norm of residual is 619809705.4863 ; relative to R0 8.4472e-07. The contact ratio is: 0.75916
+L2 norm of residual is 19400805740.3467 ; relative to R0 2.6441e-05. The contact ratio is: 0.86387
+L2 norm of residual is 975592560.0699 ; relative to R0 1.3296e-06. The contact ratio is: 0.78534
+L2 norm of residual is 24490680253.3512 ; relative to R0 3.3378e-05. The contact ratio is: 0.86387
+L2 norm of residual is 247624100.2464 ; relative to R0 3.3748e-07. The contact ratio is: 0.75916
+L2 norm of residual is 96668880618.87 ; relative to R0 0.00013175. The contact ratio is: 0.84293
+L2 norm of residual is 14728303908.4337 ; relative to R0 2.0073e-05. The contact ratio is: 0.82199
+L2 norm of residual is 4665796848.4196 ; relative to R0 6.3589e-06. The contact ratio is: 0.8377
+L2 norm of residual is 2710697190.4281 ; relative to R0 3.6943e-06. The contact ratio is: 0.85864
+L2 norm of residual is 14917681999.799 ; relative to R0 2.0331e-05. The contact ratio is: 0.88482
+L2 norm of residual is 128307359.8429 ; relative to R0 1.7487e-07. The contact ratio is: 0.82199
+L2 norm of residual is 1189792277.9299 ; relative to R0 1.6215e-06. The contact ratio is: 0.87958
+L2 norm of residual is 2867153.1289 ; relative to R0 3.9076e-09. The contact ratio is: 0.86387
+L2 norm of residual is 0.0038043 ; relative to R0 5.1848e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.003348 ; relative to R0 4.5629e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0036072 ; relative to R0 4.9162e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0034711 ; relative to R0 4.7307e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0032254 ; relative to R0 4.3958e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0037184 ; relative to R0 5.0677e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0041744 ; relative to R0 5.6891e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0049345 ; relative to R0 6.725e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0051866 ; relative to R0 7.0687e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0036807 ; relative to R0 5.0164e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0038503 ; relative to R0 5.2474e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0039339 ; relative to R0 5.3614e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0034084 ; relative to R0 4.6451e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035128 ; relative to R0 4.7875e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0044752 ; relative to R0 6.0991e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0045958 ; relative to R0 6.2635e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0032612 ; relative to R0 4.4445e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0031066 ; relative to R0 4.234e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0033645 ; relative to R0 4.5854e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0039565 ; relative to R0 5.3922e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0044281 ; relative to R0 6.0349e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.003057 ; relative to R0 4.1663e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0030938 ; relative to R0 4.2164e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0030975 ; relative to R0 4.2215e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0039086 ; relative to R0 5.327e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.003309 ; relative to R0 4.5097e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0032705 ; relative to R0 4.4572e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0031765 ; relative to R0 4.3292e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0036424 ; relative to R0 4.9641e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0029815 ; relative to R0 4.0634e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0034001 ; relative to R0 4.6339e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035485 ; relative to R0 4.8361e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035077 ; relative to R0 4.7805e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035021 ; relative to R0 4.7729e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.003593 ; relative to R0 4.8967e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0040067 ; relative to R0 5.4606e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0033307 ; relative to R0 4.5394e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0036801 ; relative to R0 5.0156e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0038541 ; relative to R0 5.2526e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035879 ; relative to R0 4.8899e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0029479 ; relative to R0 4.0176e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0033151 ; relative to R0 4.518e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0039871 ; relative to R0 5.4339e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0037998 ; relative to R0 5.1786e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035039 ; relative to R0 4.7754e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.002968 ; relative to R0 4.045e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0032375 ; relative to R0 4.4123e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.003607 ; relative to R0 4.9159e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0052659 ; relative to R0 7.1767e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0039962 ; relative to R0 5.4463e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0042729 ; relative to R0 5.8234e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0044551 ; relative to R0 6.0718e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0041455 ; relative to R0 5.6498e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035676 ; relative to R0 4.8622e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0031077 ; relative to R0 4.2354e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0031714 ; relative to R0 4.3221e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0040026 ; relative to R0 5.455e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035186 ; relative to R0 4.7954e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0036446 ; relative to R0 4.9671e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0037291 ; relative to R0 5.0822e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0038175 ; relative to R0 5.2027e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0040763 ; relative to R0 5.5555e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0036573 ; relative to R0 4.9845e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0033509 ; relative to R0 4.5669e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0049763 ; relative to R0 6.782e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0032681 ; relative to R0 4.4539e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0034653 ; relative to R0 4.7227e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0027199 ; relative to R0 3.7069e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0039439 ; relative to R0 5.375e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0031771 ; relative to R0 4.33e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.003563 ; relative to R0 4.8558e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0039575 ; relative to R0 5.3936e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0050089 ; relative to R0 6.8264e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.002996 ; relative to R0 4.0831e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0033154 ; relative to R0 4.5184e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0032735 ; relative to R0 4.4614e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0033079 ; relative to R0 4.5083e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0030643 ; relative to R0 4.1763e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0037836 ; relative to R0 5.1566e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0035592 ; relative to R0 4.8507e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0031389 ; relative to R0 4.278e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0029916 ; relative to R0 4.0772e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0037018 ; relative to R0 5.0451e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0042744 ; relative to R0 5.8254e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0033902 ; relative to R0 4.6205e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0031258 ; relative to R0 4.2601e-18. The contact ratio is: 0.86387
+L2 norm of residual is 0.0043937 ; relative to R0 5.988e-18. The contact ratio is: 0.86387
+Tip,1 before crack wall forces included : K1 is 4289849.7838   K2 is -305412.9502  and theta is 0.14074
+Tip 1: K1 is 4289849.7838   K2 is -305412.9502  and theta is -0.14074
+Tip,2 before crack wall forces included : K1 is 4282495.5509   K2 is 795550.9077  and theta is -0.34544
+Tip 2: K1 is 4282495.5509   K2 is 795550.9077  and theta is -0.34544

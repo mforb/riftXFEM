@@ -26,7 +26,8 @@ else
   ri = rhoi;
 end
 
-F = -0.5*H*H*g*ri*(1-ri/rw);
+%F = -0.5*H*H*g*ri*(1-ri/rw);
+F = -0.5*H*g*ri*(1-ri/rw);
 
 end
 

@@ -41,12 +41,14 @@ if plothelp
 end
 elems = union(split_elem,vertex_elem);
 mel_elems = [];
-for kk = 1:size(xCrk,2)
-  for i=1:length(elems)                     %loop on elems (=elements selected for enrichment)
-    iel = elems(i);
-    [flag1,width] = f_find_melange(iel,xCrk(kk));
-    if flag1
-      mel_elems = [mel_elems; kk, iel, width];
+if melange | melangeforce
+  for kk = 1:size(xCrk,2)
+    for i=1:length(elems)                     %loop on elems (=elements selected for enrichment)
+      iel = elems(i);
+      [flag1,width] = f_find_melange(iel,xCrk(kk));
+      if flag1
+        mel_elems = [mel_elems; kk, iel, width];
+      end
     end
   end
 end

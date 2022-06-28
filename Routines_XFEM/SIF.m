@@ -6,9 +6,13 @@ global iMethod iParam
 global incR xc yc phiN
 global lambda1 lambda2 nu1 nu2
 global elemType typeMesh typeProblem typeCrack stressState
-global wall_int output_file
+global wall_int output_file wall_force
 
 plotNode = 'NO' ;
+
+if isempty(wall_force)
+  wall_force = 0;
+end
 
 if strcmp(elemType,'Q4') 
   intType = 'GAUSS' ;
@@ -273,7 +277,6 @@ theta_inc = theta_inc * pi / 180.;%rad
 kstr = ['Tip,',num2str(flag_end),' before crack wall forces included : K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
 fprintf(output_file,kstr)
 
-wall_force = 0;
 if wall_force
 for iel = 1 : size(JWdomain,2)
     e = JWdomain(iel) ; % current element
@@ -330,8 +333,8 @@ for iel = 1 : size(JWdomain,2)
           %rotQT = [ cos(angl), sin(angl); -sin(angl), cos(angl) ]; 
           %sig_global = rotQT*sig_elem*rotQT';
           %sig_local = QT*sig_global*QT';
-          sig_local1 = sig_elem/-1;
-          sig_local2 = sig_elem/1;
+          sig_local1 = sig_elem/-2;
+          sig_local2 = sig_elem/2;
 
           % ++++++++++++++++++
           %  Auxiliary fields

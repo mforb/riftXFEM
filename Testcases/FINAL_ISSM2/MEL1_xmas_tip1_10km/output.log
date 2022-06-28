@@ -1,0 +1,42 @@
+27.9046    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23299
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+Tip,1 before crack wall forces included : K1 is 4297920.0598   K2 is -311020.2041  and theta is 0.143
+Tip 1: K1 is 4297920.0598   K2 is -311020.2041  and theta is -0.143
+Tip,2 before crack wall forces included : K1 is 4310967.8828   K2 is 793595.2852  and theta is -0.34273
+Tip 2: K1 is 4310967.8828   K2 is 793595.2852  and theta is -0.34273
+186.2944    Crack growth number     2
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23299
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+Tip,1 before crack wall forces included : K1 is 4614474.7992   K2 is 548932.1487  and theta is -0.23051
+Tip 1: K1 is 4614474.7992   K2 is 548932.1487  and theta is 0.23051
+Tip,2 before crack wall forces included : K1 is 4314671.845   K2 is 796345.4339  and theta is -0.3435
+Tip 2: K1 is 4314671.845   K2 is 796345.4339  and theta is -0.3435
+345.2363    Crack growth number     3
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23299
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+Tip,1 before crack wall forces included : K1 is 4355126.1851   K2 is -812707.9641  and theta is 0.3468
+Tip 1: K1 is 4355126.1851   K2 is -812707.9641  and theta is -0.3468
+Tip,2 before crack wall forces included : K1 is 4319605.4149   K2 is 799951.1764  and theta is -0.34451
+Tip 2: K1 is 4319605.4149   K2 is 799951.1764  and theta is -0.34451
+510.7954    Crack growth number     4
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23299
+Element 2498: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [0.27429,0.96165]
+Element 2498: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [0.27429,0.96165]
+Element 2498: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [0.27429,0.96165]
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+Tip,1 before crack wall forces included : K1 is 4218666.4792   K2 is 1066900.6825  and theta is -0.44618
+Tip 1: K1 is 4218666.4792   K2 is 1066900.6825  and theta is 0.44618
+Tip,2 before crack wall forces included : K1 is 4327050.2856   K2 is 805274.2342  and theta is -0.34598
+Tip 2: K1 is 4327050.2856   K2 is 805274.2342  and theta is -0.34598

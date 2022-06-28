@@ -1,0 +1,111 @@
+1844.255    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23327
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+The ratio of elements stabilized: 1
+L2 norm of residual is 24684578017.1145 ; relative to R0 1. The contact ratio is: 0.99517
+L2 norm of residual is 74283728.5541 ; relative to R0 0.0030093. The contact ratio is: 1
+L2 norm of residual is 847.1954 ; relative to R0 3.4321e-08. The contact ratio is: 1
+L2 norm of residual is 1011.7106 ; relative to R0 4.0986e-08. The contact ratio is: 1
+L2 norm of residual is 359.4652 ; relative to R0 1.4562e-08. The contact ratio is: 1
+L2 norm of residual is 231.8996 ; relative to R0 9.3945e-09. The contact ratio is: 1
+L2 norm of residual is 400.0177 ; relative to R0 1.6205e-08. The contact ratio is: 1
+L2 norm of residual is 1063.6679 ; relative to R0 4.309e-08. The contact ratio is: 1
+L2 norm of residual is 397.7666 ; relative to R0 1.6114e-08. The contact ratio is: 1
+L2 norm of residual is 395.0965 ; relative to R0 1.6006e-08. The contact ratio is: 1
+L2 norm of residual is 621.2752 ; relative to R0 2.5169e-08. The contact ratio is: 1
+L2 norm of residual is 268.9889 ; relative to R0 1.0897e-08. The contact ratio is: 1
+L2 norm of residual is 679.4901 ; relative to R0 2.7527e-08. The contact ratio is: 1
+L2 norm of residual is 526.8058 ; relative to R0 2.1341e-08. The contact ratio is: 1
+L2 norm of residual is 176.8836 ; relative to R0 7.1658e-09. The contact ratio is: 1
+L2 norm of residual is 229.0154 ; relative to R0 9.2777e-09. The contact ratio is: 1
+L2 norm of residual is 697.1292 ; relative to R0 2.8241e-08. The contact ratio is: 1
+L2 norm of residual is 435.5325 ; relative to R0 1.7644e-08. The contact ratio is: 1
+L2 norm of residual is 169.9337 ; relative to R0 6.8842e-09. The contact ratio is: 1
+L2 norm of residual is 650.1544 ; relative to R0 2.6338e-08. The contact ratio is: 1
+L2 norm of residual is 698.4525 ; relative to R0 2.8295e-08. The contact ratio is: 1
+L2 norm of residual is 413.6982 ; relative to R0 1.6759e-08. The contact ratio is: 1
+L2 norm of residual is 637.7289 ; relative to R0 2.5835e-08. The contact ratio is: 1
+L2 norm of residual is 997.4921 ; relative to R0 4.041e-08. The contact ratio is: 1
+L2 norm of residual is 754.9083 ; relative to R0 3.0582e-08. The contact ratio is: 1
+L2 norm of residual is 831.4845 ; relative to R0 3.3684e-08. The contact ratio is: 1
+L2 norm of residual is 791.0269 ; relative to R0 3.2045e-08. The contact ratio is: 1
+L2 norm of residual is 272.9782 ; relative to R0 1.1059e-08. The contact ratio is: 1
+L2 norm of residual is 596.4077 ; relative to R0 2.4161e-08. The contact ratio is: 1
+L2 norm of residual is 384.9587 ; relative to R0 1.5595e-08. The contact ratio is: 1
+L2 norm of residual is 472.7053 ; relative to R0 1.915e-08. The contact ratio is: 1
+L2 norm of residual is 381.7145 ; relative to R0 1.5464e-08. The contact ratio is: 1
+L2 norm of residual is 916.0741 ; relative to R0 3.7111e-08. The contact ratio is: 1
+L2 norm of residual is 384.2447 ; relative to R0 1.5566e-08. The contact ratio is: 1
+L2 norm of residual is 276.7394 ; relative to R0 1.1211e-08. The contact ratio is: 1
+L2 norm of residual is 170.8456 ; relative to R0 6.9211e-09. The contact ratio is: 1
+L2 norm of residual is 298.9274 ; relative to R0 1.211e-08. The contact ratio is: 1
+L2 norm of residual is 607.6827 ; relative to R0 2.4618e-08. The contact ratio is: 1
+L2 norm of residual is 845.4964 ; relative to R0 3.4252e-08. The contact ratio is: 1
+L2 norm of residual is 214.8402 ; relative to R0 8.7034e-09. The contact ratio is: 1
+L2 norm of residual is 603.551 ; relative to R0 2.4451e-08. The contact ratio is: 1
+L2 norm of residual is 337.8182 ; relative to R0 1.3685e-08. The contact ratio is: 1
+L2 norm of residual is 599.3803 ; relative to R0 2.4282e-08. The contact ratio is: 1
+L2 norm of residual is 736.8439 ; relative to R0 2.985e-08. The contact ratio is: 1
+L2 norm of residual is 1484.7491 ; relative to R0 6.0149e-08. The contact ratio is: 1
+L2 norm of residual is 1146.6857 ; relative to R0 4.6454e-08. The contact ratio is: 1
+L2 norm of residual is 1205.1723 ; relative to R0 4.8823e-08. The contact ratio is: 1
+L2 norm of residual is 245.8854 ; relative to R0 9.9611e-09. The contact ratio is: 1
+L2 norm of residual is 909.3467 ; relative to R0 3.6839e-08. The contact ratio is: 1
+L2 norm of residual is 590.9944 ; relative to R0 2.3942e-08. The contact ratio is: 1
+L2 norm of residual is 37.5392 ; relative to R0 1.5208e-09. The contact ratio is: 1
+L2 norm of residual is 291.6904 ; relative to R0 1.1817e-08. The contact ratio is: 1
+L2 norm of residual is 530.062 ; relative to R0 2.1473e-08. The contact ratio is: 1
+L2 norm of residual is 354.8141 ; relative to R0 1.4374e-08. The contact ratio is: 1
+L2 norm of residual is 532.5267 ; relative to R0 2.1573e-08. The contact ratio is: 1
+L2 norm of residual is 528.4555 ; relative to R0 2.1408e-08. The contact ratio is: 1
+L2 norm of residual is 1004.6097 ; relative to R0 4.0698e-08. The contact ratio is: 1
+L2 norm of residual is 484.3828 ; relative to R0 1.9623e-08. The contact ratio is: 1
+L2 norm of residual is 1021.0669 ; relative to R0 4.1365e-08. The contact ratio is: 1
+L2 norm of residual is 148.8154 ; relative to R0 6.0287e-09. The contact ratio is: 1
+L2 norm of residual is 438.2683 ; relative to R0 1.7755e-08. The contact ratio is: 1
+L2 norm of residual is 503.6177 ; relative to R0 2.0402e-08. The contact ratio is: 1
+L2 norm of residual is 690.1617 ; relative to R0 2.7959e-08. The contact ratio is: 1
+L2 norm of residual is 541.1406 ; relative to R0 2.1922e-08. The contact ratio is: 1
+L2 norm of residual is 567.6412 ; relative to R0 2.2996e-08. The contact ratio is: 1
+L2 norm of residual is 488.2234 ; relative to R0 1.9778e-08. The contact ratio is: 1
+L2 norm of residual is 255.2206 ; relative to R0 1.0339e-08. The contact ratio is: 1
+L2 norm of residual is 298.2164 ; relative to R0 1.2081e-08. The contact ratio is: 1
+L2 norm of residual is 696.7535 ; relative to R0 2.8226e-08. The contact ratio is: 1
+L2 norm of residual is 397.823 ; relative to R0 1.6116e-08. The contact ratio is: 1
+L2 norm of residual is 1026.3668 ; relative to R0 4.1579e-08. The contact ratio is: 1
+L2 norm of residual is 457.83 ; relative to R0 1.8547e-08. The contact ratio is: 1
+L2 norm of residual is 259.8393 ; relative to R0 1.0526e-08. The contact ratio is: 1
+L2 norm of residual is 435.3783 ; relative to R0 1.7638e-08. The contact ratio is: 1
+L2 norm of residual is 471.394 ; relative to R0 1.9097e-08. The contact ratio is: 1
+L2 norm of residual is 272.0414 ; relative to R0 1.1021e-08. The contact ratio is: 1
+L2 norm of residual is 999.2307 ; relative to R0 4.048e-08. The contact ratio is: 1
+L2 norm of residual is 867.8668 ; relative to R0 3.5158e-08. The contact ratio is: 1
+L2 norm of residual is 1634.5942 ; relative to R0 6.6219e-08. The contact ratio is: 1
+L2 norm of residual is 1366.7354 ; relative to R0 5.5368e-08. The contact ratio is: 1
+L2 norm of residual is 652.7317 ; relative to R0 2.6443e-08. The contact ratio is: 1
+L2 norm of residual is 639.8403 ; relative to R0 2.5921e-08. The contact ratio is: 1
+L2 norm of residual is 244.7611 ; relative to R0 9.9155e-09. The contact ratio is: 1
+L2 norm of residual is 437.1178 ; relative to R0 1.7708e-08. The contact ratio is: 1
+L2 norm of residual is 719.1273 ; relative to R0 2.9133e-08. The contact ratio is: 1
+L2 norm of residual is 572.9828 ; relative to R0 2.3212e-08. The contact ratio is: 1
+L2 norm of residual is 156.8187 ; relative to R0 6.3529e-09. The contact ratio is: 1
+L2 norm of residual is 477.7305 ; relative to R0 1.9353e-08. The contact ratio is: 1
+L2 norm of residual is 411.4195 ; relative to R0 1.6667e-08. The contact ratio is: 1
+L2 norm of residual is 761.2986 ; relative to R0 3.0841e-08. The contact ratio is: 1
+L2 norm of residual is 262.6182 ; relative to R0 1.0639e-08. The contact ratio is: 1
+L2 norm of residual is 863.2082 ; relative to R0 3.497e-08. The contact ratio is: 1
+L2 norm of residual is 578.3491 ; relative to R0 2.343e-08. The contact ratio is: 1
+L2 norm of residual is 832.2642 ; relative to R0 3.3716e-08. The contact ratio is: 1
+L2 norm of residual is 644.4088 ; relative to R0 2.6106e-08. The contact ratio is: 1
+L2 norm of residual is 448.0834 ; relative to R0 1.8152e-08. The contact ratio is: 1
+L2 norm of residual is 590.6786 ; relative to R0 2.3929e-08. The contact ratio is: 1
+L2 norm of residual is 637.6381 ; relative to R0 2.5831e-08. The contact ratio is: 1
+L2 norm of residual is 764.2946 ; relative to R0 3.0962e-08. The contact ratio is: 1
+L2 norm of residual is 711.1601 ; relative to R0 2.881e-08. The contact ratio is: 1
+L2 norm of residual is 518.4272 ; relative to R0 2.1002e-08. The contact ratio is: 1
+Tip,2 before crack wall forces included : K1 is 251359.1356   K2 is -2683549.0013  and theta is 1.1999
+Tip 2: K1 is -1655615.8743   K2 is -2683549.0013  and theta is -1.0354
+Tip,1 before crack wall forces included : K1 is 4307906.242   K2 is -302273.5018  and theta is 0.13876
+Tip 1: K1 is -164290.2597   K2 is -302273.5018  and theta is 1.0574

@@ -1,4 +1,4 @@
-function [Knumerical,ThetaInc,xCr] = KcalJint(xCr,...
+function [Knumerical,ThetaInc,xCr,stop] = KcalJint(xCr,...
     type_elem,enrdomain,elem_crk,enrich_node,crack_nodes,xVertex,...
     vertex_elem,pos,u,ipas,delta_inc,Knumerical,ThetaInc,...
     tip_elem,split_elem,corner_elem,elem_force)
@@ -8,6 +8,9 @@ global E nu C sigmato
 global Jint iMethod
 global output_file
 global quick_freeze
+
+stp1 = 0;
+stp2 = 0;
 
 % ThetaInc = [] ;
 for kk = 1:size(xCr,2) %what's the crack?
@@ -47,7 +50,7 @@ for kk = 1:size(xCr,2) %what's the crack?
             K1_num = [K1_num, Knum] ;
             ti1 = [ti1, theta_inc] ; % because of flipped y-axis 
             kstr = ['Tip 1: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
-            if xCr(kk).tip(1)
+            if xCr(kk).tip(1) & Knum > 0
               inc_x = xCr(kk).coor(1,1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
               [a,b] = find(node(:,1) == inc_x);
               %inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
@@ -61,6 +64,8 @@ for kk = 1:size(xCr,2) %what's the crack?
                   inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
               end
               xCr(kk).coornew1= [inc_x inc_y]; %
+            else
+              stp1 = 1;
             end
             fprintf(output_file,kstr)
         end
@@ -74,7 +79,7 @@ for kk = 1:size(xCr,2) %what's the crack?
             K2_num = [K2_num, Knum] ;
             ti2 = [ti2, theta_inc] ;
             kstr = ['Tip 2: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
-            if xCr(kk).tip(2) 
+            if xCr(kk).tip(2) & Knum > 0
               inc_x = xCr(kk).coor(size(xCr(kk).coor,1),1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
               [a,b] = find(node(:,1) == inc_x);
               inc_y = xCr(kk).coor(size(xCr(kk).coor,1),2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
@@ -85,6 +90,8 @@ for kk = 1:size(xCr,2) %what's the crack?
                   inc_x = xCr(kk).coor(1,1) + delta_inc * cos(theta_inc+alpha);
               end
               xCr(kk).coornew2 = [inc_x inc_y]; %right tip
+            else
+              stp2 = 1;
             end
             fprintf(output_file,kstr)
         end
@@ -96,23 +103,26 @@ for kk = 1:size(xCr,2) %what's the crack?
       if ~isempty(xCr(kk).coornew1)
         if quick_freeze
           mn1 = 1 ;
+          w1 = -10;
         else
           mn1 = 0 ;
+          w1 = 0;
         end
-        w1 = -5;
       end
       if ~isempty(xCr(kk).coornew2)
         if quick_freeze
           mn2 = 1;
+          w2 = -10 ;
         else
           mn2 = 0;
+          w2 =  0 ;
         end
-        mn2 = 1 ;
-        w2 = -5 ;
       end
       xCr(kk).melange = [ mn1; xCr(kk).melange; mn2 ];
       xCr(kk).width = [ w1 , xCr(kk).width, w2 ];
-      xCr(kk).width = xCr(kk).width + 5*ones(size(xCr(kk).width)) ;
+      if quick_freeze
+        xCr(kk).width = xCr(kk).width + 10*ones(size(xCr(kk).width)) ;
+      end 
     end
       
 
@@ -120,4 +130,5 @@ for kk = 1:size(xCr,2) %what's the crack?
     ThetaInc{kk,2} = ti2;
     Knumerical{kk,1} = K1_num;
     Knumerical{kk,2} = K2_num;
+    stop = stp1*stp2;
 end %kk
