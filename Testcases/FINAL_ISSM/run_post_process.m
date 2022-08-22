@@ -78,11 +78,11 @@ t = tiledlayout(2,2,'TileSpacing','Compact');
 nexttile
 hold on
 grid on
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 for i = 1:2
   plot([1:length(knm1)],knm1(i,:),'color',c1(i,:),'linewidth',3)
 end
+plot([9,9],[lb,ub],'color',[30,30,30,100]/255,'linewidth',1)
+plot([15,15],[lb,ub],'color',[30,30,30,100]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
@@ -93,11 +93,11 @@ l.FontSize = fontSize2;
 nexttile
 hold on
 grid on
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 for i = 1:2
   plot([1:length(knm2)],knm2(i,:),'color',c2(i,:),'linewidth',3)
 end
+plot([9,9],[lb,ub],'color',[30,30,30,100]/255,'linewidth',1)
+plot([15,15],[lb,ub],'color',[30,30,30,100]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
@@ -107,10 +107,10 @@ l.FontSize = fontSize2;
 
 nexttile
 hold on
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 plot([1:length(t1_cu)],t1_cu,'color',c1(4,:),'linewidth',3)
 plot([1:length(t1)],t1,'color',c1(3,:),'linewidth',3)
+plot([9,9],[-pi/3,pi/3],'color',[30,30,30,100]/255,'linewidth',1)
+plot([15,15],[-pi/3,pi/3],'color',[30,30,30,100]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 xlim([1,length(knm2)]);
@@ -121,10 +121,10 @@ l.FontSize = fontSize2;
 
 nexttile
 hold on
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 plot([1:length(t2_cu)],t2_cu,'color',c2(4,:),'linewidth',3)
 plot([1:length(t2)],t2,'color',c2(3,:),'linewidth',3)
+plot([9,9],[-pi/3,pi/3],'color',[30,30,30,100]/255,'linewidth',1)
+plot([15,15],[-pi/3,pi/3],'color',[30,30,30,100]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 title('propagation angle','FontSize',fontSize1)

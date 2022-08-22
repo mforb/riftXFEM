@@ -9,12 +9,15 @@ global gporder numtri
 global plothelp Hidden results_path
 global rift_wall_pressure
 global wall_int
-global melange melangeforce
 
 
 
 %loop over elements
 %elems = union(split_elem,vertex_elem);
+
+if isempty(wall_int)
+  wall_int = 1;
+end
 
 
 [W,Q] = quadrature(wall_int,'GAUSS',1) ;
@@ -108,11 +111,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     sctr = element(iel,:) ;
     segment = elem_crk(iel,:);
     [l,~,~,~,~,~] = f_segment_dist(segment);
-    if ( melange | melangeforce )
-      [~,width] = f_find_melange(iel,xCrk(kk));
-    else
-      width = 0;
-    end
+    [~,width] = f_find_melange(iel,xCrk(kk));
     % if there is ocean force
     for i=1:ns-1
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
@@ -175,11 +174,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     iel = vertex_elem(ii);
     sctr = element(iel,:);
     segment = elem_crk(iel,:);
-    if (melange | melangeforce )
-      [~,width] = f_find_melange(iel,xCrk(kk));
-    else
-      width = 0;
-    end
+    [~,width] = f_find_melange(iel,xCrk(kk));
     for i=1:ns-1
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
       [lseg,~,~,~,~,~] = f_segment_dist(xseg);

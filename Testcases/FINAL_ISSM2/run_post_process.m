@@ -8,7 +8,8 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('ISSM2_xmas_tip*');
+ld = dir('../FINAL_ISSM/ISSM2_xmas_tip*');
+pre = '../FINAL_ISSM/';
 results_path = './ISSM2_PP';
 mkdir(results_path);
 global results_path
@@ -19,6 +20,8 @@ global elemType
 Hidden = 0;
 global E C nu P
 global melange
+global wall_int
+wall_int = 1
 melange = 0
 melangeforce = 0
 E = 9.6e9; nu = 0.3; P = 1 ;
@@ -49,7 +52,7 @@ t1 =[];
 t2 =[];
 % read all of the SIF values
 for i = 1:length(ld)
-  dname = ld(i).name;
+  dname = [pre,ld(i).name];
   lname = [dname,'/crack.mat']; 
   load(lname)
   knm1 = [knm1,Knumerical{1}];
@@ -78,11 +81,11 @@ t = tiledlayout(2,2,'TileSpacing','Compact');
 nexttile
 hold on
 grid on
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 for i = 1:2
   plot([1:length(knm1)],knm1(i,:),'color',c1(i,:),'linewidth',3)
 end
+plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
@@ -93,11 +96,11 @@ l.FontSize = fontSize2;
 nexttile
 hold on
 grid on
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 for i = 1:2
   plot([1:length(knm2)],knm2(i,:),'color',c2(i,:),'linewidth',3)
 end
+plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
@@ -107,10 +110,10 @@ l.FontSize = fontSize2;
 
 nexttile
 hold on
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 plot([1:length(t1_cu)],t1_cu,'color',c1(4,:),'linewidth',3)
 plot([1:length(t1)],t1,'color',c1(3,:),'linewidth',3)
+plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 xlim([1,length(knm2)]);
@@ -121,10 +124,10 @@ l.FontSize = fontSize2;
 
 nexttile
 hold on
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 plot([1:length(t2_cu)],t2_cu,'color',c2(4,:),'linewidth',3)
 plot([1:length(t2)],t2,'color',c2(3,:),'linewidth',3)
+plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 title('propagation angle','FontSize',fontSize1)
@@ -149,7 +152,7 @@ shapewrite(srift_final,[results_path,'/',shapefile_name]);
 
 %plots of the first time-step
 if 1
-  dname = ld(end).name;
+  dname = [pre,ld(end).name];
   lname = [dname,'/crack2.mat']; 
   load(lname)
   TR = triangulation(element,node);
@@ -179,6 +182,7 @@ if 1
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
+  clf();
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));
@@ -198,12 +202,12 @@ else
 end
 %plots of the first time-step
 if 1
-  dname = ld(1).name;
+  dname = [pre,ld(1).name];
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+  %  elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -227,6 +231,7 @@ if 1
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
+  clf();
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));

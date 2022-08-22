@@ -58,103 +58,18 @@ for i = 1:length(ld)
   t2 = [t2,ThetaInc{2}];
 end
 
-c1 = cbrewer2('set2',4);
-c2 = cbrewer2('dark2',4);
-rg(1) = min([knm1(1,:),knm1(2,:),knm2(1,:),knm2(2,:)]);
-rg(2) = max([knm1(1,:),knm1(2,:),knm2(1,:),knm2(2,:)]);
-ormin = floor( log10(abs(rg(1))));
-ormax = floor( log10(abs(rg(2))));
-mr = max([ormin,ormax]) - 1;
-lb = floor(rg(1)/(10^mr)) * 10 ^mr;
-ub = ceil(rg(2)/(10^mr)) * 10 ^mr;
-
-t1_cu = cumsum(t1.*tip1);
-t2_cu = cumsum(t2.*tip2);
-
-
-t = tiledlayout(2,2,'TileSpacing','Compact');
-
-% tile 1
-nexttile
-hold on
-grid on
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-for i = 1:2
-  plot([1:length(knm1)],knm1(i,:),'color',c1(i,:),'linewidth',3)
-end
-ylim([lb,ub]);
-xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
-title('SIFs','FontSize',fontSize1)
-l = legend({'K1','K2'})
-l.FontSize = fontSize2;
-
-nexttile
-hold on
-grid on
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-for i = 1:2
-  plot([1:length(knm2)],knm2(i,:),'color',c2(i,:),'linewidth',3)
-end
-ylim([lb,ub]);
-xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
-title('SIFs','FontSize',fontSize1)
-l = legend({'K1','K2'})
-l.FontSize = fontSize2;
-
-nexttile
-hold on
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([1:length(t1_cu)],t1_cu,'color',c1(4,:),'linewidth',3)
-plot([1:length(t1)],t1,'color',c1(3,:),'linewidth',3)
-grid on
-ylim([-pi/3,pi/3]);
-xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
-title('propagation angle','FontSize',fontSize1)
-legend({'cumul angle','angle'})
-l.FontSize = fontSize2;
-
-nexttile
-hold on
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([1:length(t2_cu)],t2_cu,'color',c2(4,:),'linewidth',3)
-plot([1:length(t2)],t2,'color',c2(3,:),'linewidth',3)
-grid on
-ylim([-pi/3,pi/3]);
-title('propagation angle','FontSize',fontSize1)
-xlim([1,length(knm2)]);
-legend({'cumul angle','angle'})
-l.FontSize = fontSize2;
-%plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
-
-figure_name = ['Knum_results'];
-print([results_path,'/',figure_name],'-dpng','-r300')
-saveas(t,[results_path,'/',figure_name],'epsc')
-
-%in the last file we loaded the final crack geometry
-xCr_final = xCr;
-srift_final = srift2;
-srift_final.BoundingBox = [min(xCr.coor(:,1)), min(xCr.coor(:,2)); max(xCr.coor(:,1)), max(xCr.coor(:,2))];
-srift_final.X = xCr_final.coor(:,1)';
-srift_final.Y = xCr_final.coor(:,2)';
-shapefile_name = 'final_rift';
-shapewrite(srift_final,[results_path,'/',shapefile_name]);
+  zoom_dim(1,:) = [min(xCrk.coor(:,1))-5000,max(xCrk.coor(:,1))+5000];
+  zoom_dim(2,:) = [min(xCrk.coor(:,2))-5000,max(xCrk.coor(:,2))+5000];
 
 
 %plots of the first time-step
-if 1
+if 0
   dname = ld(end).name;
   lname = [dname,'/crack2.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
-  zoom_dim(2,:) = [min(xCrk.coor(:,2))-30000,max(xCrk.coor(:,2))+30000];
+  zoom_dim(1,:) = [min(xCrk.coor(:,1))-5000,max(xCrk.coor(:,1))+5000];
+  zoom_dim(2,:) = [min(xCrk.coor(:,2))-5000,max(xCrk.coor(:,2))+5000];
   [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
     elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
   fu = full(u);
@@ -197,13 +112,13 @@ else
     Cm1 = E*0.1/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
 end
 %plots of the first time-step
-if 0
+if 1
   dname = ld(1).name;
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+  %  elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
