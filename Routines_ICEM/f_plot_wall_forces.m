@@ -9,6 +9,8 @@ global gporder numtri
 global plothelp Hidden results_path
 global rift_wall_pressure
 global wall_int
+global melange
+
 
 
 
@@ -16,8 +18,15 @@ global wall_int
 %elems = union(split_elem,vertex_elem);
 
 if isempty(wall_int)
-  wall_int = 1;
+  wall_int = 2;
 end
+
+if isempty(melange)  | melange == 0 
+  mel_b = 0;
+else
+  mel_b = 1
+end
+
 
 
 [W,Q] = quadrature(wall_int,'GAUSS',1) ;
@@ -111,7 +120,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
     sctr = element(iel,:) ;
     segment = elem_crk(iel,:);
     [l,~,~,~,~,~] = f_segment_dist(segment);
-    [~,width] = f_find_melange(iel,xCrk(kk));
+    if mel_b
+      [~,width] = f_find_melange(iel,xCrk(kk));
+    else
+      width = 0;
+    end
+
     % if there is ocean force
     for i=1:ns-1
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
@@ -135,6 +149,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         seg_gt = gapt{i};
         seg_w = gapw{i};
         ind = find(seg_coord>ccoord(end),1);
+        ind2 = find(seg_gc>nl+l/2,1);
         if isempty(ind)
           seg_coord = [seg_coord, ccoord];
           seg_gc   = [seg_gc,gc];
@@ -153,12 +168,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
           seg_w = [width,width,seg_w];
         else
           seg_coord = [seg_coord(1:ind-1),ccoord,seg_coord(ind:end)];
-          seg_gc   = [seg_gc(1:ind-1),gc,seg_gc(ind:end)];
           seg_f = [seg_f(1:ind-1),fp,seg_f(ind:end)];
           seg_t = [seg_t(1:ind-1),ft,seg_t(ind:end)];
-          seg_gn = [seg_gn(1:ind-1),elem_gap(iel,[2,4]),seg_gn(ind:end)];
-          seg_gt = [seg_gt(1:ind-1),elem_gap(iel,[1,3]),seg_gt(ind:end)];
-          seg_w = [seg_w(1:ind-1),width,width,seg_w(ind:end)];
+          seg_gc   = [seg_gc(1:ind2-1),gc,seg_gc(ind2:end)];
+          seg_gn = [seg_gn(1:ind2-1),elem_gap(iel,[2,4]),seg_gn(ind2:end)];
+          seg_gt = [seg_gt(1:ind2-1),elem_gap(iel,[1,3]),seg_gt(ind2:end)];
+          seg_w = [seg_w(1:ind2-1),width,width,seg_w(ind2:end)];
         end
         crack_coord{i} = seg_coord;
         f_app{i} = seg_f;
@@ -174,7 +189,11 @@ for kk = 1:size(xCrk,2) %what's the crack?
     iel = vertex_elem(ii);
     sctr = element(iel,:);
     segment = elem_crk(iel,:);
-    [~,width] = f_find_melange(iel,xCrk(kk));
+    if mel_b
+      [~,width] = f_find_melange(iel,xCrk(kk));
+    else
+      width = 0;
+    end
     for i=1:ns-1
       xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
       [lseg,~,~,~,~,~] = f_segment_dist(xseg);
@@ -275,7 +294,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
   clf
 
 
-  t = tiledlayout(3,1,'TileSpacing','Compact');
+  if mel_b
+    t = tiledlayout(3,1,'TileSpacing','Compact');
+  else
+    t = tiledlayout(2,1,'TileSpacing','Compact');
+  end
+
   nexttile
 
   plot(gc,gn,'color',[0.1,0.1,0.6],'linewidth',3,'DisplayName','normal gap')
@@ -303,18 +327,20 @@ for kk = 1:size(xCrk,2) %what's the crack?
   tstr = ['tangential displacement along rift ',num2str(kk)];
   title(tstr);
 
-  nexttile
-  plot(gc,(gw+gn),'color',[0.2,0.1,0.3],'linewidth',3,'DisplayName','rift wall distance')
-  hold on
-  yl = ylim();
-  for i = 1: length(inters)
-    plot([inters(i),inters(i)],yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
+  if mel_b
+    nexttile
+    plot(gc,(gw+gn),'color',[0.2,0.1,0.3],'linewidth',3,'DisplayName','rift wall distance')
+    hold on
+    yl = ylim();
+    for i = 1: length(inters)
+      plot([inters(i),inters(i)],yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
+    end
+    ylim(yl);
+    xlabel('distance along crack (m)')
+    ylabel('wall to wall "distance" (m)')
+    tstr = ['"melange" distance between rift walls ',num2str(kk)];
+    title(tstr);
   end
-  ylim(yl);
-  xlabel('distance along crack (m)')
-  ylabel('wall to wall "distance" (m)')
-  tstr = ['"melange" distance between rift walls ',num2str(kk)];
-  title(tstr);
 
   nstr = ['rift',num2str(kk),'_gaps_step',num2str(stepnum)];
   print([results_path,'/',nstr],'-dpng','-r300')

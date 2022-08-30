@@ -150,7 +150,7 @@ shapefile_name = 'final_rift';
 shapewrite(srift_final,[results_path,'/',shapefile_name]);
 
 
-%plots of the first time-step
+%plots of the last time-step
 if 1
   dname = [pre,ld(end).name];
   lname = [dname,'/crack2.mat']; 
@@ -165,6 +165,9 @@ if 1
   Stdux = fu(1:2:2*numnode) ;
   Stduy = fu(2:2:2*numnode) ;
 
+  % the crack is saved after a propagation step, so we need to modify the crack to plot 
+  xCrk(1).coor(1,:)=[];
+  xCrk(1).coor(end,:)=[];
   f = figure();
   hold on
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
@@ -216,6 +219,8 @@ if 1
 
   f = figure();
   hold on
+  % the crack is saved after a propagation step, so we need to modify the crack to plot 
+  xCrk(1).coor(1,:)=[];
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
   triplot(TR);

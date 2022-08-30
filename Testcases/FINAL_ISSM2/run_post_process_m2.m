@@ -164,6 +164,10 @@ if 1
   Stdux = fu(1:2:2*numnode) ;
   Stduy = fu(2:2:2*numnode) ;
 
+  % the crack is saved after a propagation step, so we need to modify the crack to plot 
+  xCrk(1).coor(1,:)=[];
+  xCrk(1).coor(end,:)=[];
+
   f = figure();
   hold on
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
@@ -212,6 +216,8 @@ if 1
   Stduy = fu(2:2:2*numnode) ;
   %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
+  % the crack is saved after a propagation step, so we need to modify the crack to plot 
+  xCrk(1).coor(1,:)=[];
   f = figure();
   hold on
   [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);

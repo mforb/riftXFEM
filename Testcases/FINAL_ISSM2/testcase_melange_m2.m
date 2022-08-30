@@ -30,6 +30,7 @@ global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global zoom_dim modpen modocean stab_mu
 global mel_tan
 global quick_freeze
+quick_freeze = 1
 
 epsilon = 5 
 
