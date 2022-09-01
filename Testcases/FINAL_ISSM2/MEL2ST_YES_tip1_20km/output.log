@@ -1,0 +1,460 @@
+1233.6917    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23807
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+The ratio of elements stabilized: 0
+L2 norm of residual is 1892522522.6871 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0018158 ; relative to R0 9.5948e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018762 ; relative to R0 9.914e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018225 ; relative to R0 9.63e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018622 ; relative to R0 9.84e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018611 ; relative to R0 9.8341e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018896 ; relative to R0 9.9847e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001858 ; relative to R0 9.8177e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018842 ; relative to R0 9.9558e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018717 ; relative to R0 9.8902e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001855 ; relative to R0 9.802e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001886 ; relative to R0 9.9658e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018771 ; relative to R0 9.9185e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018696 ; relative to R0 9.8791e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018657 ; relative to R0 9.8582e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018391 ; relative to R0 9.7179e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018281 ; relative to R0 9.6598e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018658 ; relative to R0 9.8587e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018431 ; relative to R0 9.739e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018203 ; relative to R0 9.6182e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018497 ; relative to R0 9.7737e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018545 ; relative to R0 9.7993e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018363 ; relative to R0 9.7028e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018623 ; relative to R0 9.8402e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001836 ; relative to R0 9.7011e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018256 ; relative to R0 9.6465e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018549 ; relative to R0 9.8013e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018712 ; relative to R0 9.8875e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018545 ; relative to R0 9.7992e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018855 ; relative to R0 9.9629e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018486 ; relative to R0 9.7679e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018826 ; relative to R0 9.9474e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018747 ; relative to R0 9.906e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018724 ; relative to R0 9.8935e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018779 ; relative to R0 9.9227e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018523 ; relative to R0 9.7873e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018336 ; relative to R0 9.6885e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018633 ; relative to R0 9.8454e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018718 ; relative to R0 9.8905e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018429 ; relative to R0 9.7377e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018678 ; relative to R0 9.8692e-13. The contact ratio is: NaN
+L2 norm of residual is 0.00186 ; relative to R0 9.8279e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018511 ; relative to R0 9.7809e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018561 ; relative to R0 9.8078e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018501 ; relative to R0 9.7757e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018468 ; relative to R0 9.7581e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018246 ; relative to R0 9.6409e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018364 ; relative to R0 9.7033e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018841 ; relative to R0 9.9554e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018791 ; relative to R0 9.9288e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018729 ; relative to R0 9.8962e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018443 ; relative to R0 9.7452e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018802 ; relative to R0 9.935e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018693 ; relative to R0 9.8775e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018632 ; relative to R0 9.8453e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018023 ; relative to R0 9.5232e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018892 ; relative to R0 9.9826e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018832 ; relative to R0 9.9505e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018346 ; relative to R0 9.6938e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018225 ; relative to R0 9.6298e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018559 ; relative to R0 9.8067e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018457 ; relative to R0 9.7526e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018472 ; relative to R0 9.7603e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018368 ; relative to R0 9.7058e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018938 ; relative to R0 1.0007e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018854 ; relative to R0 9.9623e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018683 ; relative to R0 9.8721e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018497 ; relative to R0 9.7738e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018477 ; relative to R0 9.7632e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018669 ; relative to R0 9.8648e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018327 ; relative to R0 9.6841e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018595 ; relative to R0 9.8254e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018222 ; relative to R0 9.6286e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018352 ; relative to R0 9.6972e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018471 ; relative to R0 9.7599e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018802 ; relative to R0 9.9348e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001904 ; relative to R0 1.0061e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018699 ; relative to R0 9.8802e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018107 ; relative to R0 9.5676e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018336 ; relative to R0 9.6887e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018451 ; relative to R0 9.7496e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018799 ; relative to R0 9.9335e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018719 ; relative to R0 9.8908e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018372 ; relative to R0 9.7079e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018344 ; relative to R0 9.6929e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018445 ; relative to R0 9.7464e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018543 ; relative to R0 9.7978e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018492 ; relative to R0 9.7708e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018128 ; relative to R0 9.5785e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018355 ; relative to R0 9.6988e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018452 ; relative to R0 9.7501e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018452 ; relative to R0 9.7501e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018459 ; relative to R0 9.7534e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018774 ; relative to R0 9.9203e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018413 ; relative to R0 9.7295e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018423 ; relative to R0 9.7346e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018515 ; relative to R0 9.7832e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018424 ; relative to R0 9.7351e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018546 ; relative to R0 9.7997e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018549 ; relative to R0 9.8012e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018771 ; relative to R0 9.9187e-13. The contact ratio is: NaN
+Tip1: before crack wall forces included : K1 is 3752224.3838   K2 is -1264539.7441  and theta is 0.55162
+Integration of wall forces is off
+Tip 1 modified: K1 is 3752224.3838   K2 is -1264539.7441  and theta is -0.55162
+Tip2: before crack wall forces included : K1 is 4322876.1454   K2 is 817429.7775  and theta is -0.35079
+Integration of wall forces is off
+Tip 2 modified: K1 is 4322876.1454   K2 is 817429.7775  and theta is -0.35079
+1534.466    Crack growth number     2
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23807
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 0
+L2 norm of residual is 4305011504.5938 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0018152 ; relative to R0 4.2166e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018387 ; relative to R0 4.2711e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018326 ; relative to R0 4.2569e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001837 ; relative to R0 4.267e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001842 ; relative to R0 4.2787e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018421 ; relative to R0 4.2789e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018446 ; relative to R0 4.2847e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018659 ; relative to R0 4.3343e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018882 ; relative to R0 4.386e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018606 ; relative to R0 4.3218e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018597 ; relative to R0 4.3198e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018057 ; relative to R0 4.1945e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001849 ; relative to R0 4.295e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001833 ; relative to R0 4.2578e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018347 ; relative to R0 4.2618e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001848 ; relative to R0 4.2928e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018476 ; relative to R0 4.2916e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018795 ; relative to R0 4.3659e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018734 ; relative to R0 4.3518e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018703 ; relative to R0 4.3445e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018234 ; relative to R0 4.2355e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018455 ; relative to R0 4.2868e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018532 ; relative to R0 4.3048e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018355 ; relative to R0 4.2635e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0019021 ; relative to R0 4.4184e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018492 ; relative to R0 4.2954e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018473 ; relative to R0 4.2911e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018525 ; relative to R0 4.3031e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018486 ; relative to R0 4.2941e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018556 ; relative to R0 4.3103e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018317 ; relative to R0 4.2549e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018429 ; relative to R0 4.2808e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018555 ; relative to R0 4.3101e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018517 ; relative to R0 4.3012e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018593 ; relative to R0 4.3188e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018803 ; relative to R0 4.3678e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018834 ; relative to R0 4.375e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018459 ; relative to R0 4.2878e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018637 ; relative to R0 4.3293e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018646 ; relative to R0 4.3312e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018827 ; relative to R0 4.3734e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018378 ; relative to R0 4.269e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018473 ; relative to R0 4.2911e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018453 ; relative to R0 4.2863e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018342 ; relative to R0 4.2606e-13. The contact ratio is: NaN
+L2 norm of residual is 0.00183 ; relative to R0 4.2508e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018466 ; relative to R0 4.2893e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018508 ; relative to R0 4.2993e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018669 ; relative to R0 4.3366e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018643 ; relative to R0 4.3304e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018455 ; relative to R0 4.2868e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018798 ; relative to R0 4.3665e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018567 ; relative to R0 4.3128e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018485 ; relative to R0 4.2939e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018281 ; relative to R0 4.2465e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018579 ; relative to R0 4.3157e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018261 ; relative to R0 4.2419e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018767 ; relative to R0 4.3593e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018435 ; relative to R0 4.2823e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018478 ; relative to R0 4.2923e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018635 ; relative to R0 4.3286e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018513 ; relative to R0 4.3003e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018669 ; relative to R0 4.3367e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018651 ; relative to R0 4.3324e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018557 ; relative to R0 4.3107e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018618 ; relative to R0 4.3248e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018467 ; relative to R0 4.2897e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018595 ; relative to R0 4.3195e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018402 ; relative to R0 4.2745e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018576 ; relative to R0 4.315e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018679 ; relative to R0 4.3389e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018413 ; relative to R0 4.2772e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018327 ; relative to R0 4.2572e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018309 ; relative to R0 4.253e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018465 ; relative to R0 4.2893e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018278 ; relative to R0 4.2457e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018428 ; relative to R0 4.2807e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018459 ; relative to R0 4.2878e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018522 ; relative to R0 4.3024e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018477 ; relative to R0 4.292e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018522 ; relative to R0 4.3023e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018557 ; relative to R0 4.3106e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018597 ; relative to R0 4.3199e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018667 ; relative to R0 4.3361e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001871 ; relative to R0 4.346e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001864 ; relative to R0 4.3299e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018354 ; relative to R0 4.2633e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001838 ; relative to R0 4.2695e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018532 ; relative to R0 4.3048e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018736 ; relative to R0 4.3521e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018583 ; relative to R0 4.3166e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018156 ; relative to R0 4.2175e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018346 ; relative to R0 4.2615e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018624 ; relative to R0 4.3262e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018283 ; relative to R0 4.247e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018351 ; relative to R0 4.2628e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018349 ; relative to R0 4.2623e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018581 ; relative to R0 4.3162e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018798 ; relative to R0 4.3666e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018514 ; relative to R0 4.3006e-13. The contact ratio is: NaN
+Tip1: before crack wall forces included : K1 is 4336623.2637   K2 is 1726253.7174  and theta is -0.61524
+Integration of wall forces is off
+Tip 1 modified: K1 is 4336623.2637   K2 is 1726253.7174  and theta is 0.61524
+Tip2: before crack wall forces included : K1 is 4323406.1273   K2 is 818229.4391  and theta is -0.35105
+Integration of wall forces is off
+Tip 2 modified: K1 is 4323406.1273   K2 is 818229.4391  and theta is -0.35105
+1843.66    Crack growth number     3
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23807
+Element 11485: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [-0.23641,-0.97165]
+Element 11485: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [-0.23641,-0.97165]
+Element 11485: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [-0.23641,-0.97165]
+Element 11485: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [-0.23641,-0.97165]
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+The ratio of elements stabilized: 0
+L2 norm of residual is 2802606455.8096 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0018278 ; relative to R0 6.5217e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018656 ; relative to R0 6.6565e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018569 ; relative to R0 6.6256e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018913 ; relative to R0 6.7483e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018639 ; relative to R0 6.6505e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018614 ; relative to R0 6.6416e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018501 ; relative to R0 6.6013e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001854 ; relative to R0 6.6151e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018732 ; relative to R0 6.6838e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018401 ; relative to R0 6.5655e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018258 ; relative to R0 6.5145e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018486 ; relative to R0 6.596e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018546 ; relative to R0 6.6174e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018602 ; relative to R0 6.6376e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018725 ; relative to R0 6.6815e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0019149 ; relative to R0 6.8324e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018921 ; relative to R0 6.7513e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018379 ; relative to R0 6.5578e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018391 ; relative to R0 6.5621e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018405 ; relative to R0 6.5672e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018263 ; relative to R0 6.5164e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018326 ; relative to R0 6.5389e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018577 ; relative to R0 6.6283e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018924 ; relative to R0 6.7523e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018991 ; relative to R0 6.7764e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018312 ; relative to R0 6.534e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018664 ; relative to R0 6.6595e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018455 ; relative to R0 6.585e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018865 ; relative to R0 6.7311e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018556 ; relative to R0 6.6212e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018627 ; relative to R0 6.6463e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018397 ; relative to R0 6.5643e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018407 ; relative to R0 6.5678e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018153 ; relative to R0 6.4773e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018444 ; relative to R0 6.5812e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018034 ; relative to R0 6.4347e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018441 ; relative to R0 6.5798e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018885 ; relative to R0 6.7384e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018611 ; relative to R0 6.6404e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018461 ; relative to R0 6.5872e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018285 ; relative to R0 6.5241e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018527 ; relative to R0 6.6108e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018452 ; relative to R0 6.584e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018498 ; relative to R0 6.6004e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018737 ; relative to R0 6.6857e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018357 ; relative to R0 6.5501e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001841 ; relative to R0 6.5688e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018302 ; relative to R0 6.5303e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018682 ; relative to R0 6.6659e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018417 ; relative to R0 6.5713e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018425 ; relative to R0 6.5742e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018882 ; relative to R0 6.7374e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018605 ; relative to R0 6.6383e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018382 ; relative to R0 6.5589e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018635 ; relative to R0 6.6493e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018236 ; relative to R0 6.5068e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001833 ; relative to R0 6.5403e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018492 ; relative to R0 6.5983e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018213 ; relative to R0 6.4986e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018571 ; relative to R0 6.6262e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018474 ; relative to R0 6.5918e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018325 ; relative to R0 6.5386e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018123 ; relative to R0 6.4663e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018292 ; relative to R0 6.5269e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018527 ; relative to R0 6.6107e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018468 ; relative to R0 6.5897e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018496 ; relative to R0 6.5996e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001911 ; relative to R0 6.8188e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018741 ; relative to R0 6.687e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018772 ; relative to R0 6.698e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018646 ; relative to R0 6.653e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018529 ; relative to R0 6.6114e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018626 ; relative to R0 6.6458e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018237 ; relative to R0 6.5073e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018592 ; relative to R0 6.6338e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018548 ; relative to R0 6.618e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018458 ; relative to R0 6.5861e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018618 ; relative to R0 6.6432e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018722 ; relative to R0 6.6803e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0019104 ; relative to R0 6.8167e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018495 ; relative to R0 6.5991e-13. The contact ratio is: NaN
+L2 norm of residual is 0.001869 ; relative to R0 6.6689e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018481 ; relative to R0 6.5942e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018523 ; relative to R0 6.6094e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018752 ; relative to R0 6.691e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018293 ; relative to R0 6.5271e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018203 ; relative to R0 6.495e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018377 ; relative to R0 6.5571e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018336 ; relative to R0 6.5425e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018678 ; relative to R0 6.6647e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018651 ; relative to R0 6.6548e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018472 ; relative to R0 6.5909e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018436 ; relative to R0 6.5781e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018753 ; relative to R0 6.6914e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018442 ; relative to R0 6.5801e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018596 ; relative to R0 6.6353e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018705 ; relative to R0 6.6742e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018293 ; relative to R0 6.5272e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018445 ; relative to R0 6.5814e-13. The contact ratio is: NaN
+L2 norm of residual is 0.0018596 ; relative to R0 6.6351e-13. The contact ratio is: NaN
+Tip1: before crack wall forces included : K1 is 4758941.0187   K2 is -1863302.2583  and theta is 0.6089
+Integration of wall forces is off
+Tip 1 modified: K1 is 4758941.0187   K2 is -1863302.2583  and theta is -0.6089
+Tip2: before crack wall forces included : K1 is 4323831.9951   K2 is 818852.4735  and theta is -0.35125
+Integration of wall forces is off
+Tip 2 modified: K1 is 4323831.9951   K2 is 818852.4735  and theta is -0.35125
+2170.8314    Crack growth number     4
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23807
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+The ratio of elements stabilized: 0
+L2 norm of residual is 1484207436.1798 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0018395 ; relative to R0 1.2394e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018556 ; relative to R0 1.2503e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018751 ; relative to R0 1.2634e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018324 ; relative to R0 1.2346e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018556 ; relative to R0 1.2502e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018425 ; relative to R0 1.2414e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018445 ; relative to R0 1.2428e-12. The contact ratio is: NaN
+L2 norm of residual is 0.001823 ; relative to R0 1.2282e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018352 ; relative to R0 1.2365e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018482 ; relative to R0 1.2452e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018459 ; relative to R0 1.2437e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018191 ; relative to R0 1.2257e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018612 ; relative to R0 1.254e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018735 ; relative to R0 1.2623e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018344 ; relative to R0 1.236e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018351 ; relative to R0 1.2364e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018454 ; relative to R0 1.2434e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018512 ; relative to R0 1.2472e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018438 ; relative to R0 1.2423e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018606 ; relative to R0 1.2536e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018091 ; relative to R0 1.2189e-12. The contact ratio is: NaN
+L2 norm of residual is 0.001808 ; relative to R0 1.2182e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018465 ; relative to R0 1.2441e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018099 ; relative to R0 1.2195e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018462 ; relative to R0 1.2439e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018498 ; relative to R0 1.2464e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018428 ; relative to R0 1.2416e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018511 ; relative to R0 1.2472e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018491 ; relative to R0 1.2459e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018605 ; relative to R0 1.2536e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018562 ; relative to R0 1.2506e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018299 ; relative to R0 1.2329e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018467 ; relative to R0 1.2442e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018386 ; relative to R0 1.2388e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018309 ; relative to R0 1.2336e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018143 ; relative to R0 1.2224e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018258 ; relative to R0 1.2302e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018568 ; relative to R0 1.251e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018626 ; relative to R0 1.255e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018254 ; relative to R0 1.2299e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018457 ; relative to R0 1.2436e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018155 ; relative to R0 1.2232e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018302 ; relative to R0 1.2331e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018283 ; relative to R0 1.2318e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018452 ; relative to R0 1.2432e-12. The contact ratio is: NaN
+L2 norm of residual is 0.001894 ; relative to R0 1.2761e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018128 ; relative to R0 1.2214e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018565 ; relative to R0 1.2508e-12. The contact ratio is: NaN
+L2 norm of residual is 0.001825 ; relative to R0 1.2296e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018434 ; relative to R0 1.242e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018255 ; relative to R0 1.2299e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018489 ; relative to R0 1.2457e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018614 ; relative to R0 1.2542e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018464 ; relative to R0 1.2441e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018611 ; relative to R0 1.254e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018407 ; relative to R0 1.2402e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018753 ; relative to R0 1.2635e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018259 ; relative to R0 1.2302e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018541 ; relative to R0 1.2492e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018582 ; relative to R0 1.252e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018413 ; relative to R0 1.2406e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018106 ; relative to R0 1.2199e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018581 ; relative to R0 1.2519e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018608 ; relative to R0 1.2537e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018262 ; relative to R0 1.2304e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018358 ; relative to R0 1.2369e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018516 ; relative to R0 1.2475e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018578 ; relative to R0 1.2517e-12. The contact ratio is: NaN
+L2 norm of residual is 0.001853 ; relative to R0 1.2485e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018564 ; relative to R0 1.2508e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018191 ; relative to R0 1.2256e-12. The contact ratio is: NaN
+L2 norm of residual is 0.001838 ; relative to R0 1.2384e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018152 ; relative to R0 1.223e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018551 ; relative to R0 1.2499e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018435 ; relative to R0 1.2421e-12. The contact ratio is: NaN
+L2 norm of residual is 0.00185 ; relative to R0 1.2465e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018381 ; relative to R0 1.2384e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018268 ; relative to R0 1.2308e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018458 ; relative to R0 1.2437e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018526 ; relative to R0 1.2482e-12. The contact ratio is: NaN
+L2 norm of residual is 0.001839 ; relative to R0 1.239e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018073 ; relative to R0 1.2177e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018167 ; relative to R0 1.224e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018537 ; relative to R0 1.249e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018376 ; relative to R0 1.2381e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018327 ; relative to R0 1.2348e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018669 ; relative to R0 1.2578e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018451 ; relative to R0 1.2432e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018619 ; relative to R0 1.2545e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018317 ; relative to R0 1.2341e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018144 ; relative to R0 1.2225e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018545 ; relative to R0 1.2495e-12. The contact ratio is: NaN
+L2 norm of residual is 0.001855 ; relative to R0 1.2498e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018205 ; relative to R0 1.2266e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018617 ; relative to R0 1.2544e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018635 ; relative to R0 1.2556e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018417 ; relative to R0 1.2409e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018697 ; relative to R0 1.2598e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018386 ; relative to R0 1.2388e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0018601 ; relative to R0 1.2533e-12. The contact ratio is: NaN
+Tip1: before crack wall forces included : K1 is 4212622.0037   K2 is 1656196.4914  and theta is -0.61048
+Integration of wall forces is off
+Tip 1 modified: K1 is 4212622.0037   K2 is 1656196.4914  and theta is 0.61048
+Tip2: before crack wall forces included : K1 is 4324177.4063   K2 is 819349.0415  and theta is -0.35141
+Integration of wall forces is off
+Tip 2 modified: K1 is 4324177.4063   K2 is 819349.0415  and theta is -0.35141

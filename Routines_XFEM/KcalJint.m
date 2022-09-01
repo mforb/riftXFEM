@@ -35,8 +35,8 @@ for kk = 1:size(xCr,2) %what's the crack?
     tip = find(type_elem(:,kk) == 1);
     split = find(type_elem(:,kk) == 2);
     %find out the element containing the...
-    for ii=1:size(enrdomain,1)
-        iel = enrdomain(ii) ;
+    for ii=1:size(tip_elem,1)
+        iel = tip_elem(ii) ;
         sctr=element(iel,:);
         vv = node(sctr,:);
         flag1 = inhull(xCr(kk).coor(1,:),vv,[],1e-8); % left tip!
@@ -49,8 +49,8 @@ for kk = 1:size(xCr,2) %what's the crack?
             theta_inc = -1*theta_inc; 
             K1_num = [K1_num, Knum] ;
             ti1 = [ti1, theta_inc] ; % because of flipped y-axis 
-            kstr = ['Tip 1: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
-            if xCr(kk).tip(1) & Knum > 0
+            kstr = ['Tip 1 modified: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
+            if xCr(kk).tip(1) & Knum(1) > 0
               inc_x = xCr(kk).coor(1,1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
               [a,b] = find(node(:,1) == inc_x);
               %inc_y = xCr(kk).coor(1,2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));
@@ -78,8 +78,8 @@ for kk = 1:size(xCr,2) %what's the crack?
                 enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,elem_force) ;
             K2_num = [K2_num, Knum] ;
             ti2 = [ti2, theta_inc] ;
-            kstr = ['Tip 2: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
-            if xCr(kk).tip(2) & Knum > 0
+            kstr = ['Tip 2 modified: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
+            if xCr(kk).tip(2) & Knum(1) > 0
               inc_x = xCr(kk).coor(size(xCr(kk).coor,1),1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
               [a,b] = find(node(:,1) == inc_x);
               inc_y = xCr(kk).coor(size(xCr(kk).coor,1),2) + delta_inc * (cos(theta_inc)*sin(alpha) + sin(theta_inc)*cos(alpha));

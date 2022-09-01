@@ -8,7 +8,7 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('MEL2_YES_tip*');
+ld = dir('MEL2ST_YES_tip*');
 results_path = './MEL2Y_PP';
 mkdir(results_path);
 global results_path
@@ -80,11 +80,11 @@ t = tiledlayout(2,2,'TileSpacing','Compact');
 nexttile
 hold on
 grid on
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 for i = 1:2
   plot([1:length(knm1)],knm1(i,:),'color',c1(i,:),'linewidth',3)
 end
+plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
@@ -95,11 +95,11 @@ l.FontSize = fontSize2;
 nexttile
 hold on
 grid on
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 for i = 1:2
   plot([1:length(knm2)],knm2(i,:),'color',c2(i,:),'linewidth',3)
 end
+plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
@@ -109,11 +109,11 @@ l.FontSize = fontSize2;
 
 nexttile
 hold on
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 plot([1:length(t1_cu)],t1_cu,'color',c1(4,:),'linewidth',3)
 plot([1:length(t1)],t1,'color',c1(3,:),'linewidth',3)
 grid on
+plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([-pi/3,pi/3]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
@@ -123,11 +123,11 @@ l.FontSize = fontSize2;
 
 nexttile
 hold on
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([17,17],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 plot([1:length(t2_cu)],t2_cu,'color',c2(4,:),'linewidth',3)
 plot([1:length(t2)],t2,'color',c2(3,:),'linewidth',3)
 grid on
+plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([-pi/3,pi/3]);
 title('propagation angle','FontSize',fontSize1)
 xlim([1,length(knm2)]);
@@ -185,6 +185,7 @@ if 1
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
+  clf();
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));
@@ -235,6 +236,7 @@ if 1
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
+  clf();
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));

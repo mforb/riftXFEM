@@ -182,6 +182,7 @@ if 1
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
+  clf();
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));
@@ -232,6 +233,7 @@ if 1
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
+  clf();
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));
