@@ -94,6 +94,7 @@ if 0
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
+  clf();
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));
@@ -125,6 +126,9 @@ if 1
   Stduy = fu(2:2:2*numnode) ;
   %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
+  % the crack is saved after a propagation step, so we need to modify the crack to plot 
+  xCrk(1).coor(1,:)=[];
+
   f = figure();
   hold on
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
@@ -142,6 +146,7 @@ if 1
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
+  clf();
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; colorbar
   cm = flipud(cbrewer2('RdBu', 256));
