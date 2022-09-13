@@ -72,7 +72,7 @@ t = text([indx],[indy],'XFEM subdomain')
 tp = t.Position;
 set(t,'position',tp - [-10000 310000 0])
 %set(t,'fontweight','bold')
-set(t,'fontsize',14)
+set(t,'fontsize',16)
 t.Color = [0.2 0.2 0.2 1];
 
 % lines for cut domain
@@ -90,7 +90,7 @@ pa.Color = [0.6, 0.15, 0.3];
 pa.LineWidth = 1.5;
 
 t2 = text(-250*1e3,-1245*1e3,'ice front')
-t2.FontSize = 14;
+t2.FontSize = 16;
 t2.Color = [0.6, 0.15, 0.3];
 t2.Rotation = -14;
 
@@ -99,7 +99,7 @@ tvv = patch('faces',element,'vertices',node,'facevertexcdata',vv,'facecolor','in
 cm1 = cbrewer2('PuRd', 256);
 colormap(cm1);
 cb1 = colorbar();
-cb1.FontSize = 14;
+cb1.FontSize = 16;
 cb1.Label.String = 'Velocity';
 cb1.TickDirection = 'out';
 
@@ -135,8 +135,8 @@ set(tvv,'visible','off');
 set(cb1,'visible','off');
 set(tst,'visible','on');
 cb2 = colorbar();
-cb2.FontSize = 14;
-cb2.Label.String = 'Vonmises stress';
+cb2.FontSize = 16;
+cb2.Label.String = 'von Mises stress';
 cb2.TickDirection = 'out';
 set(gca,'ColorScale','log');
 colormap(cm2);

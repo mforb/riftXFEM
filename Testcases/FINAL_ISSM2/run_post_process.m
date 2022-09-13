@@ -89,9 +89,10 @@ plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
-title('SIFs','FontSize',fontSize1)
+%title('SIFs','FontSize',fontSize1)
 l = legend({'K1','K2'})
-l.FontSize = fontSize2;
+ax = gca();
+ax.FontSize = 14;
 
 nexttile
 hold on
@@ -104,9 +105,10 @@ plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([1,length(knm2)]);
 xlabel('step','FontSize',fontSize2)
-title('SIFs','FontSize',fontSize1)
+%title('SIFs','FontSize',fontSize1)
 l = legend({'K1','K2'})
-l.FontSize = fontSize2;
+ax = gca();
+ax.FontSize = 14;
 
 nexttile
 hold on
@@ -117,10 +119,11 @@ plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
-title('propagation angle','FontSize',fontSize1)
-legend({'cumul angle','angle'})
-l.FontSize = fontSize2;
+xlabel('step');
+%title('propagation angle','FontSize',fontSize1)
+legend({'add angle','angle'})
+ax = gca();
+ax.FontSize = 14;
 
 nexttile
 hold on
@@ -130,11 +133,12 @@ plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
-title('propagation angle','FontSize',fontSize1)
+%title('propagation angle','FontSize',fontSize1)
 xlim([1,length(knm2)]);
-legend({'cumul angle','angle'})
-l.FontSize = fontSize2;
+legend({'add angle','angle'})
 %plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
+ax = gca();
+ax.FontSize = 14;
 
 figure_name = ['Knum_results'];
 print([results_path,'/',figure_name],'-dpng','-r300')

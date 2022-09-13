@@ -10,8 +10,8 @@ end
 switch ss
 case 's'
 
-case 'm'
-
+case 't'
+  f.Position = [0, 0, 1200, 700 ]
 case 'b'
   f.Position = [0, 0, 900, 800 ]
 end
@@ -27,6 +27,8 @@ for i = 1:length(cax)
   % convert all plots to km
   switch ca.Type
   case 'colorbar'
+    ca.FontSize = 16;
+    ca.Label.FontSize = 16;
 
   case 'axes'
     %ca.InnerPosition = [0.13 0.11 0.775 0.815 ];

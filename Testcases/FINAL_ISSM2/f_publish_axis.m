@@ -3,7 +3,7 @@ function [ ] = f_publish_axis( ax, f )
 % The date of creation: Tue Sep 7 2022
 ax.Box='off';
 ax.Title = text();
-ax.FontSize = 14;
+ax.FontSize = 16;
 ax.LineWidth = 1.2;
 ax.Color = 'none';
 ax.TickDir = 'out';
@@ -26,10 +26,8 @@ b.Box = 'on';
 delete(b.XAxis.Label);
 delete(b.YAxis.Label);
 delete(b.Children);
-b.InnerPosition = ax.InnerPosition;
+%b.InnerPosition = ax.InnerPosition;
 b.Position = ax.Position;
-linkaxes([b,ax]);
-keyboard
 
 % 
 

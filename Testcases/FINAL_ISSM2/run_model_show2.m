@@ -49,14 +49,8 @@ ub = ceil(rg(2)/(10^mr)) * 10 ^mr;
 
 %f = figure('visible','off');
 f = figure();
-clf
-f.Position = [0 0 2000 350 ]
-t = tiledlayout(1,3);
-
+f.Position = [0 0 1200 700 ]
 % tile 1
-
-
-nexttile
 indx = find(cpos(:,1)>-3.18e5);
 indy = find(cpos(:,2)<-1.02e6);
 in = intersect(indx,indy);
@@ -74,6 +68,7 @@ ylabel('Northing (km)','FontSize',fontSize2);
 %title('XFEM starting mesh','FontSize',fontSize2)
 
 cp1 = plot(xCr.coor(:,1),xCr.coor(:,2),'r');
+cp1.LineWidth = 2;
 all_node_num = unique(element);
 numnode = size(all_node_num,1); 
 node = node(all_node_num,:);
@@ -156,44 +151,44 @@ in = f_find_points_xCr(cpos,xCr,3000,12000);
 
 %in = intersect(indx,indy);
 [node,element] = TrefineRG(node,element,in);
+yticks(-1300000:100000:-1000000);
+f_publish_fig(f,'t');
+%print([results_path,'/mesh_xfem1'],'-dpng','-r300')
+print([results_path,'/mesh_xfem1'],'-dpng')
 
-nexttile
+clf();
 TR = triangulation(element,node);
 triplot(TR);
 grid on
 hold on
 cp2 = plot(xCr.coor(:,1),xCr.coor(:,2),'r');
+cp2.LineWidth = 2;
 axis equal
 xlabel('Easting (km)','FontSize',fontSize2)
 ylabel('Northing (km)','FontSize',fontSize2);
+yticks(-1300000:100000:-1000000);
+f_publish_fig(f,'t');
+%print([results_path,'/mesh_xfem2'],'-dpng','-r300')
+print([results_path,'/mesh_xfem2'],'-dpng')
 %title('XFEM refined','FontSize',fontSize2)
 
-nexttile
+clf();
 TR = triangulation(element,node);
 triplot(TR);
 grid on
 hold on
 cp3 = plot(xCr.coor(:,1),xCr.coor(:,2),'r');
+cp3.LineWidth = 2;
 axis equal
-xlim([min(xCr.coor(:,1))-30000,max(xCr.coor(:,1))+30000])
+xlim([min(xCr.coor(:,1))-25000,max(xCr.coor(:,1))+25000])
 ylim([min(xCr.coor(:,2))-20000,max(xCr.coor(:,2))+20000])
 xlabel('Easting (km)','FontSize',fontSize2)
 ylabel('Northing (km)','FontSize',fontSize2);
 %{title('XFEM refined zoom','FontSize',fontSize2)%}
-
-cpos = TR.incenter;
-
-%in = f_find_points_xCr(cpos,xCr,4000,6000)
-%%indx = find(cpos(:,1)>39e3 & cpos(:,1)<65e3 );
-%%indy = find(cpos(:,2)>-1137e3 & cpos(:,2)<-1116e3 );
-
-%%in = intersect(indx,indy);
-%[node,element] = TrefineRG(node,element,in);
-cp = [cp1,cp2,cp3];
-set(cp,'linewidth',2);
-set(cp,'color',[0.9 0.1 0.1 0.8]);
+yticks(-1150000:10000:-1120000);
 f_publish_fig(f,'t');
-print([results_path,'/mesh_xfem'],'-dpng','-r300')
+%print([results_path,'/mesh_xfem3'],'-dpng','-r300')
+print([results_path,'/mesh_xfem3'],'-dpng')
 
 
 
