@@ -74,7 +74,8 @@ ub = ceil(rg(2)/(10^mr)) * 10 ^mr;
 t1_cu = cumsum(t1.*tip1);
 t2_cu = cumsum(t2.*tip2);
 
-
+f = figure();
+f.Position = [ 0, 0, 1200, 900 ];
 t = tiledlayout(2,2,'TileSpacing','Compact');
 
 % tile 1
@@ -82,13 +83,14 @@ nexttile
 hold on
 grid on
 for i = 1:2
-  plot([1:length(knm1)],knm1(i,:),'color',c1(i,:),'linewidth',3)
+  plot([1:length(knm1)],knm1(i,:)/1e6,'color',c1(i,:),'linewidth',3)
 end
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-ylim([lb,ub]);
+plot([9,9],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+ylim([lb,ub]/1e6);
 xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
+xlabel('Step')
+ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
 %title('SIFs','FontSize',fontSize1)
 l = legend({'K1','K2'})
 ax = gca();
@@ -98,13 +100,14 @@ nexttile
 hold on
 grid on
 for i = 1:2
-  plot([1:length(knm2)],knm2(i,:),'color',c2(i,:),'linewidth',3)
+  plot([1:length(knm2)],knm2(i,:)/1e6,'color',c2(i,:),'linewidth',3)
 end
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-ylim([lb,ub]);
+plot([9,9],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+ylim([lb,ub]/1e6);
 xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
+xlabel('Step')
+ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
 %title('SIFs','FontSize',fontSize1)
 l = legend({'K1','K2'})
 ax = gca();
@@ -119,9 +122,10 @@ plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 xlim([1,length(knm2)]);
-xlabel('step');
+xlabel('Step');
+ylabel('Angle ($^{\circ}$)','interpreter','latex','FontSize',14);
 %title('propagation angle','FontSize',fontSize1)
-legend({'add angle','angle'})
+legend({'cumulative angle','angle'})
 ax = gca();
 ax.FontSize = 14;
 
@@ -135,7 +139,10 @@ grid on
 ylim([-pi/3,pi/3]);
 %title('propagation angle','FontSize',fontSize1)
 xlim([1,length(knm2)]);
-legend({'add angle','angle'})
+xlabel('Step');
+ylabel('Angle ($^{\circ}$)','interpreter','latex','FontSize',14);
+%title('propagation angle','FontSize',fontSize1)
+legend({'cumulative angle','angle'})
 %plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
 ax = gca();
 ax.FontSize = 14;
@@ -173,6 +180,7 @@ if 1
   xCrk(1).coor(1,:)=[];
   xCrk(1).coor(end,:)=[];
   f = figure();
+  f.Position = [0 0 1200 700 ]
   hold on
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
@@ -180,22 +188,31 @@ if 1
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag)
-  print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng','-r300')
+  ax = gca();
+  f_publish_fig(f,'t');
+  print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng')
+  delete(f.Children);
+  f.Children = ax;
   if ~isempty(zoom_dim)
     xlim(zoom_dim(1,:));
     ylim(zoom_dim(2,:));
+    f_publish_fig(f,'t');
     figure_name = ['crackwalls',num2str(mag),'_end_zoom'];
-    print([results_path,'/',figure_name],'-dpng','-r300')
+    print([results_path,'/',figure_name],'-dpng')
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
   clf();
+  f = figure();
+  f.Position = [ 0 0 900 800 ];
   trisurf(element,node(:,1),node(:,2),Stduy)
-  axis equal; view(2); shading interp; colorbar
+  axis equal; view(2); shading interp; cb = colorbar();
+  cb.Label.String = "displacement";
   cm = flipud(cbrewer2('RdBu', 256));
   colormap(cm);
   caxis([-4,1]);
-  title('Y displacement')
+  %title('Y displacement')
+  f_publish_fig(f,'b');
   print([results_path,'/end_ydisp'],'-dpng','-r300')
   clf();
 end

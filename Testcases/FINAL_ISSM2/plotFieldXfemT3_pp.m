@@ -90,15 +90,17 @@ else
   f2 = figure();
   f3 = figure();
 end
+f.Position = [0, 0, 900, 800 ]
+f2.Position = [0, 0, 900, 800 ]
+f3.Position = [0, 0, 900, 800 ]
 hold on
 figure(f);
 patch('faces',tri,'vertices',node,'facevertexcdata',vonmises);
 cm = cbrewer2('BuPu', 256);
 colormap(cm);
 axis equal;
-title('Vonmises','FontSize',fontSize1)
+%title('Vonmises','FontSize',fontSize1)
 shading flat 
-colorbar
 node_vm = zeros(size(node(:,1)));
 for i = 1:length(node)
   [els,~] = find(element==i);
@@ -146,12 +148,16 @@ axis equal;
 set(gca,'ColorScale','log');
 
 figure(f);
-colorbar
-title('Vonmises','FontSize',fontSize1)
+cb = colorbar();
+cb.Label.String = 'von Mises stress';
+ax = gca();
+%title('Vonmises','FontSize',fontSize1)
 caxis(ca);
+f_publish_fig(f,'b');
 figure_name = ['Vonmises_stress_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
-caxis([0,3e4]);
+
+caxis(ax,[0,3e4]);
 figure_name = ['Vonmises_stress2_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
 
@@ -159,7 +165,9 @@ if ~isempty(zoom_dim)
   figure(f2);
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
-  colorbar;
+  cb = colorbar();
+  cb.Label.String = 'von Mises stress';
+  f_publish_fig(f,'b');
   figure_name = ['ContourVM_stress_log1_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng','-r300');
   %saveas(f2,[results_path,'/',figure_name],'epsc');
@@ -174,7 +182,9 @@ if ~isempty(zoom_dim)
   figure(f3);
   xlim(zoom_dim(1,:))
   ylim(zoom_dim(2,:))
-  colorbar;
+  cb = colorbar();
+  cb.Label.String = 'von Mises stress';
+  f_publish_fig(f,'b');
   figure_name = ['ContourVM_stress_log2_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng','-r300');
   %saveas(f3,[results_path,'/',figure_name],'epsc');
@@ -193,95 +203,35 @@ figure(f);
 clf();
 hold on
 patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,1));
-title('Stress XX','FontSize',fontSize1)
+%title('Stress XX','FontSize',fontSize1)
 shading flat 
-colorbar
+cb = colorbar();
+cb.Label.String = 'stress';
 cm = cbrewer2('RdYlBu', 256);
 colormap(cm);
-%if isempty(cax)
-%try 
-  %cax = [min(0,quantile(mstress(:,1,1),0.1)) round(quantile(mstress(:,1,1),0.99))];
-%catch 
-  %mi = min(mstress(:,1,1));
-  %ma = max(mstress(:,1,1));
-  %sl = (ma-mi);
-  %if sl == 0
-    %sl = 1;
-  %end
-  %cax = [mi+0.2*sl,ma-0.2*sl];
-%end
-%end
 cax = [-2e4,2e4];
 caxis(cax);
 axis equal;
-
+f_publish_fig(f,'b');
 figure_name = ['Stress_xx_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
-%if ~isempty(zoom_dim)
-  %xlim(zoom_dim(1,:))
-  %ylim(zoom_dim(2,:))
-  %figure_name = ['StressZoom_xx_',num2str(ipas)];
-  %print([results_path,'/',figure_name],'-dpng','-r300')
-%end
 
 figure(f);
 clf();
 hold on
 patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,2));
-title('Stress YY','FontSize',fontSize1)
+%title('Stress YY','FontSize',fontSize1)
 shading flat 
 colorbar
 cm = cbrewer2('RdYlGn', 256);
 colormap(cm);
-%if isempty(cay)
-%try 
-  %cay = [min(0,quantile(mstress(:,1,2),0.1)) round(quantile(mstress(:,1,2),0.99))];
-%catch 
-  %mi = min(mstress(:,1,2));
-  %ma = max(mstress(:,1,2));
-  %sl = (ma-mi);
-  %if sl == 0
-    %sl = 1;
-  %end
-  %cay = [mi+0.2*sl,ma-0.2*sl];
-  %warning('quantile not available- caxis boundaries are arbitrary-ish')
-%end
-%end
 cay = [-2e4,2e4];
 caxis(cay);
-colorbar();
+cb = colorbar();
+cb.Label.String = 'stress';
 axis equal;
+f_publish_fig(f,'b');
 figure_name = ['Stress_yy_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
-%if ~isempty(zoom_dim)
-  %xlim(zoom_dim(1,:))
-  %ylim(zoom_dim(2,:))
-  %figure_name = ['StressZoom_yy_',num2str(ipas)];
-  %print([results_path,'/',figure_name],'-dpng','-r300')
-%end
 clf(f); close(f);
-
-%figure;
-%%figure('visible','off');
-%clf
-%hold on
-%patch('faces',tri,'vertices',node,'facevertexcdata',ISSM_yy);
-%title('Stress YY')
-%shading flat 
-%colorbar
-%caxis([min(0,quantile(ISSM_yy,0.1)) round(quantile(ISSM_yy,0.995))])
-%figure_name = ['ISSM_yy_',num2str(ipas)];
-%print([results_path,'/',figure_name],'-dpng','-r300')
-
-%figure;
-%%figure('visible','off');
-%clf
-%hold on
-%patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,3));
-%title('Stress XY')
-%shading flat 
-%colorbar
-%caxis([min(0,quantile(mstress(:,1,3),0.1)) round(quantile(mstress(:,1,3),0.995))])
-%figure_name = ['Stress_xy_',num2str(ipas)];
-%print([results_path,'/',figure_name],'-dpng','-r300')
 

@@ -72,39 +72,44 @@ ub = ceil(rg(2)/(10^mr)) * 10 ^mr;
 t1_cu = cumsum(t1.*tip1);
 t2_cu = cumsum(t2.*tip2);
 
-
+f = figure();
 t = tiledlayout(2,2,'TileSpacing','Compact');
+f.Position = [ 0, 0, 1200, 900 ];
 
 % tile 1
 nexttile
 hold on
 grid on
 for i = 1:2
-  plot([1:length(knm1)],knm1(i,:),'color',c1(i,:),'linewidth',3)
+  plot([1:length(knm1)],knm1(i,:)/1e6,'color',c1(i,:),'linewidth',3)
 end
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-ylim([lb,ub]);
+plot([9,9],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+ylim([lb,ub]/1e6);
 xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
-title('SIFs','FontSize',fontSize1)
+xlabel('Step')
+ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
+%title('SIFs','FontSize',fontSize1)
 l = legend({'K1','K2'})
-l.FontSize = fontSize2;
+ax = gca();
+ax.FontSize = 14;
 
 nexttile
 hold on
 grid on
 for i = 1:2
-  plot([1:length(knm2)],knm2(i,:),'color',c2(i,:),'linewidth',3)
+  plot([1:length(knm2)],knm2(i,:)/1e6,'color',c2(i,:),'linewidth',3)
 end
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-ylim([lb,ub]);
+plot([9,9],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([15,15],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+ylim([lb,ub]/1e6);
 xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
-title('SIFs','FontSize',fontSize1)
+xlabel('Step')
+ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
+%title('SIFs','FontSize',fontSize1)
 l = legend({'K1','K2'})
-l.FontSize = fontSize2;
+ax = gca();
+ax.FontSize = 14;
 
 nexttile
 hold on
@@ -115,10 +120,12 @@ plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 xlim([1,length(knm2)]);
-xlabel('step','FontSize',fontSize2)
-title('propagation angle','FontSize',fontSize1)
-legend({'cumul angle','angle'})
-l.FontSize = fontSize2;
+xlabel('Step');
+ylabel('Angle ($^{\circ}$)','interpreter','latex','FontSize',14);
+%title('propagation angle','FontSize',fontSize1)
+legend({'cumulative angle','angle'})
+ax = gca();
+ax.FontSize = 14;
 
 nexttile
 hold on
@@ -128,13 +135,22 @@ plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
-title('propagation angle','FontSize',fontSize1)
+%title('propagation angle','FontSize',fontSize1)
 xlim([1,length(knm2)]);
-legend({'cumul angle','angle'})
-l.FontSize = fontSize2;
+xlabel('Step');
+ylabel('Angle ($^{\circ}$)','interpreter','latex','FontSize',14);
+%title('propagation angle','FontSize',fontSize1)
+legend({'cumulative angle','angle'})
 %plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
+ax = gca();
+ax.FontSize = 14;
 
-figure_name = ['Knum_results'];
+figure_name = ['Knum_results_M1'];
+print([results_path,'/',figure_name],'-dpng','-r300')
+saveas(t,[results_path,'/',figure_name],'epsc')
+
+
+figure_name = ['Knum_results_M1'];
 print([results_path,'/',figure_name],'-dpng','-r300')
 saveas(t,[results_path,'/',figure_name],'epsc')
 
