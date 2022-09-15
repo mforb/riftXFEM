@@ -260,7 +260,10 @@ for kk = 1:size(xCrk,2) %what's the crack?
     pl = pl + lseg;
     inters = [inters, pl];
   end
+  xl = [ 0 inters(end)/1000];
   inters(end) = [];
+
+  
 
   t = tiledlayout(2,1,'TileSpacing','Compact');
   nexttile
@@ -273,6 +276,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
   end
   ylim(yl);
+  xlim(xl);
   xlabel('Distance along rift (km)')
   ylabel('Force (N)')
   tstr = ['normal forces acting on rift ',num2str(kk)];
@@ -283,6 +287,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   set(gca,'FontSize',14);
   hold on
   yl = ylim();
+  xlim(xl);
   for i = 1: length(inters)
     plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
   end
@@ -312,6 +317,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
   end
   ylim(yl);
+  xlim(xl);
   xlabel('Distance along rift (km)')
   ylabel('Gap change (m)')
   tstr = ['normal gap along rift ',num2str(kk)];
@@ -326,6 +332,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
     plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
   end
   ylim(yl);
+  xlim(xl);
   xlabel('Distance along rift (km)')
   ylabel('Slip (m)')
   tstr = ['tangential displacement along rift ',num2str(kk)];
@@ -340,6 +347,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
       plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
     end
     ylim(yl);
+    xlim(xl);
     xlabel('Distance along rift (km)')
     ylabel('Wall to wall "distance" (m)')
     tstr = ['"melange" distance between rift walls ',num2str(kk)];

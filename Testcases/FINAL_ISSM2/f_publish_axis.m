@@ -7,7 +7,7 @@ ax.FontSize = 16;
 ax.LineWidth = 1.2;
 ax.Color = 'none';
 ax.TickDir = 'out';
-ax.TickLength = [ 0.005 0.01 ]
+ax.TickLength = [ 0.005 0.01 ];
 % change ticklabels to km
 xt = ax.XAxis.TickValues;
 xt = xt/1000;
@@ -20,12 +20,14 @@ ax.YAxis.TickLabels = strsplit(num2str(yt));
 ax.YAxis.Exponent = 0;
 
 b = copyobj(ax,f);
+grid(ax,'on');
 b.XTick = [];
 b.YTick = [];
 b.Box = 'on';
+b.Tag = 'box';
 delete(b.XAxis.Label);
 delete(b.YAxis.Label);
-delete(b.Children);
+%delete(b.Children);
 %b.InnerPosition = ax.InnerPosition;
 b.Position = ax.Position;
 

@@ -90,12 +90,13 @@ else
   f2 = figure();
   f3 = figure();
 end
-f.Position = [0, 0, 900, 800 ]
-f2.Position = [0, 0, 900, 800 ]
-f3.Position = [0, 0, 900, 800 ]
+f.Position = [0, 0, 1200, 700 ]
+f2.Position = [0, 0, 1200, 700 ]
+f3.Position = [0, 0, 1200, 700 ]
 hold on
 figure(f);
 patch('faces',tri,'vertices',node,'facevertexcdata',vonmises);
+view(2);
 cm = cbrewer2('BuPu', 256);
 colormap(cm);
 axis equal;
@@ -150,10 +151,15 @@ set(gca,'ColorScale','log');
 figure(f);
 cb = colorbar();
 cb.Label.String = 'von Mises stress';
+cb.FontSize = 16;
 ax = gca();
+ax.FontSize = 16;
 %title('Vonmises','FontSize',fontSize1)
 caxis(ca);
-f_publish_fig(f,'b');
+yticks(-1300000:100000:-1000000);
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+f_publish_fig(f,'t');
 figure_name = ['Vonmises_stress_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
 
@@ -167,16 +173,23 @@ if ~isempty(zoom_dim)
   ylim(zoom_dim(2,:))
   cb = colorbar();
   cb.Label.String = 'von Mises stress';
-  f_publish_fig(f,'b');
+  cb.FontSize = 16;
+  ax = gca();
+  ax.FontSize = 16;
+  ylabel('Northing (km)');
+  xlabel('Easting (km)');
+  yticks(-1170000:10000:-1100000);
+  xticks(-20000:10000:100000);
+  f_publish_fig(f,'t');
   figure_name = ['ContourVM_stress_log1_zoom',num2str(ipas)];
-  print([results_path,'/',figure_name],'-dpng','-r300');
+  print([results_path,'/',figure_name],'-dpng');
   %saveas(f2,[results_path,'/',figure_name],'epsc');
-  [C,h] = tricont(node(:,1),node(:,2),element,node_vm,vl1);
-  clabel(C);
-  xlim([zoom_dim(1,1)-10000,zoom_dim(1,2)+10000])
-  ylim([zoom_dim(2,1)-10000,zoom_dim(2,2)+10000])
-  figure_name = ['ContourVM_labels1_zoom',num2str(ipas)]; 
-  print([results_path,'/',figure_name],'-dpng','-r500');
+  %[C,h] = tricont(node(:,1),node(:,2),element,node_vm,vl1);
+  %clabel(C);
+  %xlim([zoom_dim(1,1)-10000,zoom_dim(1,2)+10000])
+  %ylim([zoom_dim(2,1)-10000,zoom_dim(2,2)+10000])
+  %figure_name = ['ContourVM_labels1_zoom',num2str(ipas)]; 
+  %print([results_path,'/',figure_name],'-dpng','-r500');
 
 
   figure(f3);
@@ -184,16 +197,23 @@ if ~isempty(zoom_dim)
   ylim(zoom_dim(2,:))
   cb = colorbar();
   cb.Label.String = 'von Mises stress';
-  f_publish_fig(f,'b');
+  cb.FontSize = 16;
+  ax = gca();
+  ax.FontSize = 16;
+  yticks(-1170000:10000:-1100000);
+  xticks(-20000:10000:100000);
+  ylabel('Northing (km)');
+  xlabel('Easting (km)');
+  f_publish_fig(f,'t');
   figure_name = ['ContourVM_stress_log2_zoom',num2str(ipas)];
-  print([results_path,'/',figure_name],'-dpng','-r300');
+  print([results_path,'/',figure_name],'-dpng');
   %saveas(f3,[results_path,'/',figure_name],'epsc');
-  [C,h] = tricont(node(:,1),node(:,2),element,node_vm,vl2);
-  clabel(C);
-  xlim([zoom_dim(1,1)-10000,zoom_dim(1,2)+10000])
-  ylim([zoom_dim(2,1)-10000,zoom_dim(2,2)+10000])
-  figure_name = ['ContourVM_labels2_zoom',num2str(ipas)]; 
-  print([results_path,'/',figure_name],'-dpng','-r500');
+  %[C,h] = tricont(node(:,1),node(:,2),element,node_vm,vl2);
+  %clabel(C);
+  %xlim([zoom_dim(1,1)-10000,zoom_dim(1,2)+10000])
+  %ylim([zoom_dim(2,1)-10000,zoom_dim(2,2)+10000])
+  %figure_name = ['ContourVM_labels2_zoom',num2str(ipas)]; 
+  %print([results_path,'/',figure_name],'-dpng','-r500');
 end
 
 close(f2);
@@ -203,6 +223,7 @@ figure(f);
 clf();
 hold on
 patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,1));
+view(2);
 %title('Stress XX','FontSize',fontSize1)
 shading flat 
 cb = colorbar();
@@ -212,14 +233,21 @@ colormap(cm);
 cax = [-2e4,2e4];
 caxis(cax);
 axis equal;
-f_publish_fig(f,'b');
+cb.FontSize = 16;
+ax = gca();
+ax.FontSize = 16;
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+yticks(-1300000:100000:-1000000);
+f_publish_fig(f,'t');
 figure_name = ['Stress_xx_',num2str(ipas)];
-print([results_path,'/',figure_name],'-dpng','-r300')
+print([results_path,'/',figure_name],'-dpng')
 
 figure(f);
 clf();
 hold on
 patch('faces',tri,'vertices',node,'facevertexcdata',mstress(:,1,2));
+view(2);
 %title('Stress YY','FontSize',fontSize1)
 shading flat 
 colorbar
@@ -230,8 +258,14 @@ caxis(cay);
 cb = colorbar();
 cb.Label.String = 'stress';
 axis equal;
-f_publish_fig(f,'b');
+cb.FontSize = 16;
+ax = gca();
+ax.FontSize = 16;
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+yticks(-1300000:100000:-1000000);
+f_publish_fig(f,'t');
 figure_name = ['Stress_yy_',num2str(ipas)];
-print([results_path,'/',figure_name],'-dpng','-r300')
+print([results_path,'/',figure_name],'-dpng')
 clf(f); close(f);
 

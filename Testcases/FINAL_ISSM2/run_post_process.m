@@ -75,7 +75,7 @@ t1_cu = cumsum(t1.*tip1);
 t2_cu = cumsum(t2.*tip2);
 
 f = figure();
-f.Position = [ 0, 0, 1200, 900 ];
+f.Position = [ 0, 0, 1200, 700 ];
 t = tiledlayout(2,2,'TileSpacing','Compact');
 
 % tile 1
@@ -191,11 +191,12 @@ if 1
   ax = gca();
   f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng')
-  delete(f.Children);
-  f.Children = ax;
+  delete(findobj(f, 'type', 'axes', 'tag', 'box'));
   if ~isempty(zoom_dim)
     xlim(zoom_dim(1,:));
     ylim(zoom_dim(2,:));
+    yticks(-1170000:10000:-1100000);
+    xticks(-20000:10000:100000);
     f_publish_fig(f,'t');
     figure_name = ['crackwalls',num2str(mag),'_end_zoom'];
     print([results_path,'/',figure_name],'-dpng')
@@ -204,16 +205,23 @@ if 1
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
   clf();
   f = figure();
-  f.Position = [ 0 0 900 800 ];
+  f.Position = [0 0 1200 700 ]
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
   cb.Label.String = "displacement";
+  cb.FontSize = 16;
+  ax = gca();
+  ax.FontSize = 16;
+  
+  ylabel('Northing (km)');
+  xlabel('Easting (km)');
   cm = flipud(cbrewer2('RdBu', 256));
   colormap(cm);
   caxis([-4,1]);
   %title('Y displacement')
-  f_publish_fig(f,'b');
-  print([results_path,'/end_ydisp'],'-dpng','-r300')
+  yticks(-1300000:100000:-1100000);
+  f_publish_fig(f,'t');
+  print([results_path,'/end_ydisp'],'-dpng')
   clf();
 end
 
@@ -230,8 +238,8 @@ if 1
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-  %  elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -239,6 +247,7 @@ if 1
   %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
   f = figure();
+  f.Position = [ 0, 0, 1200, 700];
   hold on
   % the crack is saved after a propagation step, so we need to modify the crack to plot 
   xCrk(1).coor(1,:)=[];
@@ -248,23 +257,39 @@ if 1
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag)
+  f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
+  delete(findobj(f, 'type', 'axes', 'tag', 'box'));
   if ~isempty(zoom_dim)
     xlim(zoom_dim(1,:));
     ylim(zoom_dim(2,:));
+    yticks(-1170000:10000:-1100000);
+    xticks(-20000:10000:100000);
+    f_publish_fig(f,'t');
     figure_name = ['crackwalls',num2str(mag),'_start_zoom'];
-    print([results_path,'/',figure_name],'-dpng','-r300')
+    print([results_path,'/',figure_name],'-dpng')
   end
   clf();
   f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
   clf();
+  f = figure();
+  f.Position = [0 0 1200 700 ];
   trisurf(element,node(:,1),node(:,2),Stduy)
-  axis equal; view(2); shading interp; colorbar
+  trisurf(element,node(:,1),node(:,2),Stduy)
+  axis equal; view(2); shading interp; cb = colorbar();
+  cb.Label.String = "displacement";
   cm = flipud(cbrewer2('RdBu', 256));
   colormap(cm);
+  cb.FontSize = 16;
+  ax = gca();
+  ax.FontSize = 16;
+  ylabel('Northing (km)');
+  xlabel('Easting (km)');
   caxis([-4,1]);
-  title('Y displacement')
-  print([results_path,'/start_ydisp'],'-dpng','-r300')
+  %title('Y displacement')
+  yticks(-1300000:100000:-1100000);
+  f_publish_fig(f,'t');
+  print([results_path,'/start_ydisp'],'-dpng')
   clf();
 end
 
