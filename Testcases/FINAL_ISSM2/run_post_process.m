@@ -197,7 +197,7 @@ if 1
     ylim(zoom_dim(2,:));
     yticks(-1170000:10000:-1100000);
     xticks(-20000:10000:100000);
-    f_publish_fig(f,'t');
+    f_publish_fig(f,'s');
     figure_name = ['crackwalls',num2str(mag),'_end_zoom'];
     print([results_path,'/',figure_name],'-dpng')
   end
@@ -265,7 +265,7 @@ if 1
     ylim(zoom_dim(2,:));
     yticks(-1170000:10000:-1100000);
     xticks(-20000:10000:100000);
-    f_publish_fig(f,'t');
+    f_publish_fig(f,'s');
     figure_name = ['crackwalls',num2str(mag),'_start_zoom'];
     print([results_path,'/',figure_name],'-dpng')
   end

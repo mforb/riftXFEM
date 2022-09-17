@@ -96,7 +96,6 @@ f3.Position = [0, 0, 1200, 700 ]
 hold on
 figure(f);
 patch('faces',tri,'vertices',node,'facevertexcdata',vonmises);
-view(2);
 cm = cbrewer2('BuPu', 256);
 colormap(cm);
 axis equal;
@@ -159,13 +158,14 @@ caxis(ca);
 yticks(-1300000:100000:-1000000);
 ylabel('Northing (km)');
 xlabel('Easting (km)');
-f_publish_fig(f,'t');
+b = f_publish_fig(f,'t');
 figure_name = ['Vonmises_stress_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
 
 caxis(ax,[0,3e4]);
 figure_name = ['Vonmises_stress2_',num2str(ipas)];
 print([results_path,'/',figure_name],'-dpng','-r300')
+delete(b)
 
 if ~isempty(zoom_dim)
   figure(f2);
@@ -180,7 +180,7 @@ if ~isempty(zoom_dim)
   xlabel('Easting (km)');
   yticks(-1170000:10000:-1100000);
   xticks(-20000:10000:100000);
-  f_publish_fig(f,'t');
+  b = f_publish_fig(f,'s');
   figure_name = ['ContourVM_stress_log1_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng');
   %saveas(f2,[results_path,'/',figure_name],'epsc');
@@ -204,7 +204,7 @@ if ~isempty(zoom_dim)
   xticks(-20000:10000:100000);
   ylabel('Northing (km)');
   xlabel('Easting (km)');
-  f_publish_fig(f,'t');
+  b = f_publish_fig(f,'s');
   figure_name = ['ContourVM_stress_log2_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng');
   %saveas(f3,[results_path,'/',figure_name],'epsc');

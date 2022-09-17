@@ -1,6 +1,13 @@
-function [ ] = f_publish_axis( ax, f )
+function [ b ] = f_publish_axis( ax, f,ss )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Tue Sep 7 2022
+switch(ss)
+case 't'
+  xlim manual
+  ylim([-1.35,-0.98]*1e6);
+  xlim([-3.22,3.767]*1e5);
+case 's'
+end
 ax.Box='off';
 ax.Title = text();
 ax.FontSize = 16;
@@ -19,17 +26,9 @@ yt = yt/1000;
 ax.YAxis.TickLabels = strsplit(num2str(yt));
 ax.YAxis.Exponent = 0;
 
-b = copyobj(ax,f);
+tpos = plotboxpos(ax);
+b = annotation("rectangle",tpos,LineWidth=1.2)
 grid(ax,'on');
-b.XTick = [];
-b.YTick = [];
-b.Box = 'on';
-b.Tag = 'box';
-delete(b.XAxis.Label);
-delete(b.YAxis.Label);
-%delete(b.Children);
-%b.InnerPosition = ax.InnerPosition;
-b.Position = ax.Position;
 
 % 
 

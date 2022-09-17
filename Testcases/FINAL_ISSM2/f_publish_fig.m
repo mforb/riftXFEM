@@ -1,4 +1,4 @@
-function [ ] = f_publish_fig( f, ss )
+function [ b ] = f_publish_fig( f, ss )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Tue Sep 7 2022
 
@@ -9,7 +9,7 @@ if nargin == 1
 end
 switch ss
 case 's'
-
+  f.Position = [0, 0, 1200, 700 ]
 case 't'
   f.Position = [0, 0, 1200, 700 ]
 case 'b'
@@ -32,6 +32,6 @@ for i = 1:length(cax)
 
   case 'axes'
     %ca.InnerPosition = [0.13 0.11 0.775 0.815 ];
-    f_publish_axis(ca,f);
+    b = f_publish_axis(ca,f,ss);
   end
 end
