@@ -32,6 +32,6 @@ for i = 1:length(cax)
 
   case 'axes'
     %ca.InnerPosition = [0.13 0.11 0.775 0.815 ];
-    b = f_publish_axis(ca,f,ss);
+    b = f_publish_axis(ca,ss);
   end
 end

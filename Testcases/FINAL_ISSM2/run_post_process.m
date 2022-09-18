@@ -189,9 +189,9 @@ if 1
   axis equal;
   f_plotCrack_pp(crackLips,mag)
   ax = gca();
-  f_publish_fig(f,'t');
+  b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng')
-  delete(findobj(f, 'type', 'axes', 'tag', 'box'));
+  delete(b);
   if ~isempty(zoom_dim)
     xlim(zoom_dim(1,:));
     ylim(zoom_dim(2,:));
@@ -219,7 +219,7 @@ if 1
   colormap(cm);
   caxis([-4,1]);
   %title('Y displacement')
-  yticks(-1300000:100000:-1100000);
+  yticks(-1300000:100000:-1000000);
   f_publish_fig(f,'t');
   print([results_path,'/end_ydisp'],'-dpng')
   clf();
@@ -257,9 +257,9 @@ if 1
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag)
-  f_publish_fig(f,'t');
+  b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
-  delete(findobj(f, 'type', 'axes', 'tag', 'box'));
+  delete(b);
   if ~isempty(zoom_dim)
     xlim(zoom_dim(1,:));
     ylim(zoom_dim(2,:));
@@ -287,7 +287,7 @@ if 1
   xlabel('Easting (km)');
   caxis([-4,1]);
   %title('Y displacement')
-  yticks(-1300000:100000:-1100000);
+  yticks(-1300000:100000:-1000000);
   f_publish_fig(f,'t');
   print([results_path,'/start_ydisp'],'-dpng')
   clf();

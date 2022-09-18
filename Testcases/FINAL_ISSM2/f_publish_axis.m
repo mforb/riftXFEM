@@ -1,10 +1,10 @@
-function [ b ] = f_publish_axis( ax, f,ss )
+function [ b ] = f_publish_axis( ax,ss )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Tue Sep 7 2022
 switch(ss)
 case 't'
   xlim manual
-  ylim([-1.35,-0.98]*1e6);
+  ylim([-1.36,-0.99]*1e6);
   xlim([-3.22,3.767]*1e5);
 case 's'
 end

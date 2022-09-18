@@ -319,7 +319,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   ylim(yl);
   xlim(xl);
   xlabel('Distance along rift (km)')
-  ylabel('Gap change (m)')
+  ylabel('Gap (m)')
   tstr = ['normal gap along rift ',num2str(kk)];
   %title(tstr);
 

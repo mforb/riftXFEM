@@ -180,7 +180,7 @@ if ~isempty(zoom_dim)
   xlabel('Easting (km)');
   yticks(-1170000:10000:-1100000);
   xticks(-20000:10000:100000);
-  b = f_publish_fig(f,'s');
+  b = f_publish_fig(f2,'s');
   figure_name = ['ContourVM_stress_log1_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng');
   %saveas(f2,[results_path,'/',figure_name],'epsc');
@@ -204,7 +204,7 @@ if ~isempty(zoom_dim)
   xticks(-20000:10000:100000);
   ylabel('Northing (km)');
   xlabel('Easting (km)');
-  b = f_publish_fig(f,'s');
+  b = f_publish_fig(f3,'s');
   figure_name = ['ContourVM_stress_log2_zoom',num2str(ipas)];
   print([results_path,'/',figure_name],'-dpng');
   %saveas(f3,[results_path,'/',figure_name],'epsc');
