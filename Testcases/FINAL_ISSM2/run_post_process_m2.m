@@ -191,7 +191,10 @@ if 1
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag)
+  ylabel('Northing (km)');
+  xlabel('Easting (km)');
   ax = gca();
+  ax.FontSize = 16;
   b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng')
   delete(b);
@@ -260,6 +263,10 @@ if 1
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag)
+  ylabel('Northing (km)');
+  xlabel('Easting (km)');
+  ax = gca();
+  ax.FontSize = 16;
   b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
   delete(b);

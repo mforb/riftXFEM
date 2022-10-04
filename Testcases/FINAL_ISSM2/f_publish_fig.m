@@ -14,6 +14,8 @@ case 't'
   f.Position = [0, 0, 1200, 700 ]
 case 'b'
   f.Position = [0, 0, 900, 800 ]
+case 'r'
+  f.Position = [0, 0, 1200, 600 ]
 end
 
 if length(f.Children) == 1 & strcmp(f.Children.Type,'tiledlayout')

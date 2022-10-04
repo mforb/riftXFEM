@@ -169,8 +169,8 @@ if 1
   TR = triangulation(element,node);
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
   zoom_dim(2,:) = [min(xCrk.coor(:,2))-30000,max(xCrk.coor(:,2))+30000];
-  [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+  %[ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -188,7 +188,10 @@ if 1
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag)
+  ylabel('Northing (km)');
+  xlabel('Easting (km)');
   ax = gca();
+  ax.FontSize = 16;
   b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng')
   delete(b);
@@ -238,8 +241,8 @@ if 1
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -257,6 +260,10 @@ if 1
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag)
+  ylabel('Northing (km)');
+  xlabel('Easting (km)');
+  ax = gca();
+  ax.FontSize = 16;
   b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
   delete(b);
