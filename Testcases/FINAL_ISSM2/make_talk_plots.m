@@ -49,8 +49,8 @@ tip2 = [ zeros(1,8), ones(1,6), ones(1,2)];
 f = figure(2);
 clf
 f.Position = [ 0, 0, 1000, 700 ];
-lb = -2
-ub = 32
+lb = -3
+ub = 33
 yticks(0:5:30);
 % tile 1
 hold on
@@ -72,8 +72,8 @@ ax.TickLength = [ 0.005 0.01 ];
 f = figure(3);
 clf
 f.Position = [ 0, 0, 1000, 700 ];
-lb = -2
-ub = 34
+lb = -3
+ub = 33
 yticks(0:5:30);
 % tile 1
 hold on
@@ -121,7 +121,7 @@ for i = 1:length(ld)
     f.Position = [ 0, 0, 1200, 700];
     hold on
     % the crack is saved after a propagation step, so we need to modify the crack to plot 
-    [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    %[crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
     cext = plot(xCrk.coor(:,1),xCrk.coor(:,2))
     xCr = xCrk;
     if xCrk.tip(1)
@@ -133,7 +133,7 @@ for i = 1:length(ld)
     csol = plot(xCr.coor(:,1),xCr.coor(:,2))
     set(cext,'color',[171, 22, 45, 150]/255)
     set(csol,'color',[171, 22, 45]/255)
-    set([cext,csol],'LineWidth',3)
+    set([cext,csol],'LineWidth',4)
     axis equal;
     xlim([0 9e4])
     ylim([-1.15,-1.12]*1e6)
@@ -145,8 +145,8 @@ for i = 1:length(ld)
     print([results_path,'/',figure_name],'-dpng')
     figure(2)
     figure_name = ['sifL',num2str(cnt)];
-    pl1 = plot(stp,kl1/1e6,'color',c1(1,:),'linewidth',3)
-    pl2 = plot(stp,kl2/1e6,'color',c1(2,:),'linewidth',3)
+    pl1 = plot(stp,kl1/1e6,'color',c2(1,:),'linewidth',4)
+    pl2 = plot(stp,kl2/1e6,'color',c2(2,:),'linewidth',4)
     if cnt == 1
       set([pl1,pl2],'Marker','o');
     end
@@ -154,8 +154,8 @@ for i = 1:length(ld)
     delete([pl1,pl2])
     figure(3)
     figure_name = ['sifR',num2str(cnt)];
-    pl1 = plot(stp,kr1/1e6,'color',c2(1,:),'linewidth',3)
-    pl2 = plot(stp,kr2/1e6,'color',c2(2,:),'linewidth',3)
+    pl1 = plot(stp,kr1/1e6,'color',c2(1,:),'linewidth',4)
+    pl2 = plot(stp,kr2/1e6,'color',c2(2,:),'linewidth',4)
     if cnt == 1
       set([pl1,pl2],'Marker','o');
     end
@@ -164,3 +164,129 @@ for i = 1:length(ld)
   end
 end
 
+figure(2)
+figure_name = ['sifL',num2str(cnt)];
+plb1 = plot(stp,kl1/1e6,'color',[c2(1,:),0.1],'linewidth',3)
+plb2 = plot(stp,kl2/1e6,'color',[c2(2,:),0.1],'linewidth',3)
+figure(3)
+figure_name = ['sifR',num2str(cnt)];
+plc1 = plot(stp,kr1/1e6,'color',[c2(1,:),0.1],'linewidth',3)
+plc2 = plot(stp,kr2/1e6,'color',[c2(2,:),0.1],'linewidth',3)
+xb = xCrk.coor(:,1);
+yb = xCrk.coor(:,2);
+lname = './PRES_xmas_tip1_10km/crack1.mat'
+load(lname)
+kl1 = Knum{1}(1,end);
+kr1 = Knum{2}(1,end);
+kl2 = Knum{1}(2,end);
+kr2 = Knum{2}(2,end);
+
+f = figure(1);
+clf
+f.Position = [ 0, 0, 1200, 700];
+hold on
+% the crack is saved after a propagation step, so we need to modify the crack to plot 
+%[crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+cb = plot(xb,yb);
+csol = plot(xCrk.coor(:,1),xCrk.coor(:,2))
+set(cb,'color',[171, 22, 45, 40]/255)
+set(csol,'color',[100, 80, 210]/255)
+set([cb,csol],'LineWidth',4)
+axis equal;
+xlim([0 9e4])
+ylim([-1.15,-1.12]*1e6)
+yticks(-1150000:10000:-1120000);
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+f_publish_fig(f,'r');
+figure_name = ['crack_imbalance'];
+print([results_path,'/',figure_name],'-dpng')
+figure(2)
+figure_name = ['sifL_imb'];
+pl1 = plot(1,kl1/1e6,'color',c2(1,:),'linewidth',4)
+pl2 = plot(1,kl2/1e6,'color',c2(2,:),'linewidth',4)
+set([pl1,pl2],'Marker','o');
+print([results_path,'/',figure_name],'-dpng')
+delete([pl1,pl2])
+figure(3)
+figure_name = ['sifR_imb'];
+pl1 = plot(1,kl1/1e6,'color',c2(1,:),'linewidth',4)
+pl2 = plot(1,kl2/1e6,'color',c2(2,:),'linewidth',4)
+set([pl1,pl2],'Marker','o');
+print([results_path,'/',figure_name],'-dpng')
+delete([pl1,pl2])
+
+results_path = './Talk_Mel';
+mkdir(results_path);
+
+ld = dir('./MEL2ST_YES_*');
+kl1 = [];
+kl2 = [];
+kr1 = [];
+kr2 = [];
+stp = [];
+cnt = 0;
+% read all of the SIF values
+for i = 1:length(ld)
+  dname = [pre,ld(i).name];
+  strs = [dname,'/crack*.mat']; 
+  lns = dir(strs);
+  for i = 2:length(lns)
+    cnt = cnt+1;
+    cmat = lns(i).name
+    lname = [dname,'/',cmat]; 
+    load(lname)
+    kl1 = [kl1, Knum{1}(1,end)];
+    kr1 = [kr1, Knum{2}(1,end)];
+    kl2 = [kl2, Knum{1}(2,end)];
+    kr2 = [kr2, Knum{2}(2,end)];
+    stp = [stp,cnt]
+    f = figure(1);
+    clf
+    f.Position = [ 0, 0, 1200, 700];
+    hold on
+    % the crack is saved after a propagation step, so we need to modify the crack to plot 
+    %[crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    cb = plot(xb,yb);
+    cext = plot(xCrk.coor(:,1),xCrk.coor(:,2))
+    xCr = xCrk;
+    if xCrk.tip(1)
+      xCr.coor(1,:) = [];
+    end
+    if xCrk.tip(2)
+      xCr.coor(end,:) = [];
+    end
+    csol = plot(xCr.coor(:,1),xCr.coor(:,2))
+    set(cb,'color',[171, 22, 45, 30]/255)
+    set(cext,'color',[50, 80, 70, 150]/255)
+    set(csol,'color',[50, 80, 70]/255)
+    set([cext,csol,cb],'LineWidth',4)
+    axis equal;
+    xlim([0 9e4])
+    ylim([-1.15,-1.12]*1e6)
+    yticks(-1150000:10000:-1120000);
+    ylabel('Northing (km)');
+    xlabel('Easting (km)');
+    f_publish_fig(f,'r');
+    figure_name = ['crack',num2str(cnt)];
+    print([results_path,'/',figure_name],'-dpng')
+    figure(2)
+    figure_name = ['sifL',num2str(cnt)];
+    pl1 = plot(stp,kl1/1e6,'color',c2(3,:),'linewidth',4)
+    pl2 = plot(stp,kl2/1e6,'color',c2(4,:),'linewidth',4)
+    if cnt == 1
+      set([pl1,pl2],'Marker','o');
+    end
+    print([results_path,'/',figure_name],'-dpng')
+    delete([pl1,pl2])
+    figure(3)
+    figure_name = ['sifR',num2str(cnt)];
+    pl1 = plot(stp,kr1/1e6,'color',c2(3,:),'linewidth',4)
+    pl2 = plot(stp,kr2/1e6,'color',c2(4,:),'linewidth',4)
+    if cnt == 1
+      set([pl1,pl2],'Marker','o');
+    end
+    print([results_path,'/',figure_name],'-dpng')
+    delete([pl1,pl2])
+  end
+end
