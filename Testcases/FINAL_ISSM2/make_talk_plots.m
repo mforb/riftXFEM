@@ -48,21 +48,22 @@ tip1 = [ ones(1,8), zeros(1,6), ones(1,2)];
 tip2 = [ zeros(1,8), ones(1,6), ones(1,2)];
 f = figure(2);
 clf
-f.Position = [ 0, 0, 1200, 800 ];
+f.Position = [ 0, 0, 1000, 700 ];
 lb = -2
 ub = 32
 yticks(0:5:30);
 % tile 1
 hold on
 grid on
+fill([-1,-1,17,17],[.08,.4,.4,.08],'cyan','FaceAlpha',0.2,'LineStyle','none');
 plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([0,16]);
-xlabel('Step')
-ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
+xlabel('Steps','FontSize',20)
+ylabel(['SIFs ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',20)
 ax = gca();
-ax.FontSize = 16;
+ax.FontSize = 20;
 ax.LineWidth = 1.2;
 ax.Color = 'none';
 ax.TickDir = 'out';
@@ -70,21 +71,22 @@ ax.TickLength = [ 0.005 0.01 ];
 
 f = figure(3);
 clf
-f.Position = [ 0, 0, 1200, 800 ];
+f.Position = [ 0, 0, 1000, 700 ];
 lb = -2
 ub = 34
 yticks(0:5:30);
 % tile 1
 hold on
 grid on
+fill([-1,-1,17,17],[.08,.4,.4,.08],'cyan','FaceAlpha',0.2,'LineStyle','none');
 plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
 xlim([0,16]);
-xlabel('Step')
-ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
+xlabel('Steps','FontSize',20)
+ylabel(['SIFs ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',20)
 ax = gca();
-ax.FontSize = 16;
+ax.FontSize = 20;
 ax.LineWidth = 1.2;
 ax.Color = 'none';
 ax.TickDir = 'out';
