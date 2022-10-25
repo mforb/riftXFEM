@@ -1,0 +1,30 @@
+11.0835    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 23823
+Element 2205: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [-0.24617,-0.96923]
+Element 2205: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [-0.24617,-0.96923]
+Element 2205: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [-0.24617,-0.96923]
+Element 2205: interacts with mesh twice at intersection between crack segmenets 1 and 2
+Crack vertex 1: moved 10 units in direction [-0.24617,-0.96923]
+Element 2387: interacts with mesh twice at intersection between crack segmenets 6 and 7
+Crack vertex 6: moved 10 units in direction [0.27232,0.96221]
+Element 1887: interacts with mesh twice at intersection between crack segmenets 5 and 6
+Crack vertex 5: moved 10 units in direction [-0.20341,-0.97909]
+Element 1887: interacts with mesh twice at intersection between crack segmenets 5 and 6
+Crack vertex 5: moved 10 units in direction [-0.20341,-0.97909]
+Element 1887: interacts with mesh twice at intersection between crack segmenets 5 and 6
+Crack vertex 5: moved 10 units in direction [-0.20341,-0.97909]
+Element 1887: interacts with mesh twice at intersection between crack segmenets 5 and 6
+Crack vertex 5: moved 10 units in direction [-0.20341,-0.97909]
+Element 1887: interacts with mesh twice at intersection between crack segmenets 5 and 6
+Crack vertex 5: moved 10 units in direction [-0.20341,-0.97909]
+Element 1884: interacts with mesh twice at intersection between crack segmenets 5 and 6
+Crack vertex 5: moved 10 units in direction [-0.20341,-0.97909]
+Element 1884: interacts with mesh twice at intersection between crack segmenets 5 and 6
+Crack vertex 5: moved 10 units in direction [-0.20341,-0.97909]
+Element 1929: interacts with mesh twice at intersection between crack segmenets 5 and 6
+Crack vertex 5: moved 10 units in direction [-0.20341,-0.97909]

@@ -27,11 +27,12 @@ area = polyarea(node(sctr,1),node(sctr,2));
 
 
 % J radius = fac * sqrt(area);
-if strcmp(typeProblem,'ISSM')
-  fac = 4;
-else
-  fac = 3;
-end
+%if strcmp(typeProblem,'ISSM')
+  %fac = 4;
+%else
+  %fac = 3;
+%end
+fac = 3;
 radius = fac * sqrt(area);
 center = xTip;
 

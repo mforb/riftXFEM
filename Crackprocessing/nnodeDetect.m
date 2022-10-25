@@ -48,6 +48,17 @@ for kk = 1:size(xCr,2)
     subelems = [];
     for i = 1:length(elems)
       [subelems, tangent_elem, corner_elem, type_elem, elem_crk, crack_node, kj_track ] = f_find_subelems(elems(i),xCr(kk),kk,subelems, tangent_elem, corner_elem, type_elem, elem_crk, crack_node);
+      if elems(i)==2205
+        figure(122)
+        plot(xCr(1).coor(:,1),xCr(1).coor(:,2),'k');
+        hold on;
+        axis equal;
+        el = elems(i);
+        scrt = node(element(el,:),:);
+        scr = [scrt;scrt(1,:)];
+        ep = plot(scr(:,1),scr(:,2),'g');
+        keyboard
+      end
       if size(kj_track,2)>1
         warn_str = ['Element ',num2str(elems(i)),': interacts with mesh twice at intersection between crack segmenets ',num2str(kj_track(1)),' and ',num2str(kj_track(2))];
         warning(join(warn_str));

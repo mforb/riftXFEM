@@ -14,7 +14,7 @@ if isempty(direction)
   n1 = norm(v1);
   n2 = norm(v2);
 
-  v3 = n1*(v2/n2) + n2*(v1/n1);
+  v3 = v2/n2 + v1/n1;
   n3 = norm(v3);
 
   direction = v3/n3;

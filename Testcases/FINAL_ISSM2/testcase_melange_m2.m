@@ -86,8 +86,9 @@ xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
 xCr(1).width = [0 10 30 150 200 30 0 ] ;
-results_path = './MEL2ST_YES_tip1_10km';
+results_path = './CLEAN/MEL2_tip1_10km';
 mkdir(results_path);
+copyfile('testcase_melange_m2.m',[results_path,'/']);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
 run_mesh_prep
 %% Material properties and crack dimensions
@@ -104,7 +105,7 @@ x = [ -2,-0.3];
 y = [-400000,-400000];
 
 %%crack definition
-deltaInc = 2500; numstep =4;% numstep = 4;
+deltaInc = 1250; numstep =8;% numstep = 4;
 %xCr(2).coor = [xs2',ys2'] 
 xCr(1).tip = [1,0];
 xCr_orig = xCr;
@@ -166,8 +167,9 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL2ST_YES_tip1_20km';
+results_path = './CLEAN/MEL2_tip1_20km';
 mkdir(results_path);
+copyfile('testcase_melange_m2.m',[results_path,'/']);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
 zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
@@ -199,8 +201,9 @@ if( strcmp(plotmesh,'YES') )
     end
 end
 xCr(1).tip = [0,1];
-results_path = './MEL2ST_YES_tip2_10km';
+results_path = './CLEAN/MEL2_tip2_10km';
 mkdir(results_path);
+copyfile('./testcase_melange_m2.m',[results_path,'/']);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
 zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
@@ -231,9 +234,10 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL2ST_YES_tip2_15km';
-numstep = 2
+results_path = './CLEAN/MEL2_tip2_15km';
+numstep = 4
 mkdir(results_path);
+copyfile('testcase_melange_m2.m',[results_path,'/']);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
 zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
@@ -265,8 +269,9 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './MEL2ST_YES_tip3_5km';
+results_path = './CLEAN/MEL2_tip3_5km';
 mkdir(results_path);
+copyfile('testcase_melange_m2.m',[results_path,'/']);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
 zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];

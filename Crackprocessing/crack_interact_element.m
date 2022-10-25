@@ -35,8 +35,17 @@ if any(psi1 < 0 ) & any(psi2 < 0 )
       vv = node(sctr,:);
       flag3 = inhull(q2,vv,[]) ; % one of the crack segments ends is within the element 
     end
-    if sum(psi1 > 0) > 1 | sum(psi2 > 0) > 1
-      if ~flag3 
+    if sum(psi1 > 0) > 1
+      pi = sign(phi(psi1< 0));
+      po = sign(phi(psi1> 0)); 
+      if ~flag3 & any(pi==po)
+        flag1 = 0;
+      end
+    end
+    if sum(psi2 > 0) > 1 
+      pi = sign(phi(psi2< 0)); 
+      po = sign(phi(psi2> 0)); 
+      if ~flag3 & any(pi==po) 
         flag1 = 0;
       end
     end

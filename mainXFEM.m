@@ -377,9 +377,9 @@ for ipas = 1:npas
     if penalty 
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
-      tol1 = 1e-39;
+      tol1 = 1e-10;
       %tol2 = 1e-8;
-      tol2 = 1e-3;
+      tol2 = 1e-2;
       cont = 1
       Du = zeros(size(u));
       Fext = F
