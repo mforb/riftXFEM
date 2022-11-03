@@ -11,7 +11,7 @@ global fmesh
 global output_file
 global Hidden zoom_dim 
 global wall_int skip_branch skip_vertex modpen modocean
-global melange_stab
+global melange_stab crack_load
 
 output_file = fopen([results_path,'/output.log'],'w')
 if ~isfield(xCrk,'tip')
@@ -77,7 +77,7 @@ for ipas = 1:npas
     % the crack can be slightly modified in cases where crack crosses an element twice
     % if there are any tangent elements
     if ~isempty(tangentElem)
-      [nodeTanfix] = f_tangent_iso_node(tangentElem,crackNode);
+      [nodeTanfix] = f_tangent_iso_node(tangentElem,splitElem,crackNode);
       tan_info = [' CRACK NODES :  ',num2str(length(crackNode)),' crack nodes, ',num2str(length(tangentElem)),' tangent elements, requiring ', num2str(length(nodeTanfix)),' fixed nodes\n'];
       fprintf(output_file,tan_info)
     else
@@ -165,6 +165,10 @@ for ipas = 1:npas
       Ft = F;
       [F,elemForce] = f_apply_ocean_pressure(enrichNode,elemCrk,typeElem,xTip,xVertex,...
         splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,[],pos,xCrk,F) ;
+    elseif ~isempty(crack_load) & crack_load ~= 0
+      disp([num2str(toc),'    Applying load on crack lips']) ;
+      [F,elemForce] = f_apply_crack_load(enrichNode,elemCrk,typeElem,xTip,xVertex,...
+        splitElem,tipElem,vertexElem,cornerElem,crackNode,enrDomain,[],pos,xCrk,F,crack_load) ;
     else
       elemForce = zeros(2,size(element,1),wall_int*2); % 2 potential segments, all elements, int points * 2 for normal and tangential
     end
@@ -192,10 +196,13 @@ for ipas = 1:npas
     if ~isempty(nodeTanfix)
       % these are dof that are only connected to crack in a tangent element (therefore enrichment is unconstrained). 
       inds = [];
+      figure(1)
       for i = 1:length(nodeTanfix)
         in = [ 2*pos(nodeTanfix(i))-1, 2*pos(nodeTanfix(i))]; 
         inds = [inds, in];
         warning(['fixing tangent dof : ', num2str(in(1)), ' and ', num2str(in(2))] )
+        plot(node(nodeTanfix(i),1),node(nodeTanfix(i),2),'sk','linestyle','none','markersize',4)
+        
       end
       K(inds,:) = 0;
       K(:,inds) = 0;
@@ -234,6 +241,18 @@ for ipas = 1:npas
         for i=1:length(dispNodes)
             bcdof = [bcdof 2*dispNodes(i)-1 2*dispNodes(i)] ;
             bcval = [bcval 0 0] ;
+        end
+    elseif strcmp(typeProblem,'centre')
+        dispNodes = unique([bcNodes{3}]) ;
+        bcdof = [ ]; bcval = [ ];
+        for i=1:length(dispNodes)
+            bcdof = [bcdof 2*dispNodes(i)] ;
+            bcval = [bcval 0] ;
+        end
+        dispNodes = unique([bcNodes{4}]) ;
+        for i=1:length(dispNodes)
+            bcdof = [bcdof 2*dispNodes(i)-1] ;
+            bcval = [bcval 0 ] ;
         end
     elseif strcmp(typeProblem,'ISSM')
         dispNodes = [bcNodes{4}];
@@ -292,7 +311,7 @@ for ipas = 1:npas
     dfac = 1 ;
     triplot(TR);
     hold on
-    f_plotCrack(crackLips,20,'r-','k-','c--')
+    f_plotCrack(crackLips,2000,'r-','k-','c--')
     print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r500')
     if ~isempty(zoom_dim)
       xlim(zoom_dim(1,:));
@@ -438,10 +457,10 @@ for ipas = 1:npas
       Stdux = fu(1:2:2*numnode) ;
       Stduy = fu(2:2:2*numnode) ;
       try
-        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas)
+        [inters,gn_inters] = f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas);
         elemForce = elemForce + elemForce_orig;
         f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas+100);
-        f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas+200)
+        %f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce_orig,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas+200)
       catch
         keyboard
       end
@@ -483,7 +502,7 @@ for ipas = 1:npas
       clf(f)
     end
     if melange
-      f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas)
+      [inters,gn_inters] = f_plot_wall_forces(u,xCrk,enrDomain,typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,ipas);
     end
 
     if plot_stresses 
@@ -503,19 +522,21 @@ for ipas = 1:npas
       f = figure();
     end
     hold on
-    dfac = 50 ;
+    dfac = 4000 ;
     plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
      %plotMesh(node+dfac*[uxAna uyAna],element,elemType,'r-',plotNode)
     figure_name = ['Disp_fact_',num2str(dfac),'_',num2str(ipas)];
     print([results_path,'/',figure_name],'-dpng','-r300')
     clf(f)
 
-
+    if ~exist('gn_inters')
+      gn_inters = zeros(length(xCrk.coor),1);
+    end
    
     [Knum,Theta,xCrk,stop] = KcalJint(xCrk,...
         typeElem,enrDomain,elemCrk,enrichNode,crackNode,xVertex,...
         vertexElem,pos,u,ipas,delta_inc,Knum,Theta,...
-        tipElem,splitElem,cornerElem,elemForce) ;
+        tipElem,splitElem,cornerElem,elemForce,gn_inters) ;
 
     %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];

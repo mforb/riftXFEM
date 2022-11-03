@@ -81,7 +81,7 @@ xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
 xCr(1).width = [0 10 60 150 200 80 0 ] ;
-results_path = './CLEAN/MEL1_xmas_tip1_10km';
+results_path = './CLEAN/MEL1_OP_tip1_10km';
 mkdir(results_path);
 copyfile('testcase_op_m1.m',[results_path,'/']);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
@@ -162,7 +162,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './CLEAN/MEL1_xmas_tip1_20km';
+results_path = './CLEAN/MEL1_OP_tip1_20km';
 mkdir(results_path);
 copyfile('testcase_op_m1.m',[results_path,'/']);
 run_mesh_prep
@@ -196,7 +196,7 @@ if( strcmp(plotmesh,'YES') )
     end
 end
 xCr(1).tip = [0,1];
-results_path = './CLEAN/MEL1_xmas_tip2_10km';
+results_path = './CLEAN/MEL1_OP_tip2_10km';
 mkdir(results_path);
 copyfile('testcase_op_m1.m',[results_path,'/']);
 run_mesh_prep
@@ -229,7 +229,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './CLEAN/MEL1_xmas_tip2_15km';
+results_path = './CLEAN/MEL1_OP_tip2_15km';
 numstep = 4
 mkdir(results_path);
 copyfile('testcase_op_m1.m',[results_path,'/']);
@@ -264,7 +264,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './CLEAN/MEL1_xmas_tip3_5km';
+results_path = './CLEAN/MEL1_OP_tip3_5km';
 mkdir(results_path);
 copyfile('testcase_op_m1.m',[results_path,'/']);
 run_mesh_prep

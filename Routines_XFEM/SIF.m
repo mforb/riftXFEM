@@ -1,17 +1,39 @@
 function [Knum,theta_inc] = SIF(C,flag_end,tip,elem_crk,xCr,type_elem,enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,...
     tip_elem,split_elem,vertex_elem,corner_elem,elem_force)
 
-global node element elemType E nu
+global node element elemType E nu Cm1
 global iMethod iParam
 global incR xc yc phiN
 global lambda1 lambda2 nu1 nu2
 global elemType typeMesh typeProblem typeCrack stressState
-global wall_int output_file wall_force
+global wall_int output_file wall_force crack_load
+global quick_freeze melange
 
 plotNode = 'NO' ;
 
 if isempty(wall_force)
   wall_force = 0;
+end
+if ~isempty(crack_load) & crack_load~=0
+  wall_force = 1
+end
+if melange
+  elems = union(split_elem,vertex_elem);
+  elemst = tan_elem;
+
+  mel_elems = [];
+  tot_phi = 0;
+  for kk = 1:size(xCrk,2)
+    for i=1:length(elems)                     %loop on elems (=elements selected for enrichment)
+      iel = elems(i);
+      [flag1,width,phiR,nodeTanfix] = f_find_melange(iel,xCrk(kk),nodeTanfix);
+      if flag1
+        tot_phi = tot_phi + phiR;
+        mel_elems = [mel_elems; kk, iel, width];
+      end
+    end
+  end
+  mE = tot_phi/size(mel_elems,1);
 end
 
 if strcmp(elemType,'Q4') 
@@ -283,8 +305,15 @@ if wall_force
       e = JWdomain(iel) ; % current element
       sctr = element(e,:);
       nn   = length(sctr);
+      mel_bool = 0
+      if melange & quick_freeze
+        if ismember(e,mel_elems)
+          mel_bool = 1
+        end
+      end
 
-      if ( ismember(e,vertex_elem) || ismember(e,split_elem) || ismember(e,tip_elem) )  && any(elem_force(1,e,:))
+
+      if ( ismember(e,vertex_elem) || ismember(e,split_elem) || ismember(e,tip_elem) )  && (any(elem_force(1,e,:)) | mel_bool)
         % The I integral needs to be adjusted to account for forces on the rift wall
         [ap,apg] = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,xyTip,xVertex,crack_nodes); % elem_crk in natural coordinates
         ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
@@ -303,6 +332,21 @@ if wall_force
           JO = l/2;
           nlocal = QT*nv';
 
+          if mel_bool
+            JN = [ mv',nv' ]; % this is the rotation matrix
+            [A,~,~,~,~] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
+            U = u(A)
+            B = [ ] ;
+            Gpt = [1/3,1/3]; %CST 
+            [N,dNdxi] = lagrange_basis(elemType,Gpt) ;
+            JO = node(sctr,:)'*dNdxi ;
+            pt = N' * node(sctr,:);
+            Gpnt = N'*node(sctr,:) ;
+            [B, dJ] = xfemBmel(Gpt,iel,type_elem,enr_node(:,kn),elem_crk,xVertex,xTip,crack_node,kn,JN,mT,mE);
+            eps_sub = B*U ;
+            mel_stress = Cm1*eps_sub ;
+            mel_local = QT*mel_stress*QT';
+          end
 
 
           % ++++++++++++++
@@ -336,6 +380,10 @@ if wall_force
             %sig_local = QT*sig_global*QT';
             sig_local1 = sig_elem/-2;
             sig_local2 = sig_elem/2;
+            if mel_bool
+              sig_local1 = sig_elem/-2 - mel_local;
+              sig_local2 = sig_elem/2 + mel_local;
+            end
 
             % ++++++++++++++++++
             %  Auxiliary fields

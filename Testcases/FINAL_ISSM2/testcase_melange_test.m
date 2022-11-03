@@ -29,6 +29,8 @@ global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global zoom_dim modpen modocean stab_mu
 global quick_freeze
+global wall_force
+wall_force = 1
 quick_freeze = 1
 epsilon = 5 
 
@@ -85,6 +87,17 @@ results_path = './CLEAN/MEL1_xmas_tip1_10km';
 
 load([results_path,'/crack.mat']);
 deltaInc = 1250; numstep =8;% numstep = 4;
+
+%% Material properties and crack dimensions
+E = 9.6e9; nu = 0.3; P = 1 ;
+sigmato = P ;
+if( strcmp(stressState,'PlaneStress') )
+    C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
+else
+    C = E/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
+    Cm1 = E*0.1/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
+end
+
 
 if Hidden
   fmesh = figure('visible','off');

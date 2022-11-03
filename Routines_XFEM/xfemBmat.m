@@ -68,7 +68,7 @@ else
                 dist = signed_distance(xCre,node(sctr(in),:),0);
                 Hi  = sign(dist);
                 if ismember(sctr(in),crack_node) 
-                  %Hi = sign(-1);
+                  %Hi = sign(1);
                   %Hi = -1*Hgp;
                   Hi = 0;
                 end
@@ -80,7 +80,7 @@ else
                 dist = signed_distance(xCre,node(sctr(in),:),0);
                 Hi  = sign(dist);
                 if ismember(sctr(in),crack_node) 
-                  %Hi = sign(-1);
+                  %Hi = sign(1);
                   %Hi = -1*Hgp;
                   Hi = 0;
                 end

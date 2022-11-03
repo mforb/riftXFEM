@@ -1,7 +1,7 @@
 function [Knumerical,ThetaInc,xCr,stop] = KcalJint(xCr,...
     type_elem,enrdomain,elem_crk,enrich_node,crack_nodes,xVertex,...
     vertex_elem,pos,u,ipas,delta_inc,Knumerical,ThetaInc,...
-    tip_elem,split_elem,corner_elem,elem_force)
+    tip_elem,split_elem,corner_elem,elem_force,gn_inters)
 
 global node element elemType
 global E nu C sigmato
@@ -103,7 +103,7 @@ for kk = 1:size(xCr,2) %what's the crack?
       if ~isempty(xCr(kk).coornew1)
         if quick_freeze
           mn1 = 1 ;
-          w1 = -10;
+          w1 = 0;
         else
           mn1 = 0 ;
           w1 = 0;
@@ -112,17 +112,18 @@ for kk = 1:size(xCr,2) %what's the crack?
       if ~isempty(xCr(kk).coornew2)
         if quick_freeze
           mn2 = 1;
-          w2 = -10 ;
+          w2 = 0 ;
         else
           mn2 = 0;
           w2 =  0 ;
         end
       end
+      xCr(kk).width = xCr(kk).width + gn_inters;
       xCr(kk).melange = [ mn1; xCr(kk).melange; mn2 ];
       xCr(kk).width = [ w1 , xCr(kk).width, w2 ];
-      if quick_freeze
-        xCr(kk).width = xCr(kk).width + 10*ones(size(xCr(kk).width)) ;
-      end 
+      %if quick_freeze
+        %xCr(kk).width = xCr(kk).width + 10*ones(size(xCr(kk).width)) ;
+      %end 
     end
       
 

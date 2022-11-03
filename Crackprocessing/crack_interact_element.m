@@ -7,15 +7,15 @@ global node element  epsilon
 sctr = element(e,:) ;
 q1 = q(1:2);
 q2 = q(3:4);
-[ psi1, mps1 ] = f_dista2(e,[q1,q2],q1);
-[ psi2, mps2 ] = f_dista2(e,[q2,q1],q2);
+[ psi1, mps1 ] = f_dista2(e,[q1,q2],q1); % along crack distance to q1
+[ psi2, mps2 ] = f_dista2(e,[q2,q1],q2); % along crack distance to q2
 flag1 = 0;
 flag2 = 0;
 flag3 = 0;
 ni = [];
 
 if any(psi1 < 0 ) & any(psi2 < 0 ) 
-  [ phi  ] = dista(e,[q1,q2]);
+  [ phi  ] = dista(e,[q1,q2]); % perpendicular distance to crack
   for i = 1:length(sctr)
     if abs(phi(i)) < epsilon
       if psi1(i) < 0 & psi2(i) < 0
@@ -27,7 +27,6 @@ if any(psi1 < 0 ) & any(psi2 < 0 )
   end
   phi(ni) = []; % this prevents crack_nodes from being used in determining if an element spans both sides of the crack
   if any(diff(sign(phi)))
-    flag1 = 1; %this element does interat with this segment
     if any(psi1 > 0)
       vv = node(sctr,:);
       flag3 = inhull(q1,vv,[]) ; % one of the crack segment ends is within the element 
@@ -35,18 +34,16 @@ if any(psi1 < 0 ) & any(psi2 < 0 )
       vv = node(sctr,:);
       flag3 = inhull(q2,vv,[]) ; % one of the crack segments ends is within the element 
     end
-    if sum(psi1 > 0) > 1
-      pi = sign(phi(psi1< 0));
-      po = sign(phi(psi1> 0)); 
-      if ~flag3 & any(pi==po)
-        flag1 = 0;
-      end
-    end
-    if sum(psi2 > 0) > 1 
-      pi = sign(phi(psi2< 0)); 
-      po = sign(phi(psi2> 0)); 
-      if ~flag3 & any(pi==po) 
-        flag1 = 0;
+    sctrl = [sctr sctr(1,1)];      
+    for iedge=1:size(sctr,2)             %loop over the edges of elements
+      nnode1=sctrl(iedge);
+      nnode2=sctrl(iedge+1);
+      p1 = [node(nnode1,:)];
+      p2 = [node(nnode2,:)];
+      intersect = segments_int_2d(p1,p2,q1,q2) ;
+      %edge_track=[edge_track,iedge]
+      if intersect(1)                
+        flag1 = 1;
       end
     end
   end

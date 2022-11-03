@@ -44,7 +44,7 @@ for ii=1:length(elems)
     inter = intersect(sctr,crack_node);
     if any(inter);
       int = find(sctr==inter);
-      p = [nnodes(int,:) ; ntip ];
+      p = [nnode(int,:) ; ntip ];
     else
       [cutEdge,nnodes] = f_edgedetect(nnode, corner,  phi, psi) ;
       p = [nnodes(end,:) ; ntip ];

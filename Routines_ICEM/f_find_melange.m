@@ -38,3 +38,6 @@ for kj = 1:size(xCrk.coor,1)-1       %loop over the elements of the fracture
     end
   end
 end
+if width == 0
+  flag1 = 0;
+end

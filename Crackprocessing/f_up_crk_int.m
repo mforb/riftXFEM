@@ -5,7 +5,7 @@ function [ ckint_out ] = f_up_crk_int( ckint, intes, f1, f2, q1, q2, el  )
 %this function makes sure that ckint is always a 2 point crack  in the same direction as the overall crack (q1 to q2)
 global node epsilon
 
-in_epsi = 1e-8;
+in_epsi = 1e-6;
 
 ins = intes(1,:);
 if size(intes,1)>1
