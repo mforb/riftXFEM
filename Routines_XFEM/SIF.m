@@ -1,5 +1,5 @@
 function [Knum,theta_inc] = SIF(C,flag_end,tip,elem_crk,xCr,type_elem,enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,...
-    tip_elem,split_elem,vertex_elem,corner_elem,elem_force)
+    tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force)
 
 global node element elemType E nu Cm1
 global iMethod iParam
@@ -15,18 +15,19 @@ if isempty(wall_force)
   wall_force = 0;
 end
 if ~isempty(crack_load) & crack_load~=0
-  wall_force = 1
+  wall_force = 1;
 end
 if melange
+  wall_force = 1;
   elems = union(split_elem,vertex_elem);
   elemst = tan_elem;
 
   mel_elems = [];
   tot_phi = 0;
-  for kk = 1:size(xCrk,2)
+  for kk = 1:size(xCr,2)
     for i=1:length(elems)                     %loop on elems (=elements selected for enrichment)
       iel = elems(i);
-      [flag1,width,phiR,nodeTanfix] = f_find_melange(iel,xCrk(kk),nodeTanfix);
+      [flag1,width,phiR,~] = f_find_melange(iel,xCr(kk),[]);
       if flag1
         tot_phi = tot_phi + phiR;
         mel_elems = [mel_elems; kk, iel, width];
@@ -305,10 +306,10 @@ if wall_force
       e = JWdomain(iel) ; % current element
       sctr = element(e,:);
       nn   = length(sctr);
-      mel_bool = 0
-      if melange & quick_freeze
+      mel_bool = 0;
+      if melange
         if ismember(e,mel_elems)
-          mel_bool = 1
+          mel_bool = 1;
         end
       end
 
@@ -333,18 +334,19 @@ if wall_force
           nlocal = QT*nv';
 
           if mel_bool
+            ii = find(mel_elems(:,2)==e);
+            mT = mel_elems(ii,3);
+            kn = mel_elems(ii,1); 
             JN = [ mv',nv' ]; % this is the rotation matrix
-            [A,~,~,~,~] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
-            U = u(A)
+            [A,~,~,~,~] = f_enrich_assembly(e,pos,type_elem,elem_crk,enrich_node);
+            U = u(A);
             B = [ ] ;
             Gpt = [1/3,1/3]; %CST 
             [N,dNdxi] = lagrange_basis(elemType,Gpt) ;
-            JO = node(sctr,:)'*dNdxi ;
-            pt = N' * node(sctr,:);
-            Gpnt = N'*node(sctr,:) ;
-            [B, dJ] = xfemBmel(Gpt,iel,type_elem,enr_node(:,kn),elem_crk,xVertex,xTip,crack_node,kn,JN,mT,mE);
+            [B, dJ] = xfemBmel(Gpt,e,type_elem,enrich_node(:,1),elem_crk,xVertex,xyTip,crack_nodes,kn,JN,mT,mE);
             eps_sub = B*U ;
-            mel_stress = Cm1*eps_sub ;
+            mstress = Cm1*eps_sub ;
+            mel_stress = [mstress(1) mstress(3); mstress(3) mstress(2)];
             mel_local = QT*mel_stress*QT';
           end
 

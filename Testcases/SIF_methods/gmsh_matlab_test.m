@@ -1,5 +1,5 @@
 %mesh
-matlab_test4
+matlab_test
 
 %[node,element,bcNodes,edgNodes]
 

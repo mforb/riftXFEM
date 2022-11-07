@@ -1,7 +1,7 @@
 function [Knumerical,ThetaInc,xCr,stop] = KcalJint(xCr,...
     type_elem,enrdomain,elem_crk,enrich_node,crack_nodes,xVertex,...
     vertex_elem,pos,u,ipas,delta_inc,Knumerical,ThetaInc,...
-    tip_elem,split_elem,corner_elem,elem_force,gn_inters)
+    tip_elem,split_elem,corner_elem, tan_elem,elem_force,gn_inters)
 
 global node element elemType
 global E nu C sigmato
@@ -44,7 +44,7 @@ for kk = 1:size(xCr,2) %what's the crack?
             seg   = xCr(kk).coor(1,:) - xCr(kk).coor(2,:);
             alpha = atan2(seg(2),seg(1));
             [Knum,theta_inc] = SIF(C,1,iel,elem_crk,xCr,type_elem,...
-                enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,elem_force) ;
+                enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
 
             theta_inc = -1*theta_inc; 
             K1_num = [K1_num, Knum] ;
@@ -75,7 +75,7 @@ for kk = 1:size(xCr,2) %what's the crack?
             alpha = atan2(seg(2),seg(1)) ;
 
             [Knum,theta_inc] = SIF(C,2,iel,elem_crk,xCr,type_elem,...
-                enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,elem_force) ;
+                enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
             K2_num = [K2_num, Knum] ;
             ti2 = [ti2, theta_inc] ;
             kstr = ['Tip 2 modified: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
