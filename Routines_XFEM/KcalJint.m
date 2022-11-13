@@ -1,6 +1,6 @@
 function [Knumerical,ThetaInc,xCr,stop] = KcalJint(xCr,...
     type_elem,enrdomain,elem_crk,enrich_node,crack_nodes,xVertex,...
-    vertex_elem,pos,u,ipas,delta_inc,Knumerical,ThetaInc,...
+    vertex_elem,pos,u,F,ipas,delta_inc,Knumerical,ThetaInc,...
     tip_elem,split_elem,corner_elem, tan_elem,elem_force,gn_inters)
 
 global node element elemType
@@ -8,6 +8,7 @@ global E nu C sigmato
 global Jint iMethod
 global output_file
 global quick_freeze
+global typeProblem
 
 stp1 = 0;
 stp2 = 0;
@@ -43,8 +44,13 @@ for kk = 1:size(xCr,2) %what's the crack?
         if flag1 == 1
             seg   = xCr(kk).coor(1,:) - xCr(kk).coor(2,:);
             alpha = atan2(seg(2),seg(1));
-            [Knum,theta_inc] = SIF(C,1,iel,elem_crk,xCr,type_elem,...
-                enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
+            if strcmp(typeProblem,'ISSM')
+              [Knum,theta_inc] = SIF_BF(C,1,iel,elem_crk,xCr,type_elem,...
+                  enrich_node,crack_nodes,xVertex,pos,u,F,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
+            else
+              [Knum,theta_inc] = SIF(C,1,iel,elem_crk,xCr,type_elem,...
+                  enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
+            end
 
             theta_inc = -1*theta_inc; 
             K1_num = [K1_num, Knum] ;
@@ -74,11 +80,15 @@ for kk = 1:size(xCr,2) %what's the crack?
             seg   = xCr(kk).coor(size(xCr(kk).coor,1),:) - xCr(kk).coor(size(xCr(kk).coor,1)-1,:);
             alpha = atan2(seg(2),seg(1)) ;
 
-            [Knum,theta_inc] = SIF(C,2,iel,elem_crk,xCr,type_elem,...
-                enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
+            if strcmp(typeProblem,'ISSM')
+              [Knum,theta_inc] = SIF_BF(C,2,iel,elem_crk,xCr,type_elem,...
+                  enrich_node,crack_nodes,xVertex,pos,u,F,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
+            else
+              [Knum,theta_inc] = SIF(C,2,iel,elem_crk,xCr,type_elem,...
+                  enrich_node,crack_nodes,xVertex,pos,u,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
+            end
             K2_num = [K2_num, Knum] ;
             ti2 = [ti2, theta_inc] ;
-            kstr = ['Tip 2 modified: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
             if xCr(kk).tip(2) & Knum(1) > 0
               inc_x = xCr(kk).coor(size(xCr(kk).coor,1),1) + delta_inc * (cos(theta_inc)*cos(alpha) - sin(theta_inc)*sin(alpha));
               [a,b] = find(node(:,1) == inc_x);

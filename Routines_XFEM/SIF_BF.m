@@ -73,6 +73,8 @@ end
 I1 = 0;
 I2 = 0;
 I  = [zeros(2,1)];
+Iw  = [zeros(2,1)];
+If  = [zeros(2,1)];
 
 QT  = fl * [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];           % for the transformation to local coordinate
 mu = E/(2.+ nu + nu);
@@ -92,132 +94,111 @@ for iel = 1 : size(JWdomain,2)
     tip_order    = 20;         % is not used -> if >20 allow a error flag (bug) if the J integrale is performed on blending's
     split_order  = 7;
     vertex_order = 7;
+    qf     = qnode2(iel,:);
+    mel_bool = 0;
+
     if ismember(e,Jdomain)
-      jring = 1;
+      if( ismember(e,split_elem) && any(ismember(enrich_node(sctr),3)) ) %why?
+          order = 3 ;
+          phis = phiN(sctr) ;
+          if strcmp(elemType,'Q4') 
+            [W,Q] = discontQ4quad(order,phis,nnode) ;
+          else
+            [W,Q] = discontT3(order,phis,nnode) ;
+          end
+      else
+          %choose Gauss quadrature rules for elements
+          [W,Q] = gauss_rule(e,enrich_node,elem_crk,...
+              xyTip,xVertex,tip_elem,split_elem,vertex_elem,corner_elem,xCr) ;
+      end
+      
+      %     compt=compt+1;
+      %     plot_GP_new(elemType,q,Q,xCr,W,e,compt,enrich_node,[])
+      
+      % ----------------------------
+      % start loop over Gauss points
+      % -----------------------------
+      for q = 1:size(W,1)
+          pt = Q(q,:);
+          wt = W(q);
+          [N,dNdxi] = lagrange_basis(elemType,pt);
+          J0    = node(sctr,:)'*dNdxi;
+          invJ0 = inv(J0);
+          dNdx  = dNdxi*invJ0;
+          gradq = qf*dNdx;
+          Gpt = N' * node(sctr,:);     % GP in global coord
+          B = [];
+          % +++++++++++++++++++++++++
+          % Gradient of displacement
+          % +++++++++++++++++++++++++
+          % need to compute u,x u,y v,x v,y, stored in matrix H
+          for k = 1:size(xCr,2)
+              B = [B xfemBmat(pt,e,type_elem,enrich_node(:,k),elem_crk,xVertex,xyTip,crack_nodes,k)];
+          end
+
+          leB = size(B,2);
+          
+          % nodal displacement of current element
+          % taken from the total nodal parameters u
+          U = [];
+          for k = 1:size(xCr,2)
+              U     = [U; element_disp(e,pos(:,k),enrich_node(:,k),u,k)];
+          end
+          % compute derivatives of u w.r.t xy
+          H(1,1) = B(1,1:2:leB)*U(1:2:leB);    % u,x
+          H(1,2) = B(2,2:2:leB)*U(1:2:leB);    % u,y
+          H(2,1) = B(1,1:2:leB)*U(2:2:leB);    % v,x
+          H(2,2) = B(2,2:2:leB)*U(2:2:leB);    % v,y
+          
+          
+          epsilon = B*U ;
+          sigma   = C*epsilon;
+          
+          voit2ind    = [1 3;3 2];
+          gradqloc    = QT*gradq';
+          graddisploc = QT*H*QT';
+          stressloc   = QT*sigma(voit2ind)*QT';
+          
+          % ++++++++++++++++++
+          %  Auxiliary fields
+          % ++++++++++++++++++
+          
+          xp    = QT *(Gpt - xyTip)';           % local coordinates
+          r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2)) ;
+          theta = atan2(xp(2),xp(1)) ;
+          
+          for mode = 1:2
+
+              [AuxStress,AuxGradDisp,AuxEps] = f_auxiliary(xp,r,theta,mu,kappa,mode);
+              
+              % +++++++++++++++
+              %   J integral
+              % +++++++++++++++
+              I1= (stressloc(1,1) * AuxGradDisp(1,1) + stressloc(2,1) * AuxGradDisp(2,1) ) * gradqloc(1) + ...
+                  (stressloc(1,2) * AuxGradDisp(1,1) + stressloc(2,2) * AuxGradDisp(2,1) ) * gradqloc(2);
+              
+              I2= (AuxStress(1,1) * graddisploc(1,1) + AuxStress(2,1) * graddisploc(2,1) ) * gradqloc(1) + ...
+                  (AuxStress(2,1) * graddisploc(1,1) + AuxStress(2,2) * graddisploc(2,1) ) * gradqloc(2);
+              
+              StrainEnergy = 0;
+              for i=1:2 %size(AuxEpsm1,1)
+                  for j=1:2  %size(AuxEpsm1,2)
+                      StrainEnergy = StrainEnergy +  stressloc(i,j)*AuxEps(i,j);
+                  end
+              end
+              
+              % Interaction integral I
+              I(mode,1) = I(mode,1) + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
+          end   %loop on mode
+      end       % of quadrature loop
     end
-    
-    if( ismember(e,split_elem) && any(ismember(enrich_node(sctr),3)) ) %why?
-        order = 3 ;
-        phis = phiN(sctr) ;
-        if strcmp(elemType,'Q4') 
-          [W,Q] = discontQ4quad(order,phis,nnode) ;
-        else
-          [W,Q] = discontT3(order,phis,nnode) ;
-        end
-    else
-        %choose Gauss quadrature rules for elements
-        [W,Q] = gauss_rule(e,enrich_node,elem_crk,...
-            xyTip,xVertex,tip_elem,split_elem,vertex_elem,corner_elem,xCr) ;
-    end
-    
-    %     compt=compt+1;
-    %     plot_GP_new(elemType,q,Q,xCr,W,e,compt,enrich_node,[])
-    
-    % ----------------------------
-    % start loop over Gauss points
-    % -----------------------------
-    for q = 1:size(W,1)
-        pt = Q(q,:);
-        wt = W(q);
-        [N,dNdxi] = lagrange_basis(elemType,pt);
-        J0    = node(sctr,:)'*dNdxi;
-        invJ0 = inv(J0);
-        dNdx  = dNdxi*invJ0;
-        Gpt = N' * node(sctr,:);     % GP in global coord
-        B = [];
-        % +++++++++++++++++++++++++
-        % Gradient of displacement
-        % +++++++++++++++++++++++++
-        % need to compute u,x u,y v,x v,y, stored in matrix H
-        for k = 1:size(xCr,2)
-            B = [B xfemBmat(pt,e,type_elem,enrich_node(:,k),elem_crk,xVertex,xyTip,crack_nodes,k)];
-        end
 
-        leB = size(B,2);
-        
-        % nodal displacement of current element
-        % taken from the total nodal parameters u
-        U = [];
-        for k = 1:size(xCr,2)
-            U     = [U; element_disp(e,pos(:,k),enrich_node(:,k),u,k)];
-        end
-        % compute derivatives of u w.r.t xy
-        H(1,1) = B(1,1:2:leB)*U(1:2:leB);    % u,x
-        H(1,2) = B(2,2:2:leB)*U(1:2:leB);    % u,y
-        H(2,1) = B(1,1:2:leB)*U(2:2:leB);    % v,x
-        H(2,2) = B(2,2:2:leB)*U(2:2:leB);    % v,y
-        
-        
-        % ++++++++++++++
-        % Gradient of q
-        % ++++++++++++++
-        q     = qnode(iel,:);
-        gradq = q*dNdx;
-        
-        epsilon = B*U ;
-        sigma   = C*epsilon;
-        
-        voit2ind    = [1 3;3 2];
-        gradqloc    = QT*gradq';
-        graddisploc = QT*H*QT';
-        stressloc   = QT*sigma(voit2ind)*QT';
-        
-        % ++++++++++++++++++
-        %  Auxiliary fields
-        % ++++++++++++++++++
-        
-        xp    = QT *(Gpt - xyTip)';           % local coordinates
-        r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2)) ;
-        theta = atan2(xp(2),xp(1)) ;
-        
-        for mode = 1:2
-
-            [AuxStress,AuxGradDisp,AuxEps] = f_auxiliary(xp,r,theta,mu,kappa,mode);
-            
-            % +++++++++++++++
-            %   J integral
-            % +++++++++++++++
-            I1= (stressloc(1,1) * AuxGradDisp(1,1) + stressloc(2,1) * AuxGradDisp(2,1) ) * gradqloc(1) + ...
-                (stressloc(1,2) * AuxGradDisp(1,1) + stressloc(2,2) * AuxGradDisp(2,1) ) * gradqloc(2);
-            
-            I2= (AuxStress(1,1) * graddisploc(1,1) + AuxStress(2,1) * graddisploc(2,1) ) * gradqloc(1) + ...
-                (AuxStress(2,1) * graddisploc(1,1) + AuxStress(2,2) * graddisploc(2,1) ) * gradqloc(2);
-            
-            StrainEnergy = 0;
-            for i=1:2 %size(AuxEpsm1,1)
-                for j=1:2  %size(AuxEpsm1,2)
-                    StrainEnergy = StrainEnergy +  stressloc(i,j)*AuxEps(i,j);
-                end
-            end
-            
-            % Interaction integral I
-            I(mode,1) = I(mode,1) + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
-        end   %loop on mode
-    end       % of quadrature loop
-end
-Knum = I.*E / (2*(1-nu^2)) % plain strain
-KI = Knum(1);
-KII = Knum(2);
-theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
-theta_inc = theta_inc * pi / 180.;%rad
-
-kstr = ['Tip',num2str(flag_end),': before crack wall forces included : K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
-fprintf(output_file,kstr)
-kstr = ['Integration of wall forces is off\n'];
-
-if wall_force
-  for iel = 1 : size(JWdomain,2)
-      e = JWdomain(iel) ; % current element
-      sctr = element(e,:);
-      nn   = length(sctr);
-      mel_bool = 0;
+    if wall_force
       if melange
         if ismember(e,mel_elems)
           mel_bool = 1;
         end
       end
-
-
       if ( ismember(e,vertex_elem) || ismember(e,split_elem) || ismember(e,tip_elem) )  && (any(elem_force(1,e,:)) | mel_bool)
         % The I integral needs to be adjusted to account for forces on the rift wall
         [ap,apg] = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,xyTip,xVertex,crack_nodes); % elem_crk in natural coordinates
@@ -255,10 +236,6 @@ if wall_force
           end
 
 
-          % ++++++++++++++
-          % q at nodes
-          % ++++++++++++++
-          q     = qnode2(iel,:);
 
           % ----------------------------
           % start loop over Gauss points
@@ -272,7 +249,7 @@ if wall_force
             % ++++++++++++++
             % q at pt 
             % ++++++++++++++
-            qm2 = N'*q';
+            qm2 = N'*qf';
             %qm1 = nv*qpt;
             %qm2 = -1*nv*qpt;
 
@@ -324,45 +301,66 @@ if wall_force
                 %keyboard
                 
                 % Interaction integral I
-                I(mode,1) = I(mode,1) + I_wall1*det(JO)*wt + I_wall2*det(JO)*wt;
+                Iw(mode,1) = Iw(mode,1) + I_wall1*det(JO)*wt + I_wall2*det(JO)*wt;
             end   %loop on mode
           end       % of quadrature loop
         end %segments in element
       end % if split_node and there is a force on wall 
-  end           % end of element loop
+    end
+    
+    for ni = 1:nn
+      nod = sctr(ni);
+      Gpt = node(nod,:);
+      % ++++++++++++++++++
+      % q at nodes 
+      % ++++++++++++++++++
+      pt = nnode(ni,:);  
+      [N,dNdxi] = lagrange_basis(elemType,pt);
+      qn = N'*qf';
 
-  % Compute SIFs from I integral
+
+
+      % ++++++++++++++++++
+      %  Auxiliary fields
+      % ++++++++++++++++++
+      xp    = QT *(Gpt - xyTip)';           % local coordinate to tip
+      r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2)) ;
+      theta = atan2(xp(2),xp(1)) ;
+
+      for mode = 1:2
+        [AuxStress,AuxGradDisp,AuxEps] = f_auxiliary(xp,r,theta,mu,kappa,mode);
+        Fdudx = (F(2*nod-1) * AuxGradDisp(1,1) + F(2*nod)*AuxGradDisp(1,2))*qn
+        If(mode,1) = If(mode,1) + Fdudx;
+      end
+    end
+end
+Knum = I.*E / (2*(1-nu^2)) % plain strain
+KI = Knum(1);
+KII = Knum(2);
+theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
+theta_inc = theta_inc * pi / 180.;%rad
+
+kstr = ['Tip',num2str(flag_end),': stress-strain contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+fprintf(output_file,kstr)
+
+I = I + If;
+Knum = I.*E / (2*(1-nu^2)) % plain strain
+KI = Knum(1);
+KII = Knum(2);
+theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
+theta_inc = theta_inc * pi / 180.;%rad
+kstr = ['Tip',num2str(flag_end),': including body forces K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+fprintf(output_file,kstr)
+
+if any(Iw)
+  I = I + Iw;
   Knum = I.*E / (2*(1-nu^2)) % plain strain
-  Knum = Roundoffa(Knum,5);
   KI = Knum(1);
   KII = Knum(2);
   theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
   theta_inc = theta_inc * pi / 180.;%rad
-  kstr = ['Tip,',num2str(flag_end),' wih crack wall forces included : K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
-
+  kstr = ['Tip',num2str(flag_end),': including wall forces K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+  fprintf(output_file,kstr)
 end
 
-fprintf(output_file,kstr)
-%
-% figure
-% hold on
-% %plot the circle
-% theta = -pi:0.1:pi;
-% xo = xyTip(1) + radius*cos(theta) ;
-% yo = xyTip(2) + radius*sin(theta) ;
-% plot(xo,yo,'k-');
-% %plot_mesh(node,element,elemType,'b-')
-% %plot_mesh(node,element(Jdomain,:),elemType,'r-')
-%
-% plotMesh(node,element,elemType,'b-',plotNode);
-% plotMesh(node,element(Jdomain,:),elemType,'b-',plotNode);
-%
-% for k = 1:size(xCr,2)
-%   for kj = 1:size(xCr(k).coor,1)-1
-%     cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-');
-%     set(cr,'LineWidth',3);
-%   end
-% end
-% pause
-% % -------------------------------------
-% % -------------------------------------
+
