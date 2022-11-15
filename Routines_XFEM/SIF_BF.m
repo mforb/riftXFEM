@@ -330,7 +330,7 @@ for iel = 1 : size(JWdomain,2)
       for mode = 1:2
         [AuxStress,AuxGradDisp,AuxEps] = f_auxiliary(xp,r,theta,mu,kappa,mode);
         Fdudx = (F(2*nod-1) * AuxGradDisp(1,1) + F(2*nod)*AuxGradDisp(1,2))*qn
-        If(mode,1) = If(mode,1) + Fdudx;
+        If(mode,1) = If(mode,1) - Fdudx;
       end
     end
 end
