@@ -69,7 +69,7 @@ copyfile('./testcase_ISSM.m',[results_path,'/']);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
 run_mesh_prep
 %% Material properties and crack dimensions
-E = 9.6e9; nu = 0.3; P = 1 ;
+E = 9.6e9; nu = 0.33; P = 144.53e3 ;
 sigmato = P ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
