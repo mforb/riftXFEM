@@ -8,8 +8,8 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('../FINAL_ISSM/ISSM2_xmas_tip*');
-pre = '../FINAL_ISSM/';
+ld = dir('./CLEAN/ISSM2_xmas_tip*');
+pre = './CLEAN/';
 results_path = './ISSM2_PP';
 mkdir(results_path);
 global results_path
@@ -70,6 +70,8 @@ ormax = floor( log10(abs(rg(2))));
 mr = max([ormin,ormax]) - 1;
 lb = floor(rg(1)/(10^mr)) * 10 ^mr;
 ub = ceil(rg(2)/(10^mr)) * 10 ^mr;
+
+keyboard
 
 t1_cu = cumsum(t1.*tip1);
 t2_cu = cumsum(t2.*tip2);
