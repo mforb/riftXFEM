@@ -1,6 +1,6 @@
 function [ tt ] = f_test_tip( tip, delta_inc)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
-global node element elemType
+global node element elemType epsilon
 
 % This function determins if a tip is within an element with sufficient margin 
 % first thing is just to check if any noodes are within epsilon 
@@ -8,7 +8,7 @@ tt = 0
 x = tip(1);
 y = tip(2);
 p_buff1 = polybuffer(tip, 'points',delta_inc);
-inds = find( isinterior(p_buff1, nodes(:,1), nodes(:,2)) ) ;
+inds = find( isinterior(p_buff1, node(:,1), node(:,2)) ) ;
 nds = node(inds,:)
 
 p_buff = polybuffer(tip, 'points',epsilon);
@@ -45,9 +45,10 @@ for i = 1:length(els)
     phi = (y0-y1)*(x-x0) + (x1-x0)*(y-y0);
     phi = phi/l;
     if phi < epsilon 
-    if psi1 < 0 & psi2 < 0 
-      tt = 1
-      return
+      if psi1 < 0 & psi2 < 0 
+        tt = 1
+        return
+      end
     end
   end
 end

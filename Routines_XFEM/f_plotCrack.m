@@ -1,7 +1,9 @@
-function [ ] = f_plotCrack( crack_lips, factor,up_pl,down_pl, mid_pl )
+function [ ] = f_plotCrack(f, crack_lips, factor,up_pl,down_pl, mid_pl )
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Mon Nov 29 18:30:31 NZDT 2021
 
+figure(f)
+hold on
 
 for kk = 1:size(crack_lips,4) %what's the crack?
   for ii = 1:size(crack_lips,1)

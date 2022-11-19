@@ -43,8 +43,8 @@ xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
 xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
 
-tip1 = [ ones(1,8), zeros(1,6), ones(1,2)];
-tip2 = [ zeros(1,8), ones(1,6), ones(1,2)];
+tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
+tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
 
 knm1 = [];
 knm2 = [];
@@ -71,7 +71,6 @@ mr = max([ormin,ormax]) - 1;
 lb = floor(rg(1)/(10^mr)) * 10 ^mr;
 ub = ceil(rg(2)/(10^mr)) * 10 ^mr;
 
-keyboard
 
 t1_cu = cumsum(t1.*tip1);
 t2_cu = cumsum(t2.*tip2);

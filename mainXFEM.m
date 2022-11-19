@@ -307,11 +307,11 @@ for ipas = 1:npas
     else
       f = figure();
     end
-    hold on
+    figure(f);
     dfac = 1 ;
     triplot(TR);
     hold on
-    f_plotCrack(crackLips,2000,'r-','k-','c--')
+    f_plotCrack(f,crackLips,2000,'r-','k-','c--')
     print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r500')
     if ~isempty(zoom_dim)
       xlim(zoom_dim(1,:));
@@ -320,7 +320,8 @@ for ipas = 1:npas
       print([results_path,'/',figure_name],'-dpng','-r500')
       %keyboard
     end
-    clf();
+    clf(f);
+    figure(f);
     trisurf(element,node(:,1),node(:,2),Stduy)
     axis equal; view(2); shading interp; colorbar
     title('Y displacement before Newton solver')
@@ -350,6 +351,7 @@ for ipas = 1:npas
         else
           f = figure();
         end
+        figure(f)
         trisurf(element,node(:,1),node(:,2),Stduy2-Stduy)
         axis equal; view(2); shading interp; colorbar
         title('Y displacement change from stabilizing')
@@ -361,11 +363,12 @@ for ipas = 1:npas
           print([results_path,'/',figure_name],'-dpng','-r500')
         end
         figure(f)
-        clf()
+        clf(f)
         [crackLips,flagP] = f_find_cracklips( u, xCrk, 1, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
         dfac = 1 ;
         plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-        f_plotCrack(crackLips,20,'r-','k-','c--')
+        hold on
+        f_plotCrack(f,crackLips,20,'r-','k-','c--')
         if ~isempty(zoom_dim)
           xlim(zoom_dim(1,:));
           ylim(zoom_dim(2,:));
