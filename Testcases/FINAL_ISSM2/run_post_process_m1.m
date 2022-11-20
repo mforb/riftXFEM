@@ -8,8 +8,9 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('MEL1_xmas_tip*');
-results_path = './MEL1_PP';
+ld = dir('./CLEAN/MEL1_t2_tip*');
+pre = ('./CLEAN/');
+results_path = './CLEAN/MEL1_P2';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -41,8 +42,8 @@ xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
 xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
 
-tip1 = [ ones(1,8), zeros(1,6), ones(1,2)];
-tip2 = [ zeros(1,8), ones(1,6), ones(1,2)];
+tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
+tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
 
 knm1 = [];
 knm2 = [];
@@ -51,7 +52,7 @@ t2 =[];
 % read all of the SIF values
 for i = 1:length(ld)
   dname = ld(i).name;
-  lname = [dname,'/crack.mat']; 
+  lname = [pre,dname,'/crack.mat']; 
   load(lname)
   knm1 = [knm1,Knumerical{1}];
   knm2 = [knm2,Knumerical{2}];
@@ -166,7 +167,7 @@ shapewrite(srift_final,[results_path,'/',shapefile_name]);
 
 if 1
   dname = ld(end).name;
-  lname = [dname,'/crack2.mat']; 
+  lname = [pre,dname,'/crack2.mat']; 
   load(lname)
   TR = triangulation(element,node);
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
@@ -240,7 +241,7 @@ end
 %plots of the first time-step
 if 1
   dname = ld(1).name;
-  lname = [dname,'/crack1.mat']; 
+  lname = [pre,dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
   %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
