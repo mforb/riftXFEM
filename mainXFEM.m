@@ -242,7 +242,7 @@ for ipas = 1:npas
             bcdof = [bcdof 2*dispNodes(i)-1 2*dispNodes(i)] ;
             bcval = [bcval 0 0] ;
         end
-    elseif strcmp(typeProblem,'centre')
+    elseif strcmp(typeProblem,'centre') || strcmp(typeProblem,'centreF')
         dispNodes = unique([bcNodes{3}]) ;
         bcdof = [ ]; bcval = [ ];
         for i=1:length(dispNodes)
