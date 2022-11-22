@@ -1,11 +1,15 @@
 No tip field for xCr defined, all tips have been activated
-5.6883    Crack growth number     1
+7.031    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 6350
-L2 norm of residual is 44212.6567 ; relative to R0 1. The contact ratio is: 1
-L2 norm of residual is 2.256e-11 ; relative to R0 5.1026e-16. The contact ratio is: 1
-Tip,2 before crack wall forces included : K1 is -325.3243   K2 is -86.1162  and theta is -0.46234
-Tip 2: K1 is 206.6486   K2 is -86.1162  and theta is 0.63279
-Tip,1 before crack wall forces included : K1 is -312.4999   K2 is -86.9097  and theta is -0.48013
-Tip 1: K1 is 221.476   K2 is -86.9097  and theta is 0.60976
+L2 norm of residual is 52168 ; relative to R0 1. The contact ratio is: 1
+L2 norm of residual is 0.44914 ; relative to R0 8.6096e-06. The contact ratio is: 0.95833
+L2 norm of residual is 0.02039 ; relative to R0 3.9086e-07. The contact ratio is: 0.95833
+L2 norm of residual is 1.5609e-11 ; relative to R0 2.9921e-16. The contact ratio is: 0.95833
+Tip2: before crack wall forces included : K1 is -324.6703   K2 is -86.2094  and theta is -0.46345
+Tip,2 wih crack wall forces included : K1 is -224.1294   K2 is -86.2094  and theta is -0.60209
+Calculating SIFs and propagating rift
+Tip1: before crack wall forces included : K1 is -312.3407   K2 is 86.8348  and theta is 0.48
+Tip,1 wih crack wall forces included : K1 is -220.3127   K2 is 86.8348  and theta is 0.61145
+Tip 1 modified: K1 is -220.3127   K2 is 86.8348  and theta is -0.61145

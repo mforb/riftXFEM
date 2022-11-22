@@ -86,8 +86,8 @@ grid on
 for i = 1:2
   plot([1:length(knm1)],knm1(i,:)/1e6,'color',c1(i,:),'linewidth',3)
 end
-plot([9,9],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([16,16],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([28,28],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]/1e6);
 xlim([1,length(knm2)]);
 xlabel('Step')
@@ -103,8 +103,8 @@ grid on
 for i = 1:2
   plot([1:length(knm2)],knm2(i,:)/1e6,'color',c2(i,:),'linewidth',3)
 end
-plot([9,9],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([16,16],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([28,28],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]/1e6);
 xlim([1,length(knm2)]);
 xlabel('Step')
@@ -118,8 +118,8 @@ nexttile
 hold on
 plot([1:length(t1_cu)],t1_cu,'color',c1(4,:),'linewidth',3)
 plot([1:length(t1)],t1,'color',c1(3,:),'linewidth',3)
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([16,16],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([28,28],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 xlim([1,length(knm2)]);
@@ -134,8 +134,8 @@ nexttile
 hold on
 plot([1:length(t2_cu)],t2_cu,'color',c2(4,:),'linewidth',3)
 plot([1:length(t2)],t2,'color',c2(3,:),'linewidth',3)
-plot([9,9],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[-pi/3,pi/3],'color',[30,30,30,200]/255,'linewidth',1)
+plot([16,16],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
+plot([28,28],[lb,ub]/1e6,'color',[30,30,30,200]/255,'linewidth',1)
 grid on
 ylim([-pi/3,pi/3]);
 %title('propagation angle','FontSize',fontSize1)
@@ -165,13 +165,13 @@ shapewrite(srift_final,[results_path,'/',shapefile_name]);
 %plots of the last time-step
 if 1
   dname = [pre,ld(end).name];
-  lname = [dname,'/crack2.mat']; 
+  lname = [dname,'/crack4.mat']; 
   load(lname)
   TR = triangulation(element,node);
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
   zoom_dim(2,:) = [min(xCrk.coor(:,2))-30000,max(xCrk.coor(:,2))+30000];
-  %[ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+  [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -248,7 +248,6 @@ if 1
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
   Stduy = fu(2:2:2*numnode) ;
-  %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
   f = figure();
   f.Position = [ 0, 0, 1200, 700];

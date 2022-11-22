@@ -47,6 +47,11 @@ else
   corner = [1 2 3 1] ;
   nnode = [0 0;1 0;0 1] ;
 end
+% for debug
+%TR = triangulation(element,node);
+%figure(12)
+%triplot(TR)
+%hold on
 
 % Compute the Stress Intensity Factors
 % Using the Interaction integral method
@@ -68,7 +73,7 @@ elseif flag_end == 2
   fl = [1 0; 0 1];
 end
 
-[Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node);
+[Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node,5);
 
 I1 = 0;
 I2 = 0;
@@ -85,6 +90,7 @@ kappa = 3-4*nu;    %Kolosov coeff, Plain strain
 %----------------------------
 compt=0;
 q=[];
+done_nodes = [];
 
 for iel = 1 : size(JWdomain,2)
     e = JWdomain(iel) ; % current element
@@ -318,19 +324,25 @@ for iel = 1 : size(JWdomain,2)
       [N,dNdxi] = lagrange_basis(elemType,pt);
       qn = N'*qf';
 
+      if ~ismember(nod,done_nodes) 
+        done_nodes = [nod, done_nodes];
 
 
-      % ++++++++++++++++++
-      %  Auxiliary fields
-      % ++++++++++++++++++
-      xp    = QT *(Gpt - xyTip)';           % local coordinate to tip
-      r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2)) ;
-      theta = atan2(xp(2),xp(1)) ;
 
-      for mode = 1:2
-        [AuxStress,AuxGradDisp,AuxEps] = f_auxiliary(xp,r,theta,mu,kappa,mode);
-        Fdudx = (F(2*nod-1) * AuxGradDisp(1,1) + F(2*nod)*AuxGradDisp(1,2))*qn
-        If(mode,1) = If(mode,1) + Fdudx;
+        % ++++++++++++++++++
+        %  Auxiliary fields
+        % ++++++++++++++++++
+        xp    = QT *(Gpt - xyTip)';           % global coordinate to tip
+        r     = sqrt(xp(1)*xp(1)+xp(2)*xp(2)) ;
+        theta = atan2(xp(2),xp(1)) ;
+
+        for mode = 1:2
+          [AuxStress,AuxGradDisp,AuxEps] = f_auxiliary(xp,r,theta,mu,kappa,mode);
+          %pe = plot(Gpt(1),Gpt(2),'y*','markersize',10);
+          f_i = QT * F(2*nod-1:2*nod);
+          Fdudx = (f_i(1) * AuxGradDisp(1,1) + f_i(2)*AuxGradDisp(2,1))*qn;
+          If(mode,1) = If(mode,1) - Fdudx;
+        end
       end
     end
 end
@@ -343,24 +355,33 @@ theta_inc = theta_inc * pi / 180.;%rad
 kstr = ['Tip',num2str(flag_end),': stress-strain contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
 fprintf(output_file,kstr)
 
-I = I + If;
-Knum = I.*E / (2*(1-nu^2)) % plain strain
+Knumf = If.*E / (2*(1-nu^2)) % plain strain
+KI = Knumf(1);
+KII = Knumf(2);
+theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
+theta_inc = theta_inc * pi / 180.;%rad
+kstr = ['Tip',num2str(flag_end),':  body forces contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+fprintf(output_file,kstr)
+
+if any(Iw)
+  Knumw = Iw.*E / (2*(1-nu^2)) % plain strain
+  KI = Knumw(1);
+  KII = Knumw(2);
+  theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
+  theta_inc = theta_inc * pi / 180.;%rad
+  kstr = ['Tip',num2str(flag_end),': wall forces contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+  fprintf(output_file,kstr)
+else
+  Knumw = zeros(2,1);
+end
+
+Knum = Knum + Knumf + Knumw;
 KI = Knum(1);
 KII = Knum(2);
 theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
 theta_inc = theta_inc * pi / 180.;%rad
-kstr = ['Tip',num2str(flag_end),': including body forces K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+kstr = ['Tip',num2str(flag_end),': K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
 fprintf(output_file,kstr)
 
-if any(Iw)
-  I = I + Iw;
-  Knum = I.*E / (2*(1-nu^2)) % plain strain
-  KI = Knum(1);
-  KII = Knum(2);
-  theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
-  theta_inc = theta_inc * pi / 180.;%rad
-  kstr = ['Tip',num2str(flag_end),': including wall forces K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
-  fprintf(output_file,kstr)
-end
 
 

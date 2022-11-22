@@ -1,11 +1,15 @@
-30.3746    Crack growth number     1
+46.6117    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 23347
  CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
-Tip1: before crack wall forces included : K1 is -6776461.6856   K2 is -1460020.7353  and theta is -0.39187
-Tip,1 wih crack wall forces included : K1 is -12808361.7626   K2 is -1460020.7353  and theta is -0.22143
-Tip 1 modified: K1 is -12808361.7626   K2 is -1460020.7353  and theta is 0.22143
-Tip2: before crack wall forces included : K1 is -7129457.0059   K2 is 1625691.9508  and theta is 0.41063
-Tip,2 wih crack wall forces included : K1 is -14373580.7346   K2 is 1625691.9508  and theta is 0.21981
-Tip 2 modified: K1 is -14373580.7346   K2 is 1625691.9508  and theta is 0.21981
+Tip1: stress-strain contribution K1 is -5067425.1761   K2 is -1524761.5671  and theta is -0.50904
+Tip1:  body forces contribution K1 is 5435.2425   K2 is -4635.6943  and theta is 0.88254
+Tip1: wall forces contribution K1 is -7768688.5426   K2 is 0  and theta is 0
+Tip1: K1 is -12830678.4762   K2 is -1529397.2614  and theta is -0.23095
+Tip 1 modified: K1 is -12830678.4762   K2 is -1529397.2614  and theta is 0.23095
+Tip2: stress-strain contribution K1 is -5837428.8289   K2 is 1648527.4053  and theta is 0.4857
+Tip2:  body forces contribution K1 is -9659.1819   K2 is -26972.8544  and theta is -1.1146
+Tip2: wall forces contribution K1 is -8549688.9047   K2 is 0  and theta is 0
+Tip2: K1 is -14396776.9156   K2 is 1621554.5508  and theta is 0.21894
+Tip 1 modified: K1 is -12830678.4762   K2 is -1529397.2614  and theta is 0.23095

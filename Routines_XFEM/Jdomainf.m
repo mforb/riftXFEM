@@ -1,4 +1,4 @@
-function [Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip_elem,xTip,enrich_node)
+function [Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip_elem,xTip,enrich_node,fac)
 
 global node element typeProblem
 
@@ -32,7 +32,7 @@ area = polyarea(node(sctr,1),node(sctr,2));
 %else
   %fac = 3;
 %end
-fac = 3;
+%fac = 6;
 radius = fac * sqrt(area);
 center = xTip;
 

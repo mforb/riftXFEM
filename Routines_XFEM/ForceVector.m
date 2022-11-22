@@ -38,7 +38,7 @@ elseif( strcmp(typeProblem,'eCrkTen2') )
     end
 elseif( strcmp(typeProblem,'Griffith') || strcmp(typeProblem,'dispfriction'))
     f = f ;
-elseif( strcmp(typeProblem,'centre') )
+elseif( strcmp(typeProblem,'centre')  || strcmp(typeProblem,'centreF') )
     botEdge = edgNodes{1} ;
     [W,Q] = quadrature(1,'GAUSS',1) ;
     for e = 1:size(botEdge,1)
@@ -51,17 +51,20 @@ elseif( strcmp(typeProblem,'centre') )
             f(sctry) = f(sctry) - N*sigmato*det(J0)*wt ;
         end
     end
-elseif( strcmp(typeProblem,'centreF') )
-    [W,Q] = quadrature(1,'TRIANGULAR',1) ;
-    for e = 1:size(element,1)
-        sctr = element(e,:) ;
-        sctry = sctr.*2;
-        for q = 1:size(W,1)
-            pt = Q(q,:) ; wt = W(q) ;
-            [N,dNdxi] = lagrange_basis(elemType,pt);  % element shape functions
-            J0 = node(sctr,:)'*dNdxi;                 % element Jacobian matrix
-            f(sctry) = f(sctry) - N*sigmato*det(J0)*wt ;
-        end
+    if( strcmp(typeProblem,'centreF') )
+      [W,Q] = quadrature(1,'TRIANGULAR',1) ;
+      els = [600,5019,5044,5259,5459]
+      for i = 1:length(els)
+          e = els(i) ;
+          sctr = element(e,:) ;
+          sctry = sctr.*2;
+          for q = 1:size(W,1)
+              pt = Q(q,:) ; wt = W(q) ;
+              [N,dNdxi] = lagrange_basis(elemType,pt);  % element shape functions
+              J0 = node(sctr,:)'*dNdxi;                 % element Jacobian matrix
+              f(sctry) = f(sctry) - .1*N*sigmato*det(J0)*wt ;
+          end
+      end
     end
 elseif( strcmp(typeProblem,'eCrkShear') )
     topEdge = edgNodes{3} ;

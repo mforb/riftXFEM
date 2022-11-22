@@ -28,7 +28,7 @@ global penalty fixedF contact Kpen stabalize
 global frictionB friction_mu epsilon FintH wall_int
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global fmesh results_path same_coords skip_branch skip_vertex
-global modpen FintH stab_mu
+global modpen FintH stab_mu wall_force
 epsilon = 1e-6
 same_coords = 1
 plothelp = 0
@@ -43,11 +43,12 @@ typeProblem = 'eCrkTen' ; %choose type of problem
 contact = 1;
 stabalize = 0;
 stab_mu = 10;
-wall_int = 2;
-modpen = 0;
+wall_int = 5;
+modpen = 1;
 modocean = 0;
 skip_branch = 0;
 skip_vertex = 0;
+wall_force = 1
 
 
 

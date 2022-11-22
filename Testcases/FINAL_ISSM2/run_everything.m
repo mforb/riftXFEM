@@ -1,24 +1,24 @@
-%try 
-  %testcase_ISSM
-%catch
-  %opfile = fopen('allrun.log','a')
-  %erm = 'Something went wrong'
-  %run = 'ISSM'
-  %fprintf(opfile,[run,'\n'])
-  %fprintf(opfile,[erm,'\n'])
-  %fclose(opfile);
-%end
+try 
+  testcase_ISSM
+catch
+  opfile = fopen('allrun.log','a')
+  erm = 'Something went wrong'
+  run = 'ISSM'
+  fprintf(opfile,[run,'\n'])
+  fprintf(opfile,[erm,'\n'])
+  fclose(opfile);
+end
 
-%try 
-  %testcase_pressure
-%catch
-  %opfile = fopen('allrun.log','a')
-  %erm = 'Something went wrong'
-  %run = 'pressure'
-  %fprintf(opfile,[run,'\n'])
-  %fprintf(opfile,[erm,'\n'])
-  %fclose(opfile);
-%end
+try 
+  testcase_pressure
+catch
+  opfile = fopen('allrun.log','a')
+  erm = 'Something went wrong'
+  run = 'pressure'
+  fprintf(opfile,[run,'\n'])
+  fprintf(opfile,[erm,'\n'])
+  fclose(opfile);
+end
 
 try 
   testcase_melange_m1

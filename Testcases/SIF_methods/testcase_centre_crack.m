@@ -12,6 +12,7 @@ path(path,'../../')
 path(path,'../../Crackprocessing')
 path(path,'../../Mesh')
 path(path,'../../Routines_XFEM')
+path(path,'../../Routines_ICEM')
 path(path,'../../Testcases/Tri_simple')
 
 %declare global variables here
@@ -58,7 +59,7 @@ else
 end
 
 %crack definition
-deltaInc = 0; numstep = 1;
+deltaInc = 200; numstep = 1;
 xCr(1).coor = [-0.1 3000 ;500 3000] ;
 numcrack = size(xCr,2) ;
 fmesh = figure();

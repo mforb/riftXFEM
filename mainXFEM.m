@@ -46,7 +46,7 @@ if isempty(modpen)
   modpen = 0;
 end
 if isempty(modocean)
-  modpen = 0;
+  modocean = 0;
 end
 if isempty(melange_stab)
   melange_stab = 0;
@@ -396,12 +396,13 @@ for ipas = 1:npas
     end
 
 
+    %keyboard
     if penalty 
       elemForce_orig = elemForce;
       elemForce = zeros(size(elemForce));
-      tol1 = 1e-10;
+      tol1 = 1e-11;
       %tol2 = 1e-8;
-      tol2 = 1e-2;
+      tol2 = 1e-3;
       cont = 1
       Du = zeros(size(u));
       Fext = F
@@ -451,7 +452,7 @@ for ipas = 1:npas
           hold on
           dfac = 1 ;
           plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
-          f_plotCrack(crackLips,1,'r-','k-','m--')
+          f_plotCrack(f,crackLips,1,'r-','k-','m--')
           print(['crack_iter',num2str(cont)],'-dpng','-r500')
         end
       end
@@ -492,7 +493,7 @@ for ipas = 1:npas
       dfac = 1 ;
       %plotMesh(node+dfac*[Stdux, Stduy],element,elemType,'b-',plotNode,f)
       triplot(TR);
-      f_plotCrack(crackLips,200,'r-','k-','c--')
+      f_plotCrack(f,crackLips,200,'r-','k-','c--')
       %keyboard
       print([results_path,'/crack_walls_after',num2str(ipas)],'-dpng','-r500')
       if ~isempty(zoom_dim)

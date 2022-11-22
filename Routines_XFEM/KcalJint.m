@@ -14,7 +14,7 @@ stp1 = 0;
 stp2 = 0;
 
 % ThetaInc = [] ;
-kstr = [];
+kstr = ['Calculating SIFs and propagating rift\n'];
 for kk = 1:size(xCr,2) %what's the crack?
     disp([num2str(toc),'      Crack n. ',num2str(kk)])
     if ~isempty(Knumerical) ;
@@ -45,7 +45,7 @@ for kk = 1:size(xCr,2) %what's the crack?
         if flag1 == 1
             seg   = xCr(kk).coor(1,:) - xCr(kk).coor(2,:);
             alpha = atan2(seg(2),seg(1));
-            if strcmp(typeProblem,'ISSM') || strcmp(typeProblem,'centerF')
+            if strcmp(typeProblem,'ISSM') || strcmp(typeProblem,'centreF')
               [Knum,theta_inc] = SIF_BF(C,1,iel,elem_crk,xCr,type_elem,...
                   enrich_node,crack_nodes,xVertex,pos,u,F,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
             else
@@ -58,7 +58,7 @@ for kk = 1:size(xCr,2) %what's the crack?
             ti1 = [ti1, theta_inc] ; % because of flipped y-axis 
             kstr = ['Tip 1 modified: K1 is ',num2str(Knum(1)),'   K2 is ',num2str(Knum(2)),'  and theta is ',num2str(theta_inc),'\n'];
             if xCr(kk).tip(1) & Knum(1) > 0
-              [xCr(kk),theta_inc,kstr] = f_advance_tip(xCr(kk),1,delta_inc,theta_inc,alpha,kstr)
+              [xCr(kk),theta_inc,kstr] = f_advance_tip(xCr(kk),1,delta_inc,theta_inc,alpha,kstr);
             else
               stp1 = 1;
             end
@@ -69,7 +69,7 @@ for kk = 1:size(xCr,2) %what's the crack?
             seg   = xCr(kk).coor(size(xCr(kk).coor,1),:) - xCr(kk).coor(size(xCr(kk).coor,1)-1,:);
             alpha = atan2(seg(2),seg(1)) ;
 
-            if strcmp(typeProblem,'ISSM') || strcmp(typeProblem,'centerF')
+            if strcmp(typeProblem,'ISSM') || strcmp(typeProblem,'centreF')
               [Knum,theta_inc] = SIF_BF(C,2,iel,elem_crk,xCr,type_elem,...
                   enrich_node,crack_nodes,xVertex,pos,u,F,kk,alpha,tip_elem,split_elem,vertex_elem,corner_elem,tan_elem,elem_force) ;
             else
@@ -78,7 +78,7 @@ for kk = 1:size(xCr,2) %what's the crack?
             end
             K2_num = [K2_num, Knum] ;
             if xCr(kk).tip(2) & Knum(1) > 0
-              [xCr(kk),theta_inc,kstr] = f_advance_tip(xCr(kk),2,delta_inc,theta_inc,alpha,kstr)
+              [xCr(kk),theta_inc,kstr] = f_advance_tip(xCr(kk),2,delta_inc,theta_inc,alpha,kstr);
             else
               stp2 = 1;
             end
