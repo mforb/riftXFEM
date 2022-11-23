@@ -8,7 +8,7 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('PRES_xmas_tip1_10*');
+ld = dir('./CLEAN/PRES_xmas_tip1_10*');
 results_path = './PRES_PP';
 mkdir(results_path);
 global results_path
@@ -115,7 +115,7 @@ end
 %plots of the first time-step
 if 1
   dname = [ld(1).name];
-  lname = [dname,'/crack1.mat']; 
+  lname = ['./CLEAN/',dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
   %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
