@@ -21,7 +21,7 @@ global E C nu P
 global melange
 melange = 0
 melangeforce = 0
-E = 9.6e9; nu = 0.3; P = 1 ;
+E = 9.6e9; nu = 0.33; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
 stressState = 'PlaneStrain' ;
@@ -58,8 +58,8 @@ for i = 1:length(ld)
   t2 = [t2,ThetaInc{2}];
 end
 
-  zoom_dim(1,:) = [min(xCr.coor(:,1))-5000,max(xCr.coor(:,1))+5000];
-  zoom_dim(2,:) = [min(xCr.coor(:,2))-5000,max(xCr.coor(:,2))+5000];
+  zoom_dim(1,:) = [min(xCr.coor(:,1))-3000,max(xCr.coor(:,1))+3000];
+  zoom_dim(2,:) = [min(xCr.coor(:,2))-3000,max(xCr.coor(:,2))+3000];
 
 
 %plots of the first time-step
@@ -70,8 +70,8 @@ if 0
   TR = triangulation(element,node);
   zoom_dim(1,:) = [min(xCrk.coor(:,1))-5000,max(xCrk.coor(:,1))+5000];
   zoom_dim(2,:) = [min(xCrk.coor(:,2))-5000,max(xCrk.coor(:,2))+5000];
-  [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+  %[ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -118,8 +118,8 @@ if 1
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1);
+  %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1);
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -133,10 +133,10 @@ if 1
   %xCrk(1).coor(1,:)=[];
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
-  triplot(TR);
+  %triplot(TR);
   hold on
   axis equal;
-  f_plotCrack_pp(crackLips,mag)
+  f_plotCrack_pp(crackLips,mag,xCr_original)
   ylabel('Northing (km)');
   xlabel('Easting (km)');
   ax = gca();
