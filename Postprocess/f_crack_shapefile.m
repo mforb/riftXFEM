@@ -28,10 +28,17 @@ if isfield(xCr,'melange')
       sp = union(sp,ptemp);
     end
   end
-  keyboard
-  sp.Geometry = 'PolyLine'
-  sp.id = NaN
+  %keyboard
+
+  sr = struct();
+  sr.Geometry = 'Polygon';
+  sr.BoundingBox = [min(sp.Vertices(:,1)), min(sp.Vertices(:,2)); max(sp.Vertices(:,1)), max(sp.Vertices(:,2))];
+  sr.X = sp.Vertices(:,1)';
+  sr.Y = sp.Vertices(:,2)';
+  sr.id = NaN;
   shapewrite(sr,[results_path,'/',sname,'_mp']);
+  %sp.Geometry = 'PolyLine'
+  %sp.id = NaN
 end
 
 

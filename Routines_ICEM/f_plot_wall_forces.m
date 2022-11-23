@@ -1,4 +1,4 @@
-function [inters,gn_inters] = f_plot_wall_forces( u,xCrk,enrDomain,typeElem,elem_force,elem_gap,elem_crk,split_elem,vertex_elem,tip_elem,stepnum)
+function [inters,gn_inters,ylg,yls] = f_plot_wall_forces( u,xCrk,enrDomain,typeElem,elem_force,elem_gap,elem_crk,split_elem,vertex_elem,tip_elem,stepnum,varargin)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Mar 18 18:39:27 NZDT 2022
 
@@ -25,6 +25,14 @@ if isempty(melange)  | melange == 0
   mel_b = 0;
 else
   mel_b = 1
+end
+
+if nargin == 13
+  ylg = varargin{1}; 
+  yls = varargin{2}; 
+else
+  ylg = []; 
+  yls = []; 
 end
 
 
@@ -308,57 +316,84 @@ for kk = 1:size(xCrk,2) %what's the crack?
   clf
 
 
-  if mel_b
-    t = tiledlayout(3,1,'TileSpacing','Compact');
-  else
-    t = tiledlayout(2,1,'TileSpacing','Compact');
-  end
+  %if mel_b
+    %t = tiledlayout(3,1,'TileSpacing','Compact');
+  %else
+    %t = tiledlayout(2,1,'TileSpacing','Compact');
+  %end
 
-  nexttile
+  f = figure(); 
+  f.Position = [0 0 900 400 ]
 
-  plot(gc/1000,gn,'color',[0.1,0.1,0.6],'linewidth',3,'DisplayName','normal gap')
-  set(gca,'FontSize',14);
+  plot(gc/1000,gn,'color',[0.04,0.04,0.04],'linewidth',2,'DisplayName','normal gap')
+  ax = gca();
+  set(ax,'FontSize',16);
   yl = ylim();
+  if isempty(ylg)
+    ylg = yl;
+  else
+    yl = ylg;
+  end
   hold on
   for i = 1: length(inters)
-    plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
+    plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
   end
   ylim(yl);
   xlim(xl);
+  %ax.XAxisLocation = 'origin';
+  grid on
   xlabel('Distance along rift (km)')
   ylabel('Gap (m)')
   tstr = ['normal gap along rift ',num2str(kk)];
   %title(tstr);
+  nstr = ['rift',num2str(kk),'_gap_',num2str(stepnum)];
+  print([results_path,'/',nstr],'-dpng','-r300')
 
-  nexttile
-  plot(gc/1000,gt,'color',[0.9,.2,0.3],'linewidth',3,'DisplayName','tangential disp')
-  set(gca,'FontSize',14);
+
+  clf(f);
+  figure(f);
+  plot(gc/1000,gt,'color',[0.04,.04,0.04],'linewidth',3,'DisplayName','tangential disp')
+  ax = gca();
+  set(ax,'FontSize',16);
   hold on
   yl = ylim();
+  if isempty(yls)
+    yls = yl;
+  else
+    yl = yls;
+  end
   for i = 1: length(inters)
-    plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
+    plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
   end
   ylim(yl);
   xlim(xl);
+  grid on
+  %ax.XAxisLocation = 'origin';
   xlabel('Distance along rift (km)')
   ylabel('Slip (m)')
   tstr = ['tangential displacement along rift ',num2str(kk)];
   %title(tstr);
+  nstr = ['rift',num2str(kk),'_slip_',num2str(stepnum)];
+  print([results_path,'/',nstr],'-dpng','-r300')
 
   if mel_b
-    nexttile
+    clf(f);
+    figure(f);
     plot(gc/1000,(gw+gn),'color',[0.2,0.1,0.3],'linewidth',3,'DisplayName','rift wall distance')
     hold on
     yl = ylim();
     for i = 1: length(inters)
-      plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',0.8,'Color',[0.5,0.3,0.7,0.2]);
+      plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
     end
     ylim(yl);
     xlim(xl);
+    grid on
     xlabel('Distance along rift (km)')
     ylabel('Wall to wall "distance" (m)')
     tstr = ['"melange" distance between rift walls ',num2str(kk)];
     %title(tstr);
+    nstr = ['rift',num2str(kk),'_dwall_',num2str(stepnum)];
+    print([results_path,'/',nstr],'-dpng','-r300')
   end
 
   nstr = ['rift',num2str(kk),'_gaps_step',num2str(stepnum)];

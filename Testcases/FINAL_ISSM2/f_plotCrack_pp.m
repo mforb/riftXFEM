@@ -1,4 +1,4 @@
-function [ ] = f_plotCrack_pp( crack_lips, factor)
+function [ ] = f_plotCrack_pp( crack_lips, factor, xCr_original)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Mon Nov 29 18:30:31 NZDT 2021
 
@@ -28,9 +28,10 @@ for kk = 1:size(crack_lips,4) %what's the crack?
      p_mid = p; 
      %p_mid = p ; 
      
-     plot(p_up(:,1),p_up(:,2),'color',[255,181,134]/255,'linewidth',2)
-     plot(p_down(:,1),p_down(:,2),'color',[255,14,94]/255,'linewidth',2)
-     plot(p_mid(:,1),p_mid(:,2),'color',[99,64,86]/510,'linewidth',1)
+     plot(p_up(:,1),p_up(:,2),'color',[202,0,32]/255,'linewidth',2)
+     plot(p_down(:,1),p_down(:,2),'color',[5,113,176]/255,'linewidth',2)
+     plot(p_mid(:,1),p_mid(:,2),'color',[20,20,20]/255,'linewidth',1)
+     plot(xCr_original.coor(:,1),xCr_original.coor(:,2),'color',[64,0,75]/255,'linewidth',2)
   end % end split or vertex elements
 end
 

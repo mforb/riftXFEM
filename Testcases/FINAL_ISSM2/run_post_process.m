@@ -6,7 +6,8 @@ path(path,'../../Routines_ICEM')
 path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
-mag       = 2000;
+mag       = 4000;
+plotfields = 0
 
 ld = dir('./CLEAN/ISSM2_xmas_tip*');
 pre = './CLEAN/';
@@ -168,10 +169,12 @@ if 1
   lname = [dname,'/crack4.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
-  zoom_dim(2,:) = [min(xCrk.coor(:,2))-30000,max(xCrk.coor(:,2))+30000];
+  zoom_dim(1,:) = [min(xCrk.coor(:,1))-3000,max(xCrk.coor(:,1))+3000];
+  zoom_dim(2,:) = [min(xCrk.coor(:,2))-3000,max(xCrk.coor(:,2))+3000];
+  if plotfields
   [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
     elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+  end
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -185,10 +188,10 @@ if 1
   hold on
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
-  triplot(TR);
+  %triplot(TR);
   hold on
   axis equal;
-  f_plotCrack_pp(crackLips,mag)
+  f_plotCrack_pp(crackLips,mag,xCr_original)
   ylabel('Northing (km)');
   xlabel('Easting (km)');
   ax = gca();
@@ -206,10 +209,10 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
+  [~,~,ylg,yls]=f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66);
   clf();
   f = figure();
-  f.Position = [0 0 1200 700 ]
+  f.Position = [0 0 1200 500 ]
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
   cb.Label.String = "displacement";
@@ -256,10 +259,10 @@ if 1
   xCrk(1).coor(1,:)=[];
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
-  triplot(TR);
+  %triplot(TR);
   hold on
   axis equal;
-  f_plotCrack_pp(crackLips,mag)
+  f_plotCrack_pp(crackLips,mag,xCr_original)
   ylabel('Northing (km)');
   xlabel('Easting (km)');
   ax = gca();
@@ -277,7 +280,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
+  [~,~,ylg,yls] = f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1,ylg,yls)
   clf();
   f = figure();
   f.Position = [0 0 1200 700 ];
