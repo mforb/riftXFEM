@@ -348,6 +348,12 @@ for kk = 1:size(xCrk,2) %what's the crack?
   %title(tstr);
   nstr = ['rift',num2str(kk),'_gap_',num2str(stepnum)];
   print([results_path,'/',nstr],'-dpng','-r300')
+  if stepnum == 1
+    ylim([-0.4,0.55])
+    nstr = ['rift',num2str(kk),'_gap_normalized'];
+    print([results_path,'/',nstr],'-dpng','-r300')
+  end
+
 
 
   clf(f);
