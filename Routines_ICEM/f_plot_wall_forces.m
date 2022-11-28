@@ -325,7 +325,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   f = figure(); 
   f.Position = [0 0 900 400 ]
 
-  plot(gc/1000,gn,'color',[0.04,0.04,0.04],'linewidth',2,'DisplayName','normal gap')
+  pg = plot(gc/1000,gn,'color',[0.04,0.04,0.04],'linewidth',2,'DisplayName','normal gap')
   ax = gca();
   set(ax,'FontSize',16);
   yl = ylim();
@@ -335,8 +335,9 @@ for kk = 1:size(xCrk,2) %what's the crack?
     yl = ylg;
   end
   hold on
+  pi = [];
   for i = 1: length(inters)
-    plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
+    pi(i) = plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
   end
   ylim(yl);
   xlim(xl);
@@ -349,7 +350,14 @@ for kk = 1:size(xCrk,2) %what's the crack?
   nstr = ['rift',num2str(kk),'_gap_',num2str(stepnum)];
   print([results_path,'/',nstr],'-dpng','-r300')
   if stepnum == 1
-    ylim([-0.4,0.55])
+    delete(pi)
+    pi = []
+    yl = [-.55,.55];
+    for i = 1: length(inters)
+      pi(i) = plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
+    end
+    ylim(yl)
+    set(pg,'linewidth',3);
     nstr = ['rift',num2str(kk),'_gap_normalized'];
     print([results_path,'/',nstr],'-dpng','-r300')
   end

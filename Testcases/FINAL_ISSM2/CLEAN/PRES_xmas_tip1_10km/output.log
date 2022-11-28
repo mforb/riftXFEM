@@ -1,15 +1,15 @@
-57.2349    Crack growth number     1
+29.3014    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
-Number of elements: 23347
- CRACK NODES :  1 crack nodes, 4 tangent elements, requiring 2 fixed nodes
-Tip1: stress-strain contribution K1 is -5067425.1761   K2 is -1524761.5671  and theta is -0.50904
-Tip1:  body forces contribution K1 is 5435.2425   K2 is -4635.6943  and theta is 0.88254
-Tip1: wall forces contribution K1 is -7768688.5426   K2 is 0  and theta is 0
-Tip1: K1 is -12830678.4762   K2 is -1529397.2614  and theta is -0.23095
-Tip 1 modified: K1 is -12830678.4762   K2 is -1529397.2614  and theta is 0.23095
-Tip2: stress-strain contribution K1 is -5837428.8289   K2 is 1648527.4053  and theta is 0.4857
-Tip2:  body forces contribution K1 is -9659.1819   K2 is -26972.8544  and theta is -1.1146
-Tip2: wall forces contribution K1 is -8549688.9047   K2 is 0  and theta is 0
-Tip2: K1 is -14396776.9156   K2 is 1621554.5508  and theta is 0.21894
-Tip 1 modified: K1 is -12830678.4762   K2 is -1529397.2614  and theta is 0.23095
+Number of elements: 23299
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+Tip1: stress-strain contribution K1 is -4663115.9843   K2 is -1402203.5409  and theta is -0.5088
+Tip1:  body forces contribution K1 is 2322.5544   K2 is -8216.9866  and theta is 1.1386
+Tip1: wall forces contribution K1 is -7941921.2429   K2 is 0  and theta is 0
+Tip1: K1 is -12602714.6728   K2 is -1410420.5275  and theta is -0.21762
+Tip 1 modified: K1 is -12602714.6728   K2 is -1410420.5275  and theta is 0.21762
+Tip2: stress-strain contribution K1 is -5747662.5545   K2 is 1553742.5022  and theta is 0.46986
+Tip2:  body forces contribution K1 is -8313.4423   K2 is -25213.1779  and theta is -1.1236
+Tip2: wall forces contribution K1 is -8618062.2091   K2 is 0  and theta is 0
+Tip2: K1 is -14374038.2059   K2 is 1528529.3243  and theta is 0.20733
+Tip 1 modified: K1 is -12602714.6728   K2 is -1410420.5275  and theta is 0.21762

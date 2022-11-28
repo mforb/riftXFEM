@@ -7,7 +7,8 @@ path(path,'../../Postprocess')
 path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
-mag       = 2000;
+mag       = 4000;
+plotfields = 1;
 
 ld = dir('./CLEAN/MEL1_t2_tip*');
 pre = ('./CLEAN/');
@@ -24,7 +25,7 @@ global melange melangeforce wall_int
 wall_int = 2
 melange = 1
 melangeforce = 0
-E = 9.6e9; nu = 0.3; P = 1 ;
+E = 9.6e9; nu = 0.33; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
 stressState = 'PlaneStrain' ;
@@ -42,6 +43,10 @@ ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
 xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
+xCr_original.melange = ones(length(xCr_original.coor)-1,1);
+%xCr(1).melange(1) = 0;
+%xCr(1).melange(end) = 0;
+xCr_original.width = [0 10 60 150 200 80 0 ] ;
 
 tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
 tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
@@ -160,17 +165,23 @@ saveas(t,[results_path,'/',figure_name],'epsc')
 xCr_final = xCr;
 shapefile_name = 'final_rift_m1';
 f_crack_shapefile(xCr_final,results_path,shapefile_name);
+shapefile_name = 'originalrift_m';
+f_crack_shapefile(xCr_original,results_path,shapefile_name);
 
 
 if 1
-  dname = ld(end).name;
-  lname = [pre,dname,'/crack2.mat']; 
+  dname = [pre,ld(end).name];
+  lname = [dname,'/crack4.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  zoom_dim(1,:) = [min(xCrk.coor(:,1))-3000,max(xCrk.coor(:,1))+3000];
-  zoom_dim(2,:) = [min(xCrk.coor(:,2))-3000,max(xCrk.coor(:,2))+3000];
-  %[ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+  zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
+  zoom_dim(2,:) = [min(xCrk.coor(:,2))-30000,max(xCrk.coor(:,2))+30000];
+  zoom_dim2(1,:) = [min(xCrk.coor(:,1))-3000,max(xCrk.coor(:,1))+3000];
+  zoom_dim2(2,:) = [min(xCrk.coor(:,2))-3000,max(xCrk.coor(:,2))+3000];
+  if plotfields
+  [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
+  end
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -184,6 +195,7 @@ if 1
   hold on
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
+  %triplot(TR);
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag,xCr_original)
@@ -194,9 +206,9 @@ if 1
   b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng')
   delete(b);
-  if ~isempty(zoom_dim)
-    xlim(zoom_dim(1,:));
-    ylim(zoom_dim(2,:));
+  if ~isempty(zoom_dim2)
+    xlim(zoom_dim2(1,:));
+    ylim(zoom_dim2(2,:));
     yticks(-1170000:10000:-1100000);
     xticks(-20000:10000:100000);
     f_publish_fig(f,'s');
@@ -204,10 +216,10 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  [~,~,ylg,yls] = f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66)
+  [~,~,ylg,yls]=f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66);
   clf();
   f = figure();
-  f.Position = [0 0 1200 700 ]
+  f.Position = [0 0 1200 500 ]
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
   cb.Label.String = "displacement";
@@ -236,8 +248,8 @@ else
 end
 %plots of the first time-step
 if 1
-  dname = ld(1).name;
-  lname = [pre,dname,'/crack1.mat']; 
+  dname = [pre,ld(1).name];
+  lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
   %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
@@ -246,7 +258,6 @@ if 1
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
   Stduy = fu(2:2:2*numnode) ;
-  %[crackLips,flagP] = f_cracklips( u, xCrk, enrDomain, typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
 
   f = figure();
   f.Position = [ 0, 0, 1200, 700];
@@ -255,6 +266,7 @@ if 1
   xCrk(1).coor(1,:)=[];
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
   dfac = 1 ;
+  %triplot(TR);
   hold on
   axis equal;
   f_plotCrack_pp(crackLips,mag,xCr_original)
@@ -265,9 +277,9 @@ if 1
   b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
   delete(b);
-  if ~isempty(zoom_dim)
-    xlim(zoom_dim(1,:));
-    ylim(zoom_dim(2,:));
+  if ~isempty(zoom_dim2)
+    xlim(zoom_dim2(1,:));
+    ylim(zoom_dim2(2,:));
     yticks(-1170000:10000:-1100000);
     xticks(-20000:10000:100000);
     f_publish_fig(f,'s');
@@ -275,7 +287,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1,ylg,yls)
+  [~,~,ylg,yls] = f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1,ylg,yls)
   clf();
   f = figure();
   f.Position = [0 0 1200 700 ];
@@ -297,5 +309,3 @@ if 1
   print([results_path,'/start_ydisp'],'-dpng')
   clf();
 end
-
-

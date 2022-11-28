@@ -11,7 +11,7 @@ plotfields = 0
 
 ld = dir('./CLEAN/ISSM2_xmas_tip*');
 pre = './CLEAN/';
-results_path = './ISSM2_PP';
+results_path = './FINAL/ISSM2_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -169,8 +169,10 @@ if 1
   lname = [dname,'/crack4.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  zoom_dim(1,:) = [min(xCrk.coor(:,1))-3000,max(xCrk.coor(:,1))+3000];
-  zoom_dim(2,:) = [min(xCrk.coor(:,2))-3000,max(xCrk.coor(:,2))+3000];
+  zoom_dim(1,:) = [min(xCrk.coor(:,1))-30000,max(xCrk.coor(:,1))+30000];
+  zoom_dim(2,:) = [min(xCrk.coor(:,2))-30000,max(xCrk.coor(:,2))+30000];
+  zoom_dim2(1,:) = [min(xCrk.coor(:,1))-3000,max(xCrk.coor(:,1))+3000];
+  zoom_dim2(2,:) = [min(xCrk.coor(:,2))-3000,max(xCrk.coor(:,2))+3000];
   if plotfields
   [ca,cax,cay] = plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
     elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,66) ;
@@ -199,9 +201,9 @@ if 1
   b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_end'],'-dpng')
   delete(b);
-  if ~isempty(zoom_dim)
-    xlim(zoom_dim(1,:));
-    ylim(zoom_dim(2,:));
+  if ~isempty(zoom_dim2)
+    xlim(zoom_dim2(1,:));
+    ylim(zoom_dim2(2,:));
     yticks(-1170000:10000:-1100000);
     xticks(-20000:10000:100000);
     f_publish_fig(f,'s');
@@ -270,9 +272,9 @@ if 1
   b = f_publish_fig(f,'t');
   print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
   delete(b);
-  if ~isempty(zoom_dim)
-    xlim(zoom_dim(1,:));
-    ylim(zoom_dim(2,:));
+  if ~isempty(zoom_dim2)
+    xlim(zoom_dim2(1,:));
+    ylim(zoom_dim2(2,:));
     yticks(-1170000:10000:-1100000);
     xticks(-20000:10000:100000);
     f_publish_fig(f,'s');

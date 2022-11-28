@@ -6,10 +6,10 @@ path(path,'../../Routines_ICEM')
 path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
-mag       = 2000;
+mag       = 4000;
 
-ld = dir('./CLEAN/PRES_xmas_tip1_10*');
-results_path = './PRES_PP';
+ld = dir('./FINAL/PRES_xmas_tip1_10*');
+results_path = './FINAL/PRES_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -115,7 +115,7 @@ end
 %plots of the first time-step
 if 1
   dname = [ld(1).name];
-  lname = ['./CLEAN/',dname,'/crack1.mat']; 
+  lname = ['./FINAL/',dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
   %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...

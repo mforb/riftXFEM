@@ -7,13 +7,13 @@ global iMethod iParam
 global incR xc yc phiN
 global lambda1 lambda2 nu1 nu2
 global elemType typeMesh typeProblem typeCrack stressState
-global wall_int output_file wall_force crack_load
+global wall_int output_file wall_force crack_load fixwf
 global quick_freeze melange
 
 plotNode = 'NO' ;
 
 if isempty(wall_force)
-  wall_force = 0;
+  wall_force = 1;
 end
 if ~isempty(crack_load) & crack_load~=0
   wall_force = 1;
@@ -36,6 +36,10 @@ if melange
     end
   end
   mE = tot_phi/size(mel_elems,1);
+end
+
+if ~isempty(fixwf) & fixwf == 1 
+  wall_force = 0  
 end
 
 if strcmp(elemType,'Q4') 

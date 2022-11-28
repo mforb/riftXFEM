@@ -1,0 +1,72 @@
+8985.117    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 26561
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 1
+L2 norm of residual is 57001706308.9675 ; relative to R0 1. The contact ratio is: 0.91429
+L2 norm of residual is 81411588.7857 ; relative to R0 0.0014282. The contact ratio is: 0.85195
+L2 norm of residual is 4830861.8267 ; relative to R0 8.4749e-05. The contact ratio is: 0.82078
+L2 norm of residual is 0.0035588 ; relative to R0 6.2434e-14. The contact ratio is: 0.82078
+Tip1: stress-strain contribution K1 is 5135837.625   K2 is 1982978.706  and theta is -0.60355
+Tip1:  body forces contribution K1 is 12363.2623   K2 is -12413.2959  and theta is 0.92837
+Tip1: K1 is 5148200.8873   K2 is 1970565.4101  and theta is -0.60022
+Tip 1 modified: K1 is 5148200.8873   K2 is 1970565.4101  and theta is 0.60022
+Tip2: stress-strain contribution K1 is 3376293.25   K2 is 2049382.5961  and theta is -0.7721
+Tip2:  body forces contribution K1 is 4439.9246   K2 is -1259.2056  and theta is 0.48725
+Tip2: K1 is 3380733.1746   K2 is 2048123.3906  and theta is -0.77142
+Tip 1 modified: K1 is 5148200.8873   K2 is 1970565.4101  and theta is 0.60022
+9377.6556    Crack growth number     2
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 26561
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 1
+L2 norm of residual is 57174269092.6393 ; relative to R0 1. The contact ratio is: 0.97506
+L2 norm of residual is 39820219.0455 ; relative to R0 0.00069647. The contact ratio is: 0.91771
+L2 norm of residual is 3109337.5584 ; relative to R0 5.4384e-05. The contact ratio is: 0.90773
+L2 norm of residual is 99590.55 ; relative to R0 1.7419e-06. The contact ratio is: 0.90773
+L2 norm of residual is 0.0025954 ; relative to R0 4.5395e-14. The contact ratio is: 0.90773
+Tip1: stress-strain contribution K1 is 5079696.9469   K2 is -1860029.0874  and theta is 0.58324
+Tip1:  body forces contribution K1 is 14772.5947   K2 is -33083.9802  and theta is 1.0871
+Tip1: K1 is 5094469.5416   K2 is -1893113.0676  and theta is 0.58888
+Tip 1 modified: K1 is 5094469.5416   K2 is -1893113.0676  and theta is -0.58888
+Tip2: stress-strain contribution K1 is 3012535.1738   K2 is -1803086.5091  and theta is 0.76716
+Tip2:  body forces contribution K1 is 2752.4334   K2 is -7424.2725  and theta is 1.1107
+Tip2: K1 is 3015287.6072   K2 is -1810510.7815  and theta is 0.76828
+Tip 1 modified: K1 is 5094469.5416   K2 is -1893113.0676  and theta is -0.58888
+9780.3729    Crack growth number     3
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 26561
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 1
+L2 norm of residual is 57240220077.4114 ; relative to R0 1. The contact ratio is: 0.93494
+L2 norm of residual is 9914123.1322 ; relative to R0 0.0001732. The contact ratio is: 0.89639
+L2 norm of residual is 0.0028828 ; relative to R0 5.0364e-14. The contact ratio is: 0.89639
+Tip1: stress-strain contribution K1 is 4925385.3192   K2 is 1783037.9369  and theta is -0.57887
+Tip1:  body forces contribution K1 is 7056.5753   K2 is -23624.7892  and theta is 1.1335
+Tip1: K1 is 4932441.8945   K2 is 1759413.1477  and theta is -0.57323
+Tip 1 modified: K1 is 4932441.8945   K2 is 1759413.1477  and theta is 0.57323
+Tip2: stress-strain contribution K1 is 3323096.8588   K2 is 1947020.5047  and theta is -0.7596
+Tip2:  body forces contribution K1 is 6369.7462   K2 is -6165.6673  and theta is 0.91851
+Tip2: K1 is 3329466.6051   K2 is 1940854.8374  and theta is -0.75779
+Tip 1 modified: K1 is 4932441.8945   K2 is 1759413.1477  and theta is 0.57323
+10187.4882    Crack growth number     4
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 26561
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 1
+L2 norm of residual is 56954438312.3489 ; relative to R0 1. The contact ratio is: 0.94664
+L2 norm of residual is 17954634.1034 ; relative to R0 0.00031525. The contact ratio is: 0.97448
+L2 norm of residual is 153903.0532 ; relative to R0 2.7022e-06. The contact ratio is: 0.97216
+L2 norm of residual is 0.0019955 ; relative to R0 3.5037e-14. The contact ratio is: 0.97216
+Tip1: stress-strain contribution K1 is 5045144.2185   K2 is -1749897.9617  and theta is 0.56255
+Tip1:  body forces contribution K1 is 1781.1378   K2 is -30100.5585  and theta is 1.2113
+Tip1: K1 is 5046925.3563   K2 is -1779998.5202  and theta is 0.56892
+Tip 1 modified: K1 is 5046925.3563   K2 is -1779998.5202  and theta is -0.56892
+Tip2: stress-strain contribution K1 is 3279471.8591   K2 is -1867878.0885  and theta is 0.74949
+Tip2:  body forces contribution K1 is 4758.196   K2 is -15455.8914  and theta is 1.1305
+Tip2: K1 is 3284230.055   K2 is -1883333.9799  and theta is 0.75193
+Tip 1 modified: K1 is 5046925.3563   K2 is -1779998.5202  and theta is -0.56892
