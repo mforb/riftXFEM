@@ -1,4 +1,4 @@
-function [ ] = f_plot_wf( u,xCrk,enrDomain,typeElem,elem_force,elem_gap,elem_crk,split_elem,vertex_elem,tip_elem,stepnum)
+function [inters,ylg,yls] = f_plot_wf( u,xCrk,enrDomain,typeElem,elem_force,elem_gap,elem_crk,split_elem,vertex_elem,xVertex,tip_elem,xTip,crack_node,type_elem,enrich_node,pos,stepnum,varargin)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Mar 18 18:39:27 NZDT 2022
 
@@ -17,6 +17,9 @@ global C
 
 %loop over elements
 %elems = union(split_elem,vertex_elem);
+intType = 'TRIANGULAR';
+corner = [1 2 3 1] ;
+nnode = [0 0;1 0;0 1] ;
 
 if isempty(wall_int)
   wall_int = 2;
@@ -26,6 +29,14 @@ if isempty(melange)  | melange == 0
   mel_b = 0;
 else
   mel_b = 1
+end
+
+if nargin == 19
+  ylg = varargin{1}; 
+  yls = varargin{2}; 
+else
+  ylg = []; 
+  yls = []; 
 end
 
 
@@ -94,7 +105,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         for k_in = 1:length(Q)
           [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
           gpt = Np'*p;
-          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xyTip,crack_nodes,k,QT);
+          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
           sv = [sv, s(2,2)];
         end
         % global stuff
@@ -155,7 +166,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         for k_in = 1:length(Q)
           [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
           gpt = Np'*p;
-          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xyTip,crack_nodes,k,QT);
+          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
           sv = [sv, s(2,2)];
         end
         % global stuff
@@ -204,14 +215,15 @@ for kk = 1:size(xCrk,2) %what's the crack?
         p = ap(seg:seg+1,:);
         seg = 2;
         p2 = ap(seg:seg+1,:);
-        sv = [];
+        sv1 = [];
+        sv2 = [];
         for k_in = 1:length(Q)
           [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
           gpt = Np'*p;
           gpt2 = Np'*p2;
-          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xyTip,crack_nodes,k,QT);
+          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
           sv1 = [sv1, s(2,2)];
-          s = f_calc_stress(gpt2,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xyTip,crack_nodes,k,QT);
+          s = f_calc_stress(gpt2,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
           sv2 = [sv2, s(2,2)];
         end
 
@@ -325,10 +337,32 @@ for kk = 1:size(xCrk,2) %what's the crack?
   else
     f = figure();
   end
+  plot(cc/1000,ss,'color',[0.04,0.04,0.04],'linewidth',3,'DisplayName','normal sym force')
+  yl = ylim();
+  hold on
+  for i = 1: length(inters)
+    pi(i) = plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
+  end
+  ylim(yl);
+  xlim(xl);
+  xlabel('distance along crack')
+  ylabel('crack normal stress')
+  nstr = ['rift',num2str(kk),'_Nstress_step',num2str(stepnum)];
+  print([results_path,'/',nstr],'-dpng','-r300')
   
+  if Hidden
+    f = figure('visible','off');
+  else
+    f = figure();
+  end
   pg = plot(gc/1000,gn,'color',[0.04,0.04,0.04],'linewidth',2,'DisplayName','normal gap')
   yl = ylim();
   hold on
+  if isempty(ylg)
+    ylg = yl;
+  else
+    yl = ylg;
+  end
   for i = 1: length(inters)
     pi(i) = plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
   end
@@ -360,6 +394,11 @@ for kk = 1:size(xCrk,2) %what's the crack?
   plot(gc/1000,gt,'color',[0.04,0.04,0.04],'linewidth',3,'DisplayName','tangential disp')
   hold on
   yl = ylim();
+  if isempty(yls)
+    yls = yl;
+  else
+    yl = yls;
+  end
   for i = 1: length(inters)
     pi(i) = plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
   end

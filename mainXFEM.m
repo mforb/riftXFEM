@@ -187,7 +187,7 @@ for ipas = 1:npas
         end
       end
       Kt = sparse(zeros(size(K)));
-      [Kt,nodeTanfix] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
+      [Kt,nodeTanfix,mE] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
         splitElem,tipElem,vertexElem,cornerElem,tangentElem,crackNode,pos,xM,xCrk,Kt,nodeTanfix) ;
       K = K + Kt;
       %keyboard
@@ -544,7 +544,7 @@ for ipas = 1:npas
 
     %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];
-    save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap');
+    save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap','mE');
     if stop
       break;
     end

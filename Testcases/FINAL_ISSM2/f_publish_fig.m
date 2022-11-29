@@ -12,6 +12,8 @@ case 's'
   f.Position = [0, 0, 1200, 700 ]
 case 't'
   f.Position = [0, 0, 1200, 700 ]
+case 'I'
+  f.Position = [0, 0, 1200, 900 ]
 case 'b'
   f.Position = [0, 0, 900, 800 ]
 case 'r'

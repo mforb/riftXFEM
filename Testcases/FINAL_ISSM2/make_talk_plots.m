@@ -22,10 +22,10 @@ Hidden = 0;
 global E C nu P
 global melange
 global wall_int
-wall_int = 1
+wall_int = 2
 melange = 0
 melangeforce = 0
-E = 9.6e9; nu = 0.3; P = 1 ;
+E = 9.6e9; nu = 0.33; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
 stressState = 'PlaneStrain' ;
@@ -37,7 +37,7 @@ else
 end
 
 % the original crack geometry
-srift2 = shaperead('~/Work/Shapefiles/rift_2005.shp');
+srift2 = shaperead('./o_rift.shp');
 xs = srift2.X;
 ys = srift2.Y;
 xs(end) = []; %get rid of trailin NaN

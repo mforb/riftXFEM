@@ -8,11 +8,11 @@ path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
 mag       = 4000;
-plotfields = 1;
+plotfields = 0;
 
-ld = dir('./CLEAN/MEL2_tip*');
-pre = ('./CLEAN/');
-results_path = './CLEAN/MEL2';
+ld = dir('./FINAL/MEL2_tip*');
+pre = ('./FINAL/');
+results_path = './FINAL/MEL2_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -37,7 +37,7 @@ else
 end
 
 % the original crack geometry
-srift2 = shaperead('~/Work/Shapefiles/rift_2005.shp');
+srift2 = shaperead('./o_rift.shp');
 xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
@@ -216,7 +216,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  [~,~,ylg,yls]=f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66);
+  [~,ylg,yls]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,typeElem,enrichNode,pos,66);
   clf();
   f = figure();
   f.Position = [0 0 1200 500 ]
@@ -287,7 +287,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  [~,~,ylg,yls] = f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1,ylg,yls)
+  [~,ylg,yls] = f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,typeElem,enrichNode,pos,1,ylg,yls)
   clf();
   f = figure();
   f.Position = [0 0 1200 700 ];

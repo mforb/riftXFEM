@@ -1,24 +1,19 @@
-function [sigma] = f_calc_stress(pt,e,u,C,type_elem,enrich_node,elem_crk,xVertex,xyTip,crack_nodes,k,varargin)
+function [sigma] = f_calc_stress(pt,e,u,C,type_elem,enrich_node,elem_crk,xVertex,xyTip,crack_nodes,pos,k,varargin)
 
 global node element elemType E nu Cm1
 
-if nargin == 12
-  QT = varargin{1}
+if nargin == 13
+  QT = varargin{1};
 else
   QT = eye(2);
 end
-
 B = [];
-for k = 1:size(xCr,2)
-    B = [B xfemBmat(pt,e,type_elem,enrich_node(:,k),elem_crk,xVertex,xyTip,crack_nodes,k)];
-end
+B = [B xfemBmat(pt,e,type_elem,enrich_node(:,k),elem_crk,xVertex,xyTip,crack_nodes,k)];
 
 leB = size(B,2);
 
 U = [];
-for k = 1:size(xCr,2)
-    U     = [U; element_disp(e,pos(:,k),enrich_node(:,k),u,k)];
-end
+U     = [U; element_disp(e,pos(:,k),enrich_node(:,k),u,k)];
 
 epsilon = B*U ;
 sigma   = C*epsilon;
