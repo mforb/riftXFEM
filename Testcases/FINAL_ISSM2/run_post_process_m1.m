@@ -42,7 +42,7 @@ xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
+xCr_original.coor = [xs',ys'] 
 xCr_original.melange = ones(length(xCr_original.coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
@@ -252,8 +252,10 @@ if 1
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  if plotfields
+  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  end
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;

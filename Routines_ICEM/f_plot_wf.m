@@ -105,7 +105,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         for k_in = 1:length(Q)
           [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
           gpt = Np'*p;
-          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
+          s = f_calc_stress(gpt,iel,u,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
           sv = [sv, s(2,2)];
         end
         % global stuff
@@ -166,7 +166,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
         for k_in = 1:length(Q)
           [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
           gpt = Np'*p;
-          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
+          s = f_calc_stress(gpt,iel,u,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
           sv = [sv, s(2,2)];
         end
         % global stuff
@@ -221,9 +221,9 @@ for kk = 1:size(xCrk,2) %what's the crack?
           [Np,dNdxp]=lagrange_basis('L2',Q(k_in));
           gpt = Np'*p;
           gpt2 = Np'*p2;
-          s = f_calc_stress(gpt,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
+          s = f_calc_stress(gpt,iel,u,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
           sv1 = [sv1, s(2,2)];
-          s = f_calc_stress(gpt2,iel,u,C,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
+          s = f_calc_stress(gpt2,iel,u,type_elem,enrich_node,elem_crk,xVertex,xTip,crack_node,pos,kk,QT);
           sv2 = [sv2, s(2,2)];
         end
 

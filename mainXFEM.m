@@ -187,8 +187,8 @@ for ipas = 1:npas
         end
       end
       Kt = sparse(zeros(size(K)));
-      [Kt,nodeTanfix,mE] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
-        splitElem,tipElem,vertexElem,cornerElem,tangentElem,crackNode,pos,xM,xCrk,Kt,nodeTanfix) ;
+      [Kt,nodeTanfix,mE,F] = KmatMELAN(enrichNode,elemCrk,typeElem,xVertex,xTip,...
+        splitElem,tipElem,vertexElem,cornerElem,tangentElem,crackNode,pos,xM,xCrk,Kt,nodeTanfix,F) ;
       K = K + Kt;
       %keyboard
     end

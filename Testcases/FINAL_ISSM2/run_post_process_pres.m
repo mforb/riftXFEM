@@ -17,8 +17,9 @@ global Hidden
 global fontSize2 fontSize1
 global elemType 
 Hidden = 0;
-global E C nu P
-global melange
+global E Cm1 nu P
+global melange epsilon
+epsilon = 5
 melange = 0
 melangeforce = 0
 E = 9.6e9; nu = 0.33; P = 1 ;
@@ -154,7 +155,8 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
+  %f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1)
+  [~,ylg,yls]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,typeElem,enrichNode,pos,1);
   clf();
   f = figure();
   f.Position = [0 0 1200 700 ];

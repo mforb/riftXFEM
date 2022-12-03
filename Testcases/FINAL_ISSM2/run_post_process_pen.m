@@ -19,6 +19,8 @@ global elemType
 Hidden = 0;
 global E C nu P
 global melange
+global epsilon
+epsilon = 5
 melange = 0
 melangeforce = 0
 E = 9.6e9; nu = 0.33; P = 1 ;

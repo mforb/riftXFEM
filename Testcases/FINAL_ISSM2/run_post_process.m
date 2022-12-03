@@ -7,7 +7,7 @@ path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
 mag       = 4000;
-plotfields = 0
+plotfields = 1
 
 ld = dir('./CLEAN/ISSM2_xmas_tip*');
 pre = './CLEAN/';
@@ -164,7 +164,7 @@ shapewrite(srift_final,[results_path,'/',shapefile_name]);
 
 
 %plots of the last time-step
-if 1
+if 0
   dname = [pre,ld(end).name];
   lname = [dname,'/crack4.mat']; 
   load(lname)
@@ -247,8 +247,8 @@ if 1
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;

@@ -1,6 +1,6 @@
-function [sigma] = f_calc_stress(pt,e,u,C,type_elem,enrich_node,elem_crk,xVertex,xyTip,crack_nodes,pos,k,varargin)
+function [sigma] = f_calc_stress(pt,e,u,type_elem,enrich_node,elem_crk,xVertex,xyTip,crack_nodes,pos,k,varargin)
 
-global node element elemType E nu Cm1
+global node element elemType E nu Cm1 C
 
 if nargin == 13
   QT = varargin{1};

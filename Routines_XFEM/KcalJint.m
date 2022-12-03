@@ -93,16 +93,16 @@ for kk = 1:size(xCr,2) %what's the crack?
       if ~isempty(xCr(kk).coornew1)
         if quick_freeze
           mn1 = 1 ;
-          w1 = 0;
+          w1 = gn_inters(1);
         else
           mn1 = 0 ;
-          w1 = 0;
+          w1 = 0 ; 
         end
       end
       if ~isempty(xCr(kk).coornew2)
         if quick_freeze
           mn2 = 1;
-          w2 = 0 ;
+          w2 = gn_inters(2) ;
         else
           mn2 = 0;
           w2 =  0 ;

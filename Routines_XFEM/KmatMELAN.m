@@ -1,5 +1,5 @@
-function [Kglobal,nodeTanfix,mE] = KmatMELAN(enr_node,elem_crk,type_elem,xVertex,xTip,...
-    split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,crack_node,pos,xM,xCrk,Kglobal,nodeTanfix)
+function [Kglobal,nodeTanfix,mE,F] = KmatMELAN(enr_node,elem_crk,type_elem,xVertex,xTip,...
+    split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,crack_node,pos,xM,xCrk,Kglobal,nodeTanfix,F)
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -9,6 +9,7 @@ global plotmesh plotNode
 global gporder numtri
 global plothelp
 global orig_nn
+global
 
 
 if strcmp(elemType,'Q4') 
@@ -47,6 +48,7 @@ for ii=1:size(mel_elems,1)
   mT = mel_elems(ii,3);
   kn = mel_elems(ii,1); 
 
+
   % find the distance between the two intersects (should be able to do this with det(J)
   [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(elem_crk(iel,:));
 
@@ -54,6 +56,9 @@ for ii=1:size(mel_elems,1)
   [A,~,~,~,~] = f_enrich_assembly(iel,pos,type_elem,elem_crk,enr_node);
   [W,Q] = quadrature(2,intType,2) ;
 
+  % remove forces on melange elements (this assumes balance). We don't need an if statement because if no rift_wall_forces the forces are zero anyways
+  F(A) = 0;
+  % this means that forces will remain in tip elements. 
 
 
   for kk = 1:size(W,1)
