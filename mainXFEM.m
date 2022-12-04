@@ -544,6 +544,9 @@ for ipas = 1:npas
 
     %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];
+    if ~exist('mE')
+      mE = [];
+    end
     save(var_name,'xCrk','Knum','Theta','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap','mE');
     if stop
       break;

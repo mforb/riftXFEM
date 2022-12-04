@@ -8,11 +8,11 @@ path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
 mag       = 4000;
-plotfields = 0;
+plotfields = 1;
 
-ld = dir('./FINAL/MEL2_tip*');
+ld = dir('./FINAL/MEL2b_tip*');
 pre = ('./FINAL/');
-results_path = './FINAL/MEL2_PP';
+results_path = './FINAL/MEL2b_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -21,10 +21,11 @@ global fontSize2 fontSize1
 global elemType 
 Hidden = 0;
 global E C nu P
-global melange melangeforce wall_int
+global melange melangeforce wall_int epsilon
+epsilon = 5;
 wall_int = 2
-melange = 1
-melangeforce = 0
+melange = 0
+melangeforce = 1
 E = 9.6e9; nu = 0.33; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
@@ -42,11 +43,11 @@ xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
+xCr_original.coor = [xs',ys'] 
 xCr_original.melange = ones(length(xCr_original.coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
-xCr_original.width = [0 10 60 150 200 80 0 ] ;
+xCr_original.width = [1 10 60 150 200 80 1 ] ;
 
 tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
 tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
@@ -252,8 +253,10 @@ if 1
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
-  %plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
-    %elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  if plotfields
+  plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
+    elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  end
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;

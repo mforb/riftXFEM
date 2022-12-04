@@ -8,11 +8,11 @@ path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
 mag       = 4000;
-plotfields = 0;
+plotfields = 1;
 
-ld = dir('./FINAL/MEL1_t2_tip*');
+ld = dir('./FINAL/MEL1b_t2_tip*');
 pre = ('./FINAL/');
-results_path = './FINAL/MEL1_PP';
+results_path = './FINAL/MEL1b_PP';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -21,7 +21,8 @@ global fontSize2 fontSize1
 global elemType 
 Hidden = 0;
 global E C nu P
-global melange melangeforce wall_int
+global melange melangeforce wall_int epsilon
+epsilon = 5;
 wall_int = 2
 melange = 1
 melangeforce = 0

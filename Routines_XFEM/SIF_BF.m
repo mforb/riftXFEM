@@ -77,7 +77,7 @@ elseif flag_end == 2
   fl = [1 0; 0 1];
 end
 
-[Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node,5);
+[Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node,3);
 
 I1 = 0;
 I2 = 0;

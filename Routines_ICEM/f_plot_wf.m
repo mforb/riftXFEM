@@ -10,7 +10,6 @@ global plothelp Hidden results_path
 global rift_wall_pressure
 global wall_int
 global melange
-global C
 
 
 

@@ -21,20 +21,46 @@
 %end
 %clear all
 %close all
+%try 
+  %testcase_op_pen
+%catch
+  %opfile = fopen('allrun.log','a')
+  %erm = 'Something went wrong'
+  %run = 'pressure'
+  %fprintf(opfile,[run,'\n'])
+  %fprintf(opfile,[erm,'\n'])
+  %fclose(opfile);
+%end
+%clear all
+%close all
 try 
-  testcase_op_pen
+  testcase_melange_m1
 catch
   opfile = fopen('allrun.log','a')
   erm = 'Something went wrong'
-  run = 'pressure'
+  run = 'melange 1'
   fprintf(opfile,[run,'\n'])
   fprintf(opfile,[erm,'\n'])
   fclose(opfile);
 end
 clear all
 close all
+
+try 
+  testcase_melange_m2
+catch
+  opfile = fopen('allrun.log','a')
+  erm = 'Something went wrong'
+  run = 'melange 2'
+  fprintf(opfile,[run,'\n'])
+  fprintf(opfile,[erm,'\n'])
+  fclose(opfile);
+end
+clear all 
+close all
+
 %try 
-  %testcase_melange_m1
+  %testcase_melangeb_m1
 %catch
   %opfile = fopen('allrun.log','a')
   %erm = 'Something went wrong'
@@ -46,53 +72,53 @@ close all
 %clear all
 %close all
 
+try 
+  testcase_melangeb_m2
+catch
+  opfile = fopen('allrun.log','a')
+  erm = 'Something went wrong'
+  run = 'melange 2'
+  fprintf(opfile,[run,'\n'])
+  fprintf(opfile,[erm,'\n'])
+  fclose(opfile);
+end
+clear all 
+close all
+
 %try 
-  %testcase_melange_m2
+  %testcase_op_m1
 %catch
   %opfile = fopen('allrun.log','a')
   %erm = 'Something went wrong'
-  %run = 'melange 2'
+  %run = 'melange 1 with pressure'
   %fprintf(opfile,[run,'\n'])
   %fprintf(opfile,[erm,'\n'])
   %fclose(opfile);
 %end
-%clear all 
+%clear all
 %close all
 
-try 
-  testcase_op_m1
-catch
-  opfile = fopen('allrun.log','a')
-  erm = 'Something went wrong'
-  run = 'melange 1 with pressure'
-  fprintf(opfile,[run,'\n'])
-  fprintf(opfile,[erm,'\n'])
-  fclose(opfile);
-end
-clear all
-close all
+%try 
+  %testcase_op_m3
+%catch
+  %opfile = fopen('allrun.log','a')
+  %erm = 'Something went wrong'
+  %run = 'melange 2 with pressure'
+  %fprintf(opfile,[run,'\n'])
+  %fprintf(opfile,[erm,'\n'])
+  %fclose(opfile);
+%end
 
-try 
-  testcase_op_m3
-catch
-  opfile = fopen('allrun.log','a')
-  erm = 'Something went wrong'
-  run = 'melange 2 with pressure'
-  fprintf(opfile,[run,'\n'])
-  fprintf(opfile,[erm,'\n'])
-  fclose(opfile);
-end
+%clear all
+%close all
 
-clear all
-close all
-
-try 
-  testcase_op_m2
-catch
-  opfile = fopen('allrun.log','a')
-  erm = 'Something went wrong'
-  run = 'melange 2 with pressure'
-  fprintf(opfile,[run,'\n'])
-  fprintf(opfile,[erm,'\n'])
-  fclose(opfile);
-end
+%try 
+  %testcase_op_m2
+%catch
+  %opfile = fopen('allrun.log','a')
+  %erm = 'Something went wrong'
+  %run = 'melange 2 with pressure'
+  %fprintf(opfile,[run,'\n'])
+  %fprintf(opfile,[erm,'\n'])
+  %fclose(opfile);
+%end

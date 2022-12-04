@@ -9,6 +9,7 @@ global Jint iMethod
 global output_file
 global quick_freeze
 global typeProblem
+global min_gap
 
 stp1 = 0;
 stp2 = 0;
@@ -93,7 +94,7 @@ for kk = 1:size(xCr,2) %what's the crack?
       if ~isempty(xCr(kk).coornew1)
         if quick_freeze
           mn1 = 1 ;
-          w1 = gn_inters(1);
+          w1 = min_gap;
         else
           mn1 = 0 ;
           w1 = 0 ; 
@@ -102,7 +103,7 @@ for kk = 1:size(xCr,2) %what's the crack?
       if ~isempty(xCr(kk).coornew2)
         if quick_freeze
           mn2 = 1;
-          w2 = gn_inters(2) ;
+          w2 = min_gap ;
         else
           mn2 = 0;
           w2 =  0 ;

@@ -9,7 +9,6 @@ global plotmesh plotNode
 global gporder numtri
 global plothelp
 global orig_nn
-global
 
 
 if strcmp(elemType,'Q4') 
