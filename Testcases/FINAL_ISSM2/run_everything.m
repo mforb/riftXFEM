@@ -34,7 +34,7 @@
 %clear all
 %close all
 try 
-  testcase_melange_m1
+  testcase_melange_noqf_m1
 catch
   opfile = fopen('allrun.log','a')
   erm = 'Something went wrong'
@@ -47,7 +47,7 @@ clear all
 close all
 
 try 
-  testcase_melange_m2
+  testcase_melange_noqf_m2
 catch
   opfile = fopen('allrun.log','a')
   erm = 'Something went wrong'

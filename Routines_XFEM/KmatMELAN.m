@@ -1,5 +1,5 @@
-function [Kglobal,nodeTanfix,mE,F] = KmatMELAN(enr_node,elem_crk,type_elem,xVertex,xTip,...
-    split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,crack_node,pos,xM,xCrk,Kglobal,nodeTanfix,F)
+function [Kglobal,nodeTanfix,mE,F,elem_force] = KmatMELAN(enr_node,elem_crk,type_elem,xVertex,xTip,...
+    split_elem,tip_elem,vertex_elem,corner_elem,tan_elem,crack_node,pos,xM,xCrk,Kglobal,nodeTanfix,F,elem_force);
 
 %declare global variables here
 global node element numnode numelem elemType
@@ -18,6 +18,7 @@ elseif strcmp(elemType,'T3')
 end
 
 elems = union(split_elem,vertex_elem);
+elems = union(elems,tip_elem);
 elemst = tan_elem;
 
 mel_elems = [];
@@ -57,18 +58,20 @@ for ii=1:size(mel_elems,1)
 
   % remove forces on melange elements (this assumes balance). We don't need an if statement because if no rift_wall_forces the forces are zero anyways
   F(A) = 0;
+  elem_force(:,iel,:) = 0;
   % this means that forces will remain in tip elements. 
 
+  if ~ismember(iel,tip_elem)
+    for kk = 1:size(W,1)
+        B = [] ;
+        Gpt = Q(kk,:) ;
+        [B, dJ] = xfemBmel(Gpt,iel,type_elem,enr_node(:,kn),elem_crk,xVertex,xTip,crack_node,kn,JN,mT,mE);
+        % for now
+        % now we want to rotate this so that is is 
+        %Ppoint =  N' * node(sctr,:);
+        %q = [q;Ppoint] ;
 
-  for kk = 1:size(W,1)
-      B = [] ;
-      Gpt = Q(kk,:) ;
-      [B, dJ] = xfemBmel(Gpt,iel,type_elem,enr_node(:,kn),elem_crk,xVertex,xTip,crack_node,kn,JN,mT,mE);
-      % for now
-      % now we want to rotate this so that is is 
-      %Ppoint =  N' * node(sctr,:);
-      %q = [q;Ppoint] ;
-
-      Kglobal(A,A) = Kglobal(A,A) + B'*Cm1*B*W(kk)*dJ ;
+        Kglobal(A,A) = Kglobal(A,A) + B'*Cm1*B*W(kk)*dJ ;
+    end
   end
 end
