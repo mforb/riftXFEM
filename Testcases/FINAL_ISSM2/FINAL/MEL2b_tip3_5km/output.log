@@ -1,0 +1,72 @@
+10445.9085    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 26535
+ CRACK NODES :  2 crack nodes, 8 tangent elements, requiring 4 fixed nodes
+The ratio of elements stabilized: 0
+L2 norm of residual is 2598416960.9081 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.002102 ; relative to R0 8.0896e-13. The contact ratio is: NaN
+Tip1: stress-strain contribution K1 is 3029110.2816   K2 is -2205727.45  and theta is 0.83357
+Tip1:  body forces contribution K1 is 2368.8606   K2 is -16499.0076  and theta is 1.1835
+Tip1: wall forces contribution K1 is -1857117.5757   K2 is 0  and theta is 0
+Tip1: K1 is 1174361.5665   K2 is -2222226.4576  and theta is 1.062
+Tip 1 modified: K1 is 1174361.5665   K2 is -2222226.4576  and theta is -1.062
+Tip2: stress-strain contribution K1 is 2064066.6455   K2 is 1801686.808  and theta is -0.88934
+Tip2:  body forces contribution K1 is 2505.6427   K2 is -130.959  and theta is 0.10387
+Tip2: wall forces contribution K1 is -841626.1067   K2 is 0  and theta is 0
+Tip2: K1 is 1224946.1816   K2 is 1801555.849  and theta is -1.0168
+Tip 1 modified: K1 is 1174361.5665   K2 is -2222226.4576  and theta is -1.062
+10901.0044    Crack growth number     2
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 26535
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+The ratio of elements stabilized: 0
+L2 norm of residual is 2484876875.4547 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0020919 ; relative to R0 8.4185e-13. The contact ratio is: NaN
+Tip1: stress-strain contribution K1 is 2749046.4353   K2 is 2010508.9367  and theta is -0.83498
+Tip1:  body forces contribution K1 is 4730.6533   K2 is -1197.2559  and theta is 0.44644
+Tip1: wall forces contribution K1 is -1758162.7422   K2 is 0  and theta is 0
+Tip1: K1 is 995614.3464   K2 is 2009311.6808  and theta is -1.072
+Tip 1 modified: K1 is 995614.3464   K2 is 2009311.6808  and theta is 1.072
+Tip2: stress-strain contribution K1 is 2218099.1429   K2 is -1896970.1377  and theta is 0.88335
+Tip2:  body forces contribution K1 is 23.6106   K2 is -5938.9077  and theta is 1.2296
+Tip2: wall forces contribution K1 is -1484174.44   K2 is 0  and theta is 0
+Tip2: K1 is 733948.3135   K2 is -1902909.0454  and theta is 1.106
+Tip 1 modified: K1 is 995614.3464   K2 is 2009311.6808  and theta is 1.072
+11368.358    Crack growth number     3
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 26535
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+The ratio of elements stabilized: 0
+L2 norm of residual is 3598142978.6691 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0021424 ; relative to R0 5.9542e-13. The contact ratio is: NaN
+Tip1: stress-strain contribution K1 is 2919874.9909   K2 is -2136931.7634  and theta is 0.8352
+Tip1:  body forces contribution K1 is 7818.3803   K2 is -11442.4702  and theta is 1.0158
+Tip1: wall forces contribution K1 is -1246686.4075   K2 is 0  and theta is 0
+Tip1: K1 is 1681006.9637   K2 is -2148374.2337  and theta is 0.98725
+Tip 1 modified: K1 is 1681006.9637   K2 is -2148374.2337  and theta is -0.98725
+Tip2: stress-strain contribution K1 is 1621031.5759   K2 is 1799102.0383  and theta is -0.95409
+Tip2:  body forces contribution K1 is 1917.7045   K2 is 1458.4368  and theta is -0.84746
+Tip2: wall forces contribution K1 is -392575.9209   K2 is 0  and theta is 0
+Tip2: K1 is 1230373.3594   K2 is 1800560.4751  and theta is -1.0158
+Tip 1 modified: K1 is 1681006.9637   K2 is -2148374.2337  and theta is -0.98725
+11863.3916    Crack growth number     4
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 26535
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+The ratio of elements stabilized: 0
+L2 norm of residual is 2394670546.13 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0020691 ; relative to R0 8.6404e-13. The contact ratio is: NaN
+Tip1: stress-strain contribution K1 is 3524767.9416   K2 is 1986928.8857  and theta is -0.74577
+Tip1:  body forces contribution K1 is 8383.9545   K2 is -535.4396  and theta is 0.12654
+Tip1: wall forces contribution K1 is -1517056.983   K2 is 0  and theta is 0
+Tip1: K1 is 2016094.9132   K2 is 1986393.446  and theta is -0.92332
+Tip 1 modified: K1 is 2016094.9132   K2 is 1986393.446  and theta is 0.92332
+Tip2: stress-strain contribution K1 is 2485727.3036   K2 is -1601105.298  and theta is 0.7927
+Tip2:  body forces contribution K1 is -366.3981   K2 is -7570.0931  and theta is -1.2149
+Tip2: wall forces contribution K1 is -906066.0989   K2 is 0  and theta is 0
+Tip2: K1 is 1579294.8066   K2 is -1608675.3911  and theta is 0.93218
+Tip 1 modified: K1 is 2016094.9132   K2 is 1986393.446  and theta is 0.92332
