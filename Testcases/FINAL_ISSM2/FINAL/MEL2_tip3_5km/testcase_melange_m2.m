@@ -29,7 +29,8 @@ global ISSM_xx ISSM_yy ISSM_xy
 global OPT Hidden epsilon melange melangeforce Cm1 xM rift_wall_pressure
 global zoom_dim modpen modocean stab_mu
 global mel_tan
-global quick_freeze
+global quick_freeze min_gap
+min_gap = 10
 quick_freeze = 1
 
 epsilon = 5 
@@ -72,20 +73,22 @@ typeProblem = 'ISSM' ; %choose type of problem
 
 % import rifts
 % srift1 = shaperead('../../Data/2013_14_cracka_open.shp');
-srift2 = shaperead('~/Work/Shapefiles/rift_2005.shp');
+%srift2 = shaperead('../../Data/2013_14_crackb_open.shp');
+%srift = shaperead('./Data/cracka_short_2009-10.shp');
+srift2 = shaperead('./o_rift.shp');
 %srift2 = shaperead('../../Data/2013_14_crackb_open.shp');
 %srift = shaperead('./Data/cracka_short_2009-10.shp');
 xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-xCr(1).coor = [fliplr(xs)',fliplr(ys)'] 
+xCr(1).coor = [xs',ys'] 
 %xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
 %{keyboard %}
 xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
-xCr(1).width = [0 10 30 150 200 30 0 ] ;
+xCr(1).width = [min_gap 10 30 150 200 30 min_gap ] ;
 results_path = './FINAL/MEL2_tip1_10km';
 mkdir(results_path);
 copyfile('testcase_melange_m2.m',[results_path,'/']);

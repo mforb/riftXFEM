@@ -9,7 +9,11 @@ global plotmesh plotNode
 global gporder numtri
 global plothelp
 global orig_nn
+global force_OP
 
+if isempty(force_OP)
+  force_OP = 0;
+end
 
 if strcmp(elemType,'Q4') 
   intType = 'GAUSS' ;
@@ -57,8 +61,10 @@ for ii=1:size(mel_elems,1)
   [W,Q] = quadrature(2,intType,2) ;
 
   % remove forces on melange elements (this assumes balance). We don't need an if statement because if no rift_wall_forces the forces are zero anyways
-  F(A) = 0;
-  elem_force(:,iel,:) = 0;
+  if ~force_OP
+    F(A) = 0;
+    elem_force(:,iel,:) = 0;
+  end
   % this means that forces will remain in tip elements. 
 
   if ~ismember(iel,tip_elem)
