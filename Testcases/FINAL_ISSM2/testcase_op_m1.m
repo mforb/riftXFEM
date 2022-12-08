@@ -84,7 +84,7 @@ xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
 xCr(1).width = [min_gap 10 60 150 200 80 min_gap ] ;
-results_path = './FINAL/MEL1_DOP_tip1_10km';
+results_path = './FINAL/M1_OP_tip1_10km';
 mkdir(results_path);
 copyfile('testcase_op_m1.m',[results_path,'/']);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
