@@ -15,16 +15,18 @@ FintXY = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_xy);
 FintH = scatteredInterpolant(cpos(:,1),cpos(:,2),ISSM_H');
 
 %flow = [Vx,Vy]./sqrt(Vx.*Vx+Vy.*Vy);
-flow = [Vx,Vy]
+flow = [Vx,Vy];
+IM_xx = 2*ISSM_xx+ISSM_yy;
+IM_yy = 2*ISSM_yy+ISSM_xx;
 
-p1 = (ISSM_xx+ISSM_yy)/2 + sqrt( (ISSM_xx - ISSM_yy).*(ISSM_xx - ISSM_yy)/4 + ISSM_xy.*ISSM_xy);
-p2 = (ISSM_xx+ISSM_yy)/2 - sqrt( (ISSM_xx - ISSM_yy).*(ISSM_xx - ISSM_yy)/4 + ISSM_xy.*ISSM_xy);
+p1 = (IM_xx+IM_yy)/2 + sqrt( (IM_xx - IM_yy).*(IM_xx - IM_yy)/4 + ISSM_xy.*ISSM_xy);
+p2 = (IM_xx+IM_yy)/2 - sqrt( (IM_xx - IM_yy).*(IM_xx - IM_yy)/4 + ISSM_xy.*ISSM_xy);
 
-for i = 1:length(ISSM_xx);
+for i = 1:length(IM_xx);
   fl = mean(flow(element(i,:),:),1);
   alpha = atan2(fl(2),fl(1));
   QT  = [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];           % for the transformation to local coordinate
-  sigma = [ISSM_xx(i),ISSM_yy(i),ISSM_xy(i)];
+  sigma = [IM_xx(i),IM_yy(i),ISSM_xy(i)];
   voit2ind    = [1 3;3 2];
   stressloc   = QT*sigma(voit2ind)*QT';
   STF1(i) = stressloc(1,1);
@@ -32,7 +34,7 @@ for i = 1:length(ISSM_xx);
 end
 
 g = 9.81;
-rw = 1027;
+rw = 1023;
 ri = 917;
 F_fact = -0.5*g*ri*(1-ri/rw);
 ISSM_GHI = F_fact*ISSM_H';
@@ -88,6 +90,7 @@ b = f_publish_fig(f,'I');
 figure_name = ['GHI_map'];
 print(['./',figure_name],'-dpng','-r300')
 clf()
+keyboard
 
 f = figure();
 patch('faces',element,'vertices',node,'facevertexcdata',(p1)/1000);

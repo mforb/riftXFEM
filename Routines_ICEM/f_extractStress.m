@@ -9,8 +9,10 @@ if exist('same_coords') & same_coords
 else
   xint = convertModeltoShelf(x);
 end
+xx = FintX(xint); 
+yy = FintY(xint); 
 xy = FintXY(xint); 
-St = [ FintX(xint) xy; xy FintY(xint) ];
+St = [ 2*xx+yy xy; xy 2*yy+xx ];
 
 % Model coordinates
 Stp = QT'*St*QT;

@@ -19,7 +19,7 @@ else
 end
 
 if isempty(rhow) | isempty(rhoi)
-  rw = 1027;
+  rw = 1023;
   ri = 917;
 else
   rw = rhow;

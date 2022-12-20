@@ -81,9 +81,13 @@ end
 
 I1 = 0;
 I2 = 0;
+IT = 0;
 I  = [zeros(2,1)];
 Iw  = [zeros(2,1)];
 If  = [zeros(2,1)];
+I_T  = [zeros(1,1)];
+Iw_T  = [zeros(1,1)];
+If_T  = [zeros(1,1)];
 
 QT  = fl * [cos(alpha) sin(alpha); -sin(alpha) cos(alpha)];           % for the transformation to local coordinate
 mu = E/(2.+ nu + nu);
@@ -199,6 +203,22 @@ for iel = 1 : size(JWdomain,2)
               
               % Interaction integral I
               I(mode,1) = I(mode,1) + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
+
+              [AuxStress,AuxGradDisp,AuxEps] = f_Taux(xp,r,d,theta,mu,kappa,mode);
+              I1= (stressloc(1,1) * AuxGradDisp(1,1) + stressloc(2,1) * AuxGradDisp(2,1) ) * gradqloc(1) + ...
+                  (stressloc(1,2) * AuxGradDisp(1,1) + stressloc(2,2) * AuxGradDisp(2,1) ) * gradqloc(2);
+              
+              I2= (AuxStress(1,1) * graddisploc(1,1) + AuxStress(2,1) * graddisploc(2,1) ) * gradqloc(1) + ...
+                  (AuxStress(2,1) * graddisploc(1,1) + AuxStress(2,2) * graddisploc(2,1) ) * gradqloc(2);
+              
+              StrainEnergy = 0;
+              for i=1:2 %size(AuxEpsm1,1)
+                  for j=1:2  %size(AuxEpsm1,2)
+                      StrainEnergy = StrainEnergy +  stressloc(i,j)*AuxEps(i,j);
+                  end
+              end
+              % Interaction integral I_T
+              IT = IT + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
           end   %loop on mode
       end       % of quadrature loop
     end
@@ -312,6 +332,29 @@ for iel = 1 : size(JWdomain,2)
                 
                 % Interaction integral I
                 Iw(mode,1) = Iw(mode,1) + I_wall1*det(JO)*wt + I_wall2*det(JO)*wt;
+                if mode == 1
+                  [AuxStress,AuxGradDisp,AuxEps] = f_Taux(xp,r,d,theta,mu,kappa,mode);
+              
+                  % +++++++++++++++
+                  %  Surface part of the I integral 
+                  % +++++++++++++++
+                  %keyboard
+                  I_wall1 = (sig_local1(1,2) * AuxGradDisp(1,1) + sig_local1(2,2) * AuxGradDisp(2,1) ) * qm2;
+                  %keyboard
+                  % Interaction integral I
+                  %keyboard
+                  theta =-1*pi;
+                  [AuxStress,AuxGradDisp,AuxEps] = f_auxiliary(xp,r,theta,mu,kappa,mode);
+
+                  % +++++++++++++++
+                  %  Surface part of the I integral 
+                  % +++++++++++++++
+                  I_wall2= (sig_local2(1,2) * AuxGradDisp(1,1) + sig_local2(2,2) * AuxGradDisp(2,1) ) * qm2;
+                  %keyboard
+                  
+                  % Interaction integral I
+                  Iw_T = Iw_T + I_wall1*det(JO)*wt + I_wall2*det(JO)*wt;
+              end
             end   %loop on mode
           end       % of quadrature loop
         end %segments in element
