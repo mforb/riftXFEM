@@ -534,15 +534,15 @@ for ipas = 1:npas
     clf(f)
 
     if ~exist('gn_inters')
-      gn_inters = zeros(length(xCrk.coor),1);
+  [inters,gn_inters,ylg,yls,gc,gn,gt]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,typeElem,enrichNode,pos,66);
     end
    
+    save('restart_test','xCrk','enrDomain','pos','F','ipas','Knum','Theta','tangentElem','elemForce','gn_inters','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap');
     [Knum,Theta,xCrk,stop] = KcalJint(xCrk,...
         typeElem,enrDomain,elemCrk,enrichNode,crackNode,xVertex,...
         vertexElem,pos,u,F,ipas,delta_inc,Knum,Theta,...
         tipElem,splitElem,cornerElem,tangentElem,elemForce,gn_inters) ;
 
-    %keyboard
     var_name = [results_path,'/crack',num2str(ipas),'.mat'];
     if ~exist('mE')
       mE = [];

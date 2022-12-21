@@ -17,7 +17,7 @@ dtdy = CT/r;
 
 FACStress1 = 1/(pi*r);
 
-FACDisp1 = 1/(8*pi*mu));
+FACDisp1 = 1/(8*pi*mu);
 
 AuxStress   = zeros(2,2);
 AuxGradDisp = zeros(2,2);
@@ -27,12 +27,12 @@ if mode == 2
 end
 
     
-AuxStress(1,1) = -1*FACStress1*CT3;
+AuxStress(1,1) = -1*FACStress1*C3T;
 AuxStress(2,2) = -1*FACStress1*CT*S2T;
 AuxStress(1,2) = -2*FACStress1*C2T*ST;
 AuxStress(2,1) = AuxStress(1,2);
 
-u1    = -F*FACDisp1*(kappa + 1)*ln(r)-2*FACDisp1*S2T;
+u1    = -F*FACDisp1*(kappa + 1)*log(r/d)-2*FACDisp1*S2T;
 u2    = -F*FACDisp1*(kappa - 1)*theta-2*FACDisp1*ST*CT;
 
 AuxGradDisp(1,1) = (F/r)*FACDisp1*CT*(-1*kappa+1-2*CT2);

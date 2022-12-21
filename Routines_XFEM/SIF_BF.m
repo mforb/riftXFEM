@@ -56,7 +56,7 @@ end
 %figure(12)
 %triplot(TR)
 %hold on
-
+d = 1
 % Compute the Stress Intensity Factors
 % Using the Interaction integral method
 
@@ -77,11 +77,10 @@ elseif flag_end == 2
   fl = [1 0; 0 1];
 end
 
-[Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node,3);
+[Jdomain,JWdomain,qnode,qnode2,radius] = Jdomainf(tip,xyTip,enrich_node,4);
 
 I1 = 0;
 I2 = 0;
-IT = 0;
 I  = [zeros(2,1)];
 Iw  = [zeros(2,1)];
 If  = [zeros(2,1)];
@@ -201,24 +200,26 @@ for iel = 1 : size(JWdomain,2)
                   end
               end
               
-              % Interaction integral I
               I(mode,1) = I(mode,1) + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
+              % Interaction integral I
+              if mode == 1
 
-              [AuxStress,AuxGradDisp,AuxEps] = f_Taux(xp,r,d,theta,mu,kappa,mode);
-              I1= (stressloc(1,1) * AuxGradDisp(1,1) + stressloc(2,1) * AuxGradDisp(2,1) ) * gradqloc(1) + ...
-                  (stressloc(1,2) * AuxGradDisp(1,1) + stressloc(2,2) * AuxGradDisp(2,1) ) * gradqloc(2);
-              
-              I2= (AuxStress(1,1) * graddisploc(1,1) + AuxStress(2,1) * graddisploc(2,1) ) * gradqloc(1) + ...
-                  (AuxStress(2,1) * graddisploc(1,1) + AuxStress(2,2) * graddisploc(2,1) ) * gradqloc(2);
-              
-              StrainEnergy = 0;
-              for i=1:2 %size(AuxEpsm1,1)
-                  for j=1:2  %size(AuxEpsm1,2)
-                      StrainEnergy = StrainEnergy +  stressloc(i,j)*AuxEps(i,j);
-                  end
+                [AuxStress,AuxGradDisp,AuxEps] = f_Taux(xp,r,d,theta,mu,kappa,mode);
+                I1= (stressloc(1,1) * AuxGradDisp(1,1) + stressloc(2,1) * AuxGradDisp(2,1) ) * gradqloc(1) + ...
+                    (stressloc(1,2) * AuxGradDisp(1,1) + stressloc(2,2) * AuxGradDisp(2,1) ) * gradqloc(2);
+                
+                I2= (AuxStress(1,1) * graddisploc(1,1) + AuxStress(2,1) * graddisploc(2,1) ) * gradqloc(1) + ...
+                    (AuxStress(2,1) * graddisploc(1,1) + AuxStress(2,2) * graddisploc(2,1) ) * gradqloc(2);
+                
+                StrainEnergy = 0;
+                for i=1:2 %size(AuxEpsm1,1)
+                    for j=1:2  %size(AuxEpsm1,2)
+                        StrainEnergy = StrainEnergy +  stressloc(i,j)*AuxEps(i,j);
+                    end
+                end
+                % Interaction integral I_T
+                I_T = I_T + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
               end
-              % Interaction integral I_T
-              IT = IT + (I1 + I2 - StrainEnergy*gradqloc(1))*det(J0)*wt;
           end   %loop on mode
       end       % of quadrature loop
     end
@@ -233,7 +234,6 @@ for iel = 1 : size(JWdomain,2)
         % The I integral needs to be adjusted to account for forces on the rift wall
         [ap,apg] = f_crack_wall(e,nnode,corner,tip_elem,vertex_elem,elem_crk,xyTip,xVertex,crack_nodes); % elem_crk in natural coordinates
         ap = f_align_lp_gc(ap,[apg(1,:),apg(end,:)],sctr);
-        %keyboard
         for seg = 1:length(ap) - 1
           % find the distance between the two intersects (should be able to do this with det(J)
           p = ap(seg:seg+1,:);
@@ -340,11 +340,9 @@ for iel = 1 : size(JWdomain,2)
                   % +++++++++++++++
                   %keyboard
                   I_wall1 = (sig_local1(1,2) * AuxGradDisp(1,1) + sig_local1(2,2) * AuxGradDisp(2,1) ) * qm2;
-                  %keyboard
-                  % Interaction integral I
-                  %keyboard
+
                   theta =-1*pi;
-                  [AuxStress,AuxGradDisp,AuxEps] = f_auxiliary(xp,r,theta,mu,kappa,mode);
+                  [AuxStress,AuxGradDisp,AuxEps] = f_Taux(xp,r,d,theta,mu,kappa,mode);
 
                   % +++++++++++++++
                   %  Surface part of the I integral 
@@ -354,7 +352,7 @@ for iel = 1 : size(JWdomain,2)
                   
                   % Interaction integral I
                   Iw_T = Iw_T + I_wall1*det(JO)*wt + I_wall2*det(JO)*wt;
-              end
+                end
             end   %loop on mode
           end       % of quadrature loop
         end %segments in element
@@ -389,46 +387,71 @@ for iel = 1 : size(JWdomain,2)
           f_i = QT * F(2*nod-1:2*nod);
           Fdudx = (f_i(1) * AuxGradDisp(1,1) + f_i(2)*AuxGradDisp(2,1))*qn;
           If(mode,1) = If(mode,1) - Fdudx;
+          if mode == 1
+            [AuxStress,AuxGradDisp,AuxEps] = f_Taux(xp,r,d,theta,mu,kappa,mode);
+            %pe = plot(Gpt(1),Gpt(2),'y*','markersize',10);
+            f_i = QT * F(2*nod-1:2*nod);
+            Fdudx = (f_i(1) * AuxGradDisp(1,1) + f_i(2)*AuxGradDisp(2,1))*qn;
+            If_T = If_T - Fdudx;
+          end
         end
       end
     end
 end
 Knum = I.*E / (2*(1-nu^2)) % plain strain
+T = I_T*E / (1-nu^2)
 KI = Knum(1);
 KII = Knum(2);
 theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
 theta_inc = theta_inc * pi / 180.;%rad
 
-kstr = ['Tip',num2str(flag_end),': stress-strain contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+kstr = ['Tip',num2str(flag_end),': stress-strain contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'\n'];
+tstr = ['Tip',num2str(flag_end),': stress-strain contribution T is ',num2str(T),'\n'];
 fprintf(output_file,kstr)
+fprintf(output_file,tstr)
 
 Knumf = If.*E / (2*(1-nu^2)) % plain strain
+Tf = If_T*E / (1-nu^2)
 KI = Knumf(1);
 KII = Knumf(2);
+kstr = ['Tip',num2str(flag_end),':  body forces contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),' \n'];
+tstr = ['Tip',num2str(flag_end),': body forces contribution T is ',num2str(T),'\n'];
+fprintf(output_file,kstr)
+fprintf(output_file,tstr)
+KI = Knum(1)+Knumf(1);
+KII = Knum(2)+Knumf(2);
 theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
 theta_inc = theta_inc * pi / 180.;%rad
-kstr = ['Tip',num2str(flag_end),':  body forces contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+kstr = ['Tip',num2str(flag_end),':  theta is ',num2str(theta_inc),'\n'];
 fprintf(output_file,kstr)
 
 if any(Iw)
-  Knumw = Iw.*E / (2*(1-nu^2)) % plain strain
+  Knumw = Iw.*E / (2*(1-nu^2)); % plain strain
+  Tw = Iw_T*E/(1-nu^2);
   KI = Knumw(1);
   KII = Knumw(2);
-  theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
-  theta_inc = theta_inc * pi / 180.;%rad
-  kstr = ['Tip',num2str(flag_end),': wall forces contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+  tstr = ['Tip',num2str(flag_end),': wall forces contribution T is ',num2str(T),'\n'];
+  kstr = ['Tip',num2str(flag_end),': wall forces contribution K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  \n'];
   fprintf(output_file,kstr)
+  fprintf(output_file,tstr)
 else
   Knumw = zeros(2,1);
+  Tw = 0;
 end
 
 Knum = Knum + Knumf + Knumw;
+T = T + Tf + Tw;
 KI = Knum(1);
 KII = Knum(2);
-theta_inc = 2 * atand((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
-theta_inc = theta_inc * pi / 180.;%rad
-kstr = ['Tip',num2str(flag_end),': K1 is ',num2str(KI),'   K2 is ',num2str(KII),'  and theta is ',num2str(theta_inc),'\n'];
+%keyboard
+t1 = 2 * atan((-2*KII / KI) / (1 + sqrt(1 + 8 * (KII / KI) ^ 2))); %deg
+t2 = f_MTS_adj(KI,KII,T,0,30)
+%t3 = f_SED_adj(KI,KII,T,kappa)
+tstr = ['Tip',num2str(flag_end),': theta MTS is ',num2str(t1),'   theta MTSM is ',num2str(t2),'\n'];
+theta_inc = t2;
+kstr = ['Tip',num2str(flag_end),': K1 is ',num2str(KI),'   K2 is ',num2str(KII),'   T is ',num2str(T),'  and theta is ',num2str(theta_inc),'\n'];
 fprintf(output_file,kstr)
+fprintf(output_file,tstr)
 
 
 

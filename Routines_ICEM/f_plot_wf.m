@@ -1,4 +1,4 @@
-function [inters,ylg,yls] = f_plot_wf( u,xCrk,enrDomain,typeElem,elem_force,elem_gap,elem_crk,split_elem,vertex_elem,xVertex,tip_elem,xTip,crack_node,type_elem,enrich_node,pos,stepnum,varargin)
+function [inters,gn_inters,ylg,yls,gc,gn,gt] = f_plot_wf( u,xCrk,enrDomain,typeElem,elem_force,elem_gap,elem_crk,split_elem,vertex_elem,xVertex,tip_elem,xTip,crack_node,type_elem,enrich_node,pos,stepnum,varargin)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Mar 18 18:39:27 NZDT 2022
 
@@ -279,6 +279,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   gt = [];
   gw = [];
   inters = [];
+  gn_inters = [];
   for i = 1:ns-1
     xseg = [xCrk(kk).coor(i,:),xCrk(kk).coor(i+1,:)];
     [lseg,~,~,~,~,~] = f_segment_dist(xseg);
@@ -294,9 +295,16 @@ for kk = 1:size(xCrk,2) %what's the crack?
     gw = [gw, gapw{i}(so2)]; 
     pl = pl + lseg;
     inters = [inters, pl];
+    gn_inters = [gn_inters, gn(end)];
+    if i > 1
+      ifg = find(so2==1);
+      gn_inters(end-1) = (gn_inters(end-1)+gapn{i}(ifg))/2
+    end
   end
   xl = [ 0 inters(end)/1000];
   inters(end) = [];
+  gn_inters(end) = 0;
+  gn_inters = [0,gn_inters];
 
   t = tiledlayout(2,1,'TileSpacing','Compact');
   nexttile

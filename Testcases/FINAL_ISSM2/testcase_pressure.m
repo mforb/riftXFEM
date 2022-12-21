@@ -56,18 +56,16 @@ stressState = 'PlaneStrain' ;
 typeProblem = 'ISSM' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
 
-% import rifts
-% srift1 = shaperead('../../Data/2013_14_cracka_open.shp');
-srift2 = shaperead('~/Work/Shapefiles/rift_2005.shp');
+srift2 = shaperead('./o_rift.shp');
 %srift2 = shaperead('../../Data/2013_14_crackb_open.shp');
 %srift = shaperead('./Data/cracka_short_2009-10.shp');
 xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-%keyboard
-xCr(1).coor = [fliplr(xs)',fliplr(ys)'] 
-%xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
+xCr(1).coor = [xs',ys'] 
+% import rifts
+% srift1 = shaperead('../../Data/2013_14_cracka_open.shp');
 %{keyboard %}
 results_path = './FINAL_RXX/PRES_xmas_tip1_10km';
 mkdir(results_path);
@@ -189,7 +187,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './PRES_xmas_tip2_10km';
+results_path = './FINAL_RXX/PRES_xmas_tip2_10km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
