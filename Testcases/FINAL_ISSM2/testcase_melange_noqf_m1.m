@@ -82,7 +82,7 @@ xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
 xCr(1).width = [min_gap 10 60 150 200 80 min_gap ] ;
-results_path = './FINAL/MEL1_NOQF__tip1_10km';
+results_path = './FINAL/MEL1_NQF_tip1_10km';
 mkdir(results_path);
 copyfile('testcase_melange_m1.m',[results_path,'/']);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
@@ -163,7 +163,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './FINAL/MEL1_NOQF__tip1_20km';
+results_path = './FINAL/MEL1_NQF_tip1_20km';
 mkdir(results_path);
 copyfile('testcase_melange_m1.m',[results_path,'/']);
 run_mesh_prep
@@ -197,7 +197,7 @@ if( strcmp(plotmesh,'YES') )
     end
 end
 xCr(1).tip = [0,1];
-results_path = './FINAL/MEL1_NOQF__tip2_10km';
+results_path = './FINAL/MEL1_NQF_tip2_10km';
 mkdir(results_path);
 run_mesh_prep
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
@@ -229,7 +229,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './FINAL/MEL1_NOQF__tip2_15km';
+results_path = './FINAL/MEL1_NQF_tip2_15km';
 numstep = 4
 mkdir(results_path);
 copyfile('testcase_melange_m1.m',[results_path,'/']);
@@ -264,7 +264,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './FINAL/MEL1_NOQF__tip3_5km';
+results_path = './FINAL/MEL1_NQF_tip3_5km';
 mkdir(results_path);
 copyfile('testcase_melange_m1.m',[results_path,'/']);
 run_mesh_prep

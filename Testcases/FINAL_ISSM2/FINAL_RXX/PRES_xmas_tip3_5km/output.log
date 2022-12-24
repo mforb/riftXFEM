@@ -1,4 +1,4 @@
-5365.4915    Crack growth number     1
+5776.4299    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 26743
@@ -23,7 +23,7 @@ Tip2: wall forces contribution T is -164372.0055
 Tip2: K1 is 2031913.7891   K2 is 7071.4756   T is -164424.689  and theta is 0
 Tip2: theta MTS is -0.0069602   theta MTSM is 0
 Tip 1 modified: K1 is 2446993.7768   K2 is -63041.5611  and theta is -0.014204
-5598.569    Crack growth number     2
+6027.6914    Crack growth number     2
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 26743
@@ -48,7 +48,7 @@ Tip2: wall forces contribution T is -163545.6971
 Tip2: K1 is 2013522.1617   K2 is -916.2887   T is -163861.8968  and theta is 0
 Tip2: theta MTS is 0.00091013   theta MTSM is 0
 Tip 1 modified: K1 is 2376541.6447   K2 is 33332.217  and theta is 0.0057963
-5823.1606    Crack growth number     3
+6272.2413    Crack growth number     3
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 26743
@@ -73,7 +73,7 @@ Tip2: wall forces contribution T is -167069.5226
 Tip2: K1 is 1969952.1485   K2 is -10470.1331   T is -167426.3037  and theta is 0.0042037
 Tip2: theta MTS is 0.010629   theta MTSM is 0.0042037
 Tip 1 modified: K1 is 2794044.5602   K2 is 14778.454  and theta is 0
-6056.1747    Crack growth number     4
+6524.2266    Crack growth number     4
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 26743

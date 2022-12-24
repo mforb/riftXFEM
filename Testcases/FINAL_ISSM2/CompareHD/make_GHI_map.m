@@ -2,7 +2,8 @@ clear element node
 path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 path(path,'..');
 global element node
-load ./import_holly5
+%load ./import_holly5
+load ../../FINAL_ISSM/import_issm_holly1
 %element = element(1:5,:);
 % we are going to use triangulation to create a Fintx...
 % this is necessary if we plan on doing some refinement in the vicinity of the rift(s)
@@ -68,6 +69,13 @@ ISSM_GHI = F_fact*ISSM_H';
 %caxis(cax);
 %axis equal;
 %shading flat;
+srift2 = shaperead('../../ADVECT_100A/100a_invent.shp');
+%srift2 = shaperead('../../Data/2013_14_crackb_open.shp');
+%srift = shaperead('./Data/cracka_short_2009-10.shp');
+xs = srift2.X
+ys = srift2.Y
+xs(end) = []; %get rid of trailin NaN
+ys(end) = [];
 
 f = figure();
 patch('faces',element,'vertices',node,'facevertexcdata',(p1 + ISSM_GHI)/1000);
@@ -86,10 +94,18 @@ ylabel('Northing (km)');
 xlabel('Easting (km)');
 yticks(-1300000:100000:-500000);
 xticks(-600000:100000:400000);
+%b = f_publish_fig(f,'I');
+%figure_name = ['GHI_map'];
+%print(['./',figure_name],'-dpng','-r300')
+%clf()
+hold on
+plr = plot(xs,ys,'-');
+set(plr,'linewidth',4);
+set(plr,'color',[0,0,0]);
 b = f_publish_fig(f,'I');
-figure_name = ['GHI_map'];
+figure_name = ['GHI_rift'];
 print(['./',figure_name],'-dpng','-r300')
-clf()
+%clf()
 keyboard
 
 f = figure();
