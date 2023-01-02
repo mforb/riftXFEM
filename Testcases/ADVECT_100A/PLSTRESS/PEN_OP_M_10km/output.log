@@ -1,0 +1,406 @@
+31.2879    Crack growth number     1
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 25072
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+The ratio of elements stabilized: 0.10309
+L2 norm of residual is 5322569924912.424 ; relative to R0 1. The contact ratio is: 0.11753
+L2 norm of residual is 1437914223.2286 ; relative to R0 0.00027015. The contact ratio is: 0.051546
+L2 norm of residual is 116365591.9164 ; relative to R0 2.1863e-05. The contact ratio is: 0.037113
+L2 norm of residual is 23681176180.5273 ; relative to R0 0.0044492. The contact ratio is: 0.026804
+L2 norm of residual is 91112178193.9365 ; relative to R0 0.017118. The contact ratio is: 0.028866
+L2 norm of residual is 91444164.5087 ; relative to R0 1.718e-05. The contact ratio is: 0.024742
+L2 norm of residual is 43858226.1505 ; relative to R0 8.24e-06. The contact ratio is: 0.02268
+L2 norm of residual is 79253472.2256 ; relative to R0 1.489e-05. The contact ratio is: 0.016495
+L2 norm of residual is 20980387073.8036 ; relative to R0 0.0039418. The contact ratio is: 0.020619
+L2 norm of residual is 6129509810.4583 ; relative to R0 0.0011516. The contact ratio is: 0.051546
+L2 norm of residual is 147473770.8661 ; relative to R0 2.7707e-05. The contact ratio is: 0.028866
+L2 norm of residual is 42288978.453 ; relative to R0 7.9452e-06. The contact ratio is: 0.02268
+L2 norm of residual is 17773853.4195 ; relative to R0 3.3393e-06. The contact ratio is: 0.02268
+L2 norm of residual is 6537095.4347 ; relative to R0 1.2282e-06. The contact ratio is: 0.018557
+L2 norm of residual is 2088182.8378 ; relative to R0 3.9233e-07. The contact ratio is: 0.016495
+L2 norm of residual is 0.0022788 ; relative to R0 4.2813e-16. The contact ratio is: 0.016495
+Tip1: stress-strain contribution K1 is 9378515.5441   K2 is -743778.0074
+Tip1: stress-strain contribution T is -37074.998
+Tip1:  body forces contribution K1 is -784.1867   K2 is -7637.4845 
+Tip1: body forces contribution T is -37074.998
+Tip1:  theta is 0.15792
+Tip1: wall forces contribution K1 is -6655023.0351   K2 is 0  
+Tip1: wall forces contribution T is -37074.998
+Tip1: K1 is 2722708.3223   K2 is -751415.492   T is -37071.9579  and theta is 0.3492
+Tip1: theta MTS is 0.47734   theta MTSM is 0.3492
+Tip 1 modified: K1 is 2722708.3223   K2 is -751415.492  and theta is -0.3492
+Tip2: stress-strain contribution K1 is 9174050.4836   K2 is 419008.5329
+Tip2: stress-strain contribution T is -53742.895
+Tip2:  body forces contribution K1 is 8364.2687   K2 is -19916.6402 
+Tip2: body forces contribution T is -53742.895
+Tip2:  theta is -0.086545
+Tip2: wall forces contribution K1 is -7961359.0732   K2 is 0  
+Tip2: wall forces contribution T is -53742.895
+Tip2: K1 is 1221055.6791   K2 is 399091.8927   T is -54107.5908  and theta is -0.2458
+Tip2: theta MTS is -0.54002   theta MTSM is -0.2458
+Tip 1 modified: K1 is 2722708.3223   K2 is -751415.492  and theta is -0.3492
+329.83    Crack growth number     2
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 25072
+ CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
+The ratio of elements stabilized: 0.097166
+L2 norm of residual is 32159053764558.33 ; relative to R0 1. The contact ratio is: 0.13563
+L2 norm of residual is 55072863408.5063 ; relative to R0 0.0017125. The contact ratio is: 0.076923
+L2 norm of residual is 2557074580.5199 ; relative to R0 7.9513e-05. The contact ratio is: 0.054656
+L2 norm of residual is 4585069154.1884 ; relative to R0 0.00014257. The contact ratio is: 0.046559
+L2 norm of residual is 2376713475.1034 ; relative to R0 7.3905e-05. The contact ratio is: 0.038462
+L2 norm of residual is 893062525.4476 ; relative to R0 2.777e-05. The contact ratio is: 0.030364
+L2 norm of residual is 265162072.164 ; relative to R0 8.2453e-06. The contact ratio is: 0.030364
+L2 norm of residual is 996981023.8302 ; relative to R0 3.1002e-05. The contact ratio is: 0.022267
+L2 norm of residual is 45590870359.4866 ; relative to R0 0.0014177. The contact ratio is: 0.024291
+L2 norm of residual is 11090897.5342 ; relative to R0 3.4488e-07. The contact ratio is: 0.022267
+L2 norm of residual is 8758188.1597 ; relative to R0 2.7234e-07. The contact ratio is: 0.022267
+L2 norm of residual is 0.002278 ; relative to R0 7.0837e-17. The contact ratio is: 0.022267
+Tip2: stress-strain contribution K1 is 8781774.7652   K2 is -621485.8717
+Tip2: stress-strain contribution T is -46788.2794
+Tip2:  body forces contribution K1 is 18672.7174   K2 is -2927.1985 
+Tip2: body forces contribution T is -46788.2794
+Tip2:  theta is 0.14027
+Tip2: wall forces contribution K1 is -4007562.8321   K2 is 0  
+Tip2: wall forces contribution T is -46788.2794
+Tip2: K1 is 4792884.6506   K2 is -624413.0702   T is -47440.2521  and theta is 0.1892
+Tip2: theta MTS is 0.25094   theta MTSM is 0.1892
+Calculating SIFs and propagating rift
+Tip1: stress-strain contribution K1 is 9501933.2837   K2 is 968906.8962
+Tip1: stress-strain contribution T is -35757.8699
+Tip1:  body forces contribution K1 is 696.305   K2 is -11455.5195 
+Tip1: body forces contribution T is -35757.8699
+Tip1:  theta is -0.19694
+Tip1: wall forces contribution K1 is -6947959.6955   K2 is 0  
+Tip1: wall forces contribution T is -35757.8699
+Tip1: K1 is 2554669.8932   K2 is 957451.3767   T is -35837.4021  and theta is -0.4458
+Tip1: theta MTS is -0.59215   theta MTSM is -0.4458
+Tip 1 modified: K1 is 2554669.8932   K2 is 957451.3767  and theta is 0.4458
+629.2417    Crack growth number     3
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 25072
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 0.095238
+L2 norm of residual is 23748863285321.97 ; relative to R0 1. The contact ratio is: 0.13889
+L2 norm of residual is 166532026898.0677 ; relative to R0 0.0070122. The contact ratio is: 0.073413
+L2 norm of residual is 2311879890.2134 ; relative to R0 9.7347e-05. The contact ratio is: 0.051587
+L2 norm of residual is 33837357903.3748 ; relative to R0 0.0014248. The contact ratio is: 0.041667
+L2 norm of residual is 2960840248.0628 ; relative to R0 0.00012467. The contact ratio is: 0.037698
+L2 norm of residual is 71008894.0908 ; relative to R0 2.99e-06. The contact ratio is: 0.015873
+L2 norm of residual is 8093336367.0518 ; relative to R0 0.00034079. The contact ratio is: 0.013889
+L2 norm of residual is 57893555.7077 ; relative to R0 2.4377e-06. The contact ratio is: 0.0099206
+L2 norm of residual is 44270827664.2826 ; relative to R0 0.0018641. The contact ratio is: 0.011905
+L2 norm of residual is 11441473.7587 ; relative to R0 4.8177e-07. The contact ratio is: 0.0099206
+L2 norm of residual is 9833754.9265 ; relative to R0 4.1407e-07. The contact ratio is: 0.0099206
+L2 norm of residual is 180826.3889 ; relative to R0 7.6141e-09. The contact ratio is: 0.0099206
+L2 norm of residual is 0.002273 ; relative to R0 9.5712e-17. The contact ratio is: 0.0099206
+Tip2: stress-strain contribution K1 is 8176070.7758   K2 is 142629.4847
+Tip2: stress-strain contribution T is -55300.6225
+Tip2:  body forces contribution K1 is 9192.0335   K2 is 13951.7218 
+Tip2: body forces contribution T is -55300.6225
+Tip2:  theta is -0.038227
+Tip2: wall forces contribution K1 is -7832994.8343   K2 is 0  
+Tip2: wall forces contribution T is -55300.6225
+Tip2: K1 is 352267.9751   K2 is 156581.2065   T is -55517.1182  and theta is -0.1308
+Tip2: theta MTS is -0.65741   theta MTSM is -0.1308
+Calculating SIFs and propagating rift
+Tip1: stress-strain contribution K1 is 10265657.9508   K2 is -760634.1098
+Tip1: stress-strain contribution T is -41733.7701
+Tip1:  body forces contribution K1 is -9020.2001   K2 is -22950.0324 
+Tip1: body forces contribution T is -41733.7701
+Tip1:  theta is 0.15077
+Tip1: wall forces contribution K1 is -7694511.3091   K2 is 0  
+Tip1: wall forces contribution T is -41733.7701
+Tip1: K1 is 2562126.4416   K2 is -783584.1422   T is -41546.8816  and theta is 0.3592
+Tip1: theta MTS is 0.5151   theta MTSM is 0.3592
+Tip 1 modified: K1 is 2562126.4416   K2 is -783584.1422  and theta is -0.3592
+933.6154    Crack growth number     4
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 25072
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 0.099415
+L2 norm of residual is 21559003172111 ; relative to R0 1. The contact ratio is: 0.14035
+L2 norm of residual is 749963295.7143 ; relative to R0 3.4787e-05. The contact ratio is: 0.064327
+L2 norm of residual is 6318702032.5317 ; relative to R0 0.00029309. The contact ratio is: 0.046784
+L2 norm of residual is 25673949222.5958 ; relative to R0 0.0011909. The contact ratio is: 0.038986
+L2 norm of residual is 64932242871.4789 ; relative to R0 0.0030118. The contact ratio is: 0.02729
+L2 norm of residual is 6116918738.0256 ; relative to R0 0.00028373. The contact ratio is: 0.019493
+L2 norm of residual is 1030016054.7307 ; relative to R0 4.7777e-05. The contact ratio is: 0.019493
+L2 norm of residual is 69986483.4193 ; relative to R0 3.2463e-06. The contact ratio is: 0.005848
+L2 norm of residual is 33741160731.3741 ; relative to R0 0.0015651. The contact ratio is: 0.011696
+L2 norm of residual is 155452996.2386 ; relative to R0 7.2106e-06. The contact ratio is: 0.0077973
+L2 norm of residual is 74049434.2038 ; relative to R0 3.4347e-06. The contact ratio is: 0.0077973
+L2 norm of residual is 51445541.3856 ; relative to R0 2.3863e-06. The contact ratio is: 0.0077973
+L2 norm of residual is 13646768.7486 ; relative to R0 6.33e-07. The contact ratio is: 0.005848
+L2 norm of residual is 0.0022463 ; relative to R0 1.0419e-16. The contact ratio is: 0.005848
+Tip2: stress-strain contribution K1 is 8995807.7556   K2 is -381761.164
+Tip2: stress-strain contribution T is -40536.6101
+Tip2:  body forces contribution K1 is 1273.9793   K2 is 15643.1767 
+Tip2: body forces contribution T is -40536.6101
+Tip2:  theta is 0.081074
+Tip2: wall forces contribution K1 is -6438756.014   K2 is 0  
+Tip2: wall forces contribution T is -40536.6101
+Tip2: K1 is 2558325.7208   K2 is -366117.9873   T is -40287.1723  and theta is 0.1792
+Tip2: theta MTS is 0.27365   theta MTSM is 0.1792
+Calculating SIFs and propagating rift
+Tip1: stress-strain contribution K1 is 10255684.4469   K2 is 915084.0752
+Tip1: stress-strain contribution T is -30245.2772
+Tip1:  body forces contribution K1 is -6036.298   K2 is -27776.0243 
+Tip1: body forces contribution T is -30245.2772
+Tip1:  theta is -0.17021
+Tip1: wall forces contribution K1 is -7624135.2092   K2 is 0  
+Tip1: wall forces contribution T is -30245.2772
+Tip1: K1 is 2625512.9397   K2 is 887308.0509   T is -30272.3866  and theta is -0.4308
+Tip1: theta MTS is -0.55268   theta MTSM is -0.4308
+Tip 1 modified: K1 is 2625512.9397   K2 is 887308.0509  and theta is 0.4308
+1241.6576    Crack growth number     5
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 25072
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 0.10305
+L2 norm of residual is 19902358811400.97 ; relative to R0 1. The contact ratio is: 0.1374
+L2 norm of residual is 623965124.8527 ; relative to R0 3.1351e-05. The contact ratio is: 0.070611
+L2 norm of residual is 2474276229.9097 ; relative to R0 0.00012432. The contact ratio is: 0.04771
+L2 norm of residual is 18491524677.2575 ; relative to R0 0.00092911. The contact ratio is: 0.040076
+L2 norm of residual is 91362922.5625 ; relative to R0 4.5906e-06. The contact ratio is: 0.034351
+L2 norm of residual is 33109398517.0618 ; relative to R0 0.0016636. The contact ratio is: 0.026718
+L2 norm of residual is 1255958357.5882 ; relative to R0 6.3106e-05. The contact ratio is: 0.022901
+L2 norm of residual is 18357709390.707 ; relative to R0 0.00092239. The contact ratio is: 0.020992
+L2 norm of residual is 11638299.9424 ; relative to R0 5.8477e-07. The contact ratio is: 0.017176
+L2 norm of residual is 19281059.6216 ; relative to R0 9.6878e-07. The contact ratio is: 0.015267
+L2 norm of residual is 16239111169.1477 ; relative to R0 0.00081594. The contact ratio is: 0.017176
+L2 norm of residual is 7231436.1335 ; relative to R0 3.6335e-07. The contact ratio is: 0.015267
+L2 norm of residual is 0.0022412 ; relative to R0 1.1261e-16. The contact ratio is: 0.015267
+Tip2: stress-strain contribution K1 is 8446908.0202   K2 is 270558.0481
+Tip2: stress-strain contribution T is -42305.7894
+Tip2:  body forces contribution K1 is -3776.5214   K2 is -5572.6113 
+Tip2: body forces contribution T is -42305.7894
+Tip2:  theta is -0.062626
+Tip2: wall forces contribution K1 is -8192514.9863   K2 is 0  
+Tip2: wall forces contribution T is -42305.7894
+Tip2: K1 is 250616.5124   K2 is 264985.4368   T is -42091.3248  and theta is -0.2908
+Tip2: theta MTS is -0.94188   theta MTSM is -0.2908
+Calculating SIFs and propagating rift
+Tip1: stress-strain contribution K1 is 10187136.6154   K2 is -1070435.867
+Tip1: stress-strain contribution T is -48627.1448
+Tip1:  body forces contribution K1 is 16532.6129   K2 is -18469.0861 
+Tip1: body forces contribution T is -48627.1448
+Tip1:  theta is 0.20803
+Tip1: wall forces contribution K1 is -8044891.8516   K2 is 0  
+Tip1: wall forces contribution T is -48627.1448
+Tip1: K1 is 2158777.3767   K2 is -1088904.9531   T is -49297.3897  and theta is 0.4892
+Tip1: theta MTS is 0.70503   theta MTSM is 0.4892
+Tip 1 modified: K1 is 2158777.3767   K2 is -1088904.9531  and theta is -0.4892
+1554.8672    Crack growth number     6
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 25072
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 0.11257
+L2 norm of residual is 906865965784.2815 ; relative to R0 1. The contact ratio is: 0.11632
+L2 norm of residual is 739865748.5152 ; relative to R0 0.00081585. The contact ratio is: 0.061914
+L2 norm of residual is 1578083047.6554 ; relative to R0 0.0017402. The contact ratio is: 0.052533
+L2 norm of residual is 615733385.6982 ; relative to R0 0.00067897. The contact ratio is: 0.043152
+L2 norm of residual is 13406838066.627 ; relative to R0 0.014784. The contact ratio is: 0.037523
+L2 norm of residual is 1166795199.0752 ; relative to R0 0.0012866. The contact ratio is: 0.035647
+L2 norm of residual is 5374885946.3005 ; relative to R0 0.0059269. The contact ratio is: 0.060038
+L2 norm of residual is 6206182265.1878 ; relative to R0 0.0068435. The contact ratio is: 0.050657
+L2 norm of residual is 17472329999.4523 ; relative to R0 0.019267. The contact ratio is: 0.030019
+L2 norm of residual is 889869135.1669 ; relative to R0 0.00098126. The contact ratio is: 0.0394
+L2 norm of residual is 1057915155.4493 ; relative to R0 0.0011666. The contact ratio is: 0.041276
+L2 norm of residual is 6125462513.5477 ; relative to R0 0.0067545. The contact ratio is: 0.04878
+L2 norm of residual is 17277423671.2227 ; relative to R0 0.019052. The contact ratio is: 0.031895
+L2 norm of residual is 872172035.1307 ; relative to R0 0.00096174. The contact ratio is: 0.035647
+L2 norm of residual is 267359813.3522 ; relative to R0 0.00029482. The contact ratio is: 0.030019
+L2 norm of residual is 6105246347.6775 ; relative to R0 0.0067322. The contact ratio is: 0.043152
+L2 norm of residual is 16725812417.7636 ; relative to R0 0.018444. The contact ratio is: 0.046904
+L2 norm of residual is 853977199.908 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3876 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3152 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.1293 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4263 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3876 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.2904 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.2576 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4266 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3879 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3182 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.2875 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4265 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3876 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.2991 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.2581 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4266 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3874 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3162 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.4335 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4267 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3876 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3273 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.0648 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4269 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3874 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.2979 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.0077 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4271 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3878 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.285 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.261 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4243 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3872 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.311 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.6099 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4275 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3874 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.325 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.2213 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.425 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3874 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3096 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.3122 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4262 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3875 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.313 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.4525 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4264 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3879 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3007 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.1365 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4265 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3876 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3015 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.4899 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4269 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3881 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.303 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.3268 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4268 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3878 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.2968 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.2566 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4259 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.388 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.2888 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.1462 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4266 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3874 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.283 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.361 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4276 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3875 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3019 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039898.926 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4259 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.3879 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3122 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.2612 ; relative to R0 0.018445. The contact ratio is: 0.04878
+L2 norm of residual is 853976664.4268 ; relative to R0 0.00094168. The contact ratio is: 0.037523
+L2 norm of residual is 269445171.388 ; relative to R0 0.00029712. The contact ratio is: 0.028143
+L2 norm of residual is 6106376787.3114 ; relative to R0 0.0067335. The contact ratio is: 0.046904
+L2 norm of residual is 16727039899.239 ; relative to R0 0.018445. The contact ratio is: 0.04878
+Tip2: stress-strain contribution K1 is 8724500.9656   K2 is -801281.8653
+Tip2: stress-strain contribution T is -34363.379
+Tip2:  body forces contribution K1 is -5480.8304   K2 is -15579.9086 
+Tip2: body forces contribution T is -34363.379
+Tip2:  theta is 0.18368
+Tip2: wall forces contribution K1 is -9148062.9094   K2 is 0  
+Tip2: wall forces contribution T is -34363.379
+Tip2: K1 is -429042.7742   K2 is -816861.7739   T is -34589.0629  and theta is 1.1592
+Tip2: theta MTS is -1.0629   theta MTSM is 1.1592
+Calculating SIFs and propagating rift
+Tip1: stress-strain contribution K1 is 10460417.1194   K2 is 1245156.9668
+Tip1: stress-strain contribution T is -32237.7935
+Tip1:  body forces contribution K1 is 11306.5538   K2 is -6724.9642 
+Tip1: body forces contribution T is -32237.7935
+Tip1:  theta is -0.22925
+Tip1: wall forces contribution K1 is -7981386.6521   K2 is 0  
+Tip1: wall forces contribution T is -32237.7935
+Tip1: K1 is 2490337.021   K2 is 1238432.0026   T is -32262.4664  and theta is -0.5658
+Tip1: theta MTS is -0.69974   theta MTSM is -0.5658
+Tip 1 modified: K1 is 2490337.021   K2 is 1238432.0026  and theta is 0.5658
+1909.9791    Crack growth number     7
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 25072
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 0.1
+L2 norm of residual is 17669866552103.21 ; relative to R0 1. The contact ratio is: 0.12963
+L2 norm of residual is 932158757.0617 ; relative to R0 5.2754e-05. The contact ratio is: 0.061111
+L2 norm of residual is 12645560817.4328 ; relative to R0 0.00071566. The contact ratio is: 0.061111
+L2 norm of residual is 22811842101.5999 ; relative to R0 0.001291. The contact ratio is: 0.044444
+L2 norm of residual is 1457605938.7216 ; relative to R0 8.2491e-05. The contact ratio is: 0.037037
+L2 norm of residual is 2220216251.3283 ; relative to R0 0.00012565. The contact ratio is: 0.02963
+L2 norm of residual is 1344801766.4211 ; relative to R0 7.6107e-05. The contact ratio is: 0.027778
+L2 norm of residual is 65534631.2546 ; relative to R0 3.7088e-06. The contact ratio is: 0.022222
+L2 norm of residual is 29356943107.3225 ; relative to R0 0.0016614. The contact ratio is: 0.024074
+L2 norm of residual is 103315031.1317 ; relative to R0 5.847e-06. The contact ratio is: 0.018519
+L2 norm of residual is 5910777871.5188 ; relative to R0 0.00033451. The contact ratio is: 0.018519
+L2 norm of residual is 973950382.6349 ; relative to R0 5.5119e-05. The contact ratio is: 0.018519
+L2 norm of residual is 8058898.7025 ; relative to R0 4.5608e-07. The contact ratio is: 0.014815
+L2 norm of residual is 17366303376.6318 ; relative to R0 0.00098282. The contact ratio is: 0.014815
+L2 norm of residual is 18393409.1879 ; relative to R0 1.0409e-06. The contact ratio is: 0.012963
+L2 norm of residual is 6781768.3906 ; relative to R0 3.838e-07. The contact ratio is: 0.012963
+L2 norm of residual is 661492.6973 ; relative to R0 3.7436e-08. The contact ratio is: 0.012963
+L2 norm of residual is 0.0022479 ; relative to R0 1.2722e-16. The contact ratio is: 0.012963
+Tip2: stress-strain contribution K1 is 8735440.6861   K2 is -788446.0004
+Tip2: stress-strain contribution T is -34520.9269
+Tip2:  body forces contribution K1 is -5480.8304   K2 is -15579.9086 
+Tip2: body forces contribution T is -34520.9269
+Tip2:  theta is 0.18068
+Tip2: wall forces contribution K1 is -9147264.0534   K2 is 0  
+Tip2: wall forces contribution T is -34520.9269
+Tip2: K1 is -417304.1978   K2 is -804025.909   T is -34746.6107  and theta is 1.1492
+Tip2: theta MTS is -1.0648   theta MTSM is 1.1492
+Calculating SIFs and propagating rift
+Tip1: stress-strain contribution K1 is 10249109.3346   K2 is -1353632.4926
+Tip1: stress-strain contribution T is -33116.9833
+Tip1:  body forces contribution K1 is -1202.9642   K2 is -24967.9066 
+Tip1: body forces contribution T is -33116.9833
+Tip1:  theta is 0.25851
+Tip1: wall forces contribution K1 is -7802322.1627   K2 is 0  
+Tip1: wall forces contribution T is -33116.9833
+Tip1: K1 is 2445584.2076   K2 is -1378600.3993   T is -33204.8412  and theta is 0.6142
+Tip1: theta MTS is 0.74577   theta MTSM is 0.6142
+Tip 1 modified: K1 is 2445584.2076   K2 is -1378600.3993  and theta is -0.6142
+2233.3518    Crack growth number     8
+---------------------------------------------------
+---------------------------------------------------
+Number of elements: 25072
+ CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
+The ratio of elements stabilized: 0.091575
+L2 norm of residual is 16121833857873.66 ; relative to R0 1. The contact ratio is: 0.12454
+L2 norm of residual is 1244543647.194 ; relative to R0 7.7196e-05. The contact ratio is: 0.054945
+L2 norm of residual is 4220246528.6973 ; relative to R0 0.00026177. The contact ratio is: 0.032967
+L2 norm of residual is 5119556058.0564 ; relative to R0 0.00031755. The contact ratio is: 0.018315
+L2 norm of residual is 110847742.3063 ; relative to R0 6.8756e-06. The contact ratio is: 0.0091575
+L2 norm of residual is 17894813202.3614 ; relative to R0 0.00111. The contact ratio is: 0.003663
+L2 norm of residual is 10420136725.227 ; relative to R0 0.00064634. The contact ratio is: 0.007326
+L2 norm of residual is 9939132868.44 ; relative to R0 0.0006165. The contact ratio is: 0.003663
+L2 norm of residual is 25543778.5284 ; relative to R0 1.5844e-06. The contact ratio is: 0.0054945
+L2 norm of residual is 2869263.9809 ; relative to R0 1.7797e-07. The contact ratio is: 0.0018315
+L2 norm of residual is 0.002268 ; relative to R0 1.4068e-16. The contact ratio is: 0.0018315
+Tip2: stress-strain contribution K1 is 8746628.4815   K2 is -774481.7164
+Tip2: stress-strain contribution T is -34689.9571
+Tip2:  body forces contribution K1 is -5480.8304   K2 is -15579.9086 
+Tip2: body forces contribution T is -34689.9571
+Tip2:  theta is 0.17744
+Tip2: wall forces contribution K1 is -9180504.7635   K2 is 0  
+Tip2: wall forces contribution T is -34689.9571
+Tip2: K1 is -439357.1125   K2 is -790061.625   T is -34915.641  and theta is 1.1592
+Tip2: theta MTS is -1.0536   theta MTSM is 1.1592
+Calculating SIFs and propagating rift
+Tip1: stress-strain contribution K1 is 10618591.8207   K2 is 1515438.4002
+Tip1: stress-strain contribution T is -14146.8876
+Tip1:  body forces contribution K1 is -5611.1427   K2 is -25006.8818 
+Tip1: body forces contribution T is -14146.8876
+Tip1:  theta is -0.26895
+Tip1: wall forces contribution K1 is -8710720.4073   K2 is 0  
+Tip1: wall forces contribution T is -14146.8876
+Tip1: K1 is 1902260.2708   K2 is 1490431.5184   T is -13561.8398  and theta is -0.7958
+Tip1: theta MTS is -0.8568   theta MTSM is -0.7958
+Tip 1 modified: K1 is 1902260.2708   K2 is 1490431.5184  and theta is 0.7958

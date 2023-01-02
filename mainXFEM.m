@@ -534,7 +534,7 @@ for ipas = 1:npas
     clf(f)
 
     if ~exist('gn_inters')
-  [inters,gn_inters,ylg,yls,gc,gn,gt]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,typeElem,enrichNode,pos,66);
+  [inters,gn_inters,ylg,yls,gc,gn,gt]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,enrichNode,pos,66);
     end
    
     save('restart_test','xCrk','enrDomain','pos','F','ipas','Knum','Theta','tangentElem','elemForce','gn_inters','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap');

@@ -10,9 +10,9 @@ fontSize2 = 12;
 mag       = 4000;
 plotfields = 1;
 
-ld = dir('./FINAL/MEL2b_tip*');
-pre = ('./FINAL/');
-results_path = './FINAL/MEL2b_PP';
+ld = dir('./PLSTRESS/MEL2_tip*');
+pre = ('./PLSTRESS/');
+results_path = './PLSTRESS/PPM2';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -20,18 +20,19 @@ global Hidden
 global fontSize2 fontSize1
 global elemType 
 Hidden = 0;
-global E C nu P
+global E C nu P Cm1
 global melange melangeforce wall_int epsilon
 epsilon = 5;
 wall_int = 2
-melange = 0
-melangeforce = 1
+melange = 1
+melangeforce = 0
 E = 9.6e9; nu = 0.33; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
-stressState = 'PlaneStrain' ;
+stressState = 'PlaneStress' ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
+    Cm1 = E*0.1/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 else
     C = E/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
     Cm1 = E*0.1/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
@@ -47,7 +48,7 @@ xCr_original.coor = [xs',ys']
 xCr_original.melange = ones(length(xCr_original.coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
-xCr_original.width = [1 10 60 150 200 80 1 ] ;
+xCr_original.width = [0 10 60 150 200 80 0 ] ;
 
 tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
 tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
@@ -98,7 +99,7 @@ xlim([1,length(knm2)]);
 xlabel('Step')
 ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
 %title('SIFs','FontSize',fontSize1)
-l = legend({'K1','K2'})
+l1 = legend({'K1','K2'})
 ax = gca();
 ax.FontSize = 14;
 
@@ -115,7 +116,7 @@ xlim([1,length(knm2)]);
 xlabel('Step')
 ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
 %title('SIFs','FontSize',fontSize1)
-l = legend({'K1','K2'})
+l2 = legend({'K1','K2'})
 ax = gca();
 ax.FontSize = 14;
 
@@ -152,6 +153,9 @@ legend({'cumulative angle','angle'})
 %plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
 ax = gca();
 ax.FontSize = 14;
+
+set(l1,'Position',l1.Position - [0, 0.1 0 0 ])
+%set(l2,'Position',l2.Position + [0, 0.02 0 0 ])
 
 figure_name = ['Knum_results_M1'];
 print([results_path,'/',figure_name],'-dpng','-r300')
@@ -217,7 +221,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  [~,ylg,yls]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,typeElem,enrichNode,pos,66);
+  [~,~,ylg,yls]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,enrichNode,pos,66);
   clf();
   f = figure();
   f.Position = [0 0 1200 500 ]
@@ -290,7 +294,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  [~,ylg,yls] = f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,typeElem,enrichNode,pos,1,ylg,yls)
+  [~,ylg,yls] = f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,enrichNode,pos,1,ylg,yls)
   clf();
   f = figure();
   f.Position = [0 0 1200 700 ];

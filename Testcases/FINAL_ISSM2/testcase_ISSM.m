@@ -46,7 +46,8 @@ Tfact = 1;
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
-stressState = 'PlaneStrain' ;
+%stressState = 'PlaneStrain' ;
+stressState = 'PlaneStress' ;
 %typeProblem = 'eCrkTen' ; %choose type of problem
 typeProblem = 'ISSM' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
@@ -64,7 +65,7 @@ xCr(1).coor = [xs',ys']
 % import rifts
 %xCr(1).coor = [xs(1),ys(1);xs(4),ys(4);xs(7),ys(7)] 
 %{keyboard %}
-results_path = './FINAL/ISSM2_xmas_tip1_10km';
+results_path = './PLSTRESS/ISSM2_xmas_tip1_10km';
 mkdir(results_path);
 copyfile('./testcase_ISSM.m',[results_path,'/']);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
@@ -74,6 +75,7 @@ E = 9.6e9; nu = 0.33; P = 144.53e3 ;
 sigmato = P ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
+    Cm1 = E*0.1/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 else
     C = E/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
     Cm1 = E*0.1/(1+nu)/(1-2*nu)*[1-nu nu 0; nu 1-nu 0; 0 0 (1/2)-nu];
@@ -125,7 +127,7 @@ make_knum
 
 close all;
 clf;
-results_path = './FINAL/ISSM2_xmas_tip1_20km';
+results_path = './PLSTRESS/ISSM2_xmas_tip1_20km';
 mkdir(results_path);
 copyfile('testcase_ISSM.m',[results_path,'/']);
 zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
@@ -159,7 +161,7 @@ make_knum
 xCr(1).tip = [0,1];
 close all;
 clf;
-results_path = './FINAL/ISSM2_xmas_tip2_10km';
+results_path = './PLSTRESS/ISSM2_xmas_tip2_10km';
 mkdir(results_path);
 copyfile('testcase_ISSM.m',[results_path,'/']);
 run_mesh_prep
@@ -213,7 +215,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './FINAL/ISSM2_xmas_tip2_15km';
+results_path = './PLSTRESS/ISSM2_xmas_tip2_15km';
 numstep = 4;
 mkdir(results_path);
 copyfile('testcase_ISSM.m',[results_path,'/']);
@@ -248,7 +250,7 @@ if( strcmp(plotmesh,'YES') )
         end
     end
 end
-results_path = './FINAL/ISSM2_xmas_tip3_5km';
+results_path = './PLSTRESS/ISSM2_xmas_tip3_5km';
 mkdir(results_path);
 copyfile('testcase_ISSM.m',[results_path,'/']);
 run_mesh_prep

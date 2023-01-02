@@ -94,25 +94,27 @@ if contact
         [l,nv,mv,nnt,nmt,mmt] = f_segment_dist(pg);
         JO = l/2;
 
-        for k_in = 1:length(Q)
-          [N1,dNdx1]=lagrange_basis('L2',Q(k_in));
-          gpt = N1'*p;
-      % find the distance between the two intersects (should be able to do this with det(J)
-          [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-          pint =  N' * node(sctr,:);
-          Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modpen);
-          gn = nv*Nmat*2*u(A) + gn_lim;
-          if gn < 0 
-            if k_in ==1
-              if seg == 1
-                cct = cct + 1;
+      if ~ismember(iel,tip_elem)
+          for k_in = 1:length(Q)
+            [N1,dNdx1]=lagrange_basis('L2',Q(k_in));
+            gpt = N1'*p;
+        % find the distance between the two intersects (should be able to do this with det(J)
+            [N,dNdxi] = lagrange_basis(elemType,gpt) ;
+            pint =  N' * node(sctr,:);
+            Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modpen);
+            gn = nv*Nmat*2*u(A) + gn_lim;
+            if gn < 0 
+              if k_in ==1
+                if seg == 1
+                  cct = cct + 1;
+                end
               end
+              elem_force(seg,iel,2*k_in-1) = -1*E_pen*gn;
+              Gint(A) = Gint(A) + (E_pen*gn)*W(k_in)*det(JO)*Nmat'*nv';
+              Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+            else          
+              elem_force(seg,iel,2*k_in-1) = 0;
             end
-            elem_force(seg,iel,2*k_in-1) = -1*E_pen*gn;
-            Gint(A) = Gint(A) + (E_pen*gn)*W(k_in)*det(JO)*Nmat'*nv';
-            Kglobal(A,A) = Kglobal(A,A) + 2*E_pen*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
-          else          
-            elem_force(seg,iel,2*k_in-1) = 0;
           end
         end
       end
@@ -140,23 +142,25 @@ if melangeforce
       mT = mel_elems(ii,3);
       kk = mel_elems(ii,1); 
       
-      for k_in = 1:length(Q)
-        [N1,dNdx1]=lagrange_basis('L2',Q(k_in));
-        gpt = N1'*p;
-        [N,dNdxi] = lagrange_basis(elemType,gpt) ;
-        Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modpen);
-        gn = nv*Nmat*2*u(A);
-        
-        fn = Cm1(1,1)*(gn/mT);
-        elem_force(seg,iel,2*k_in-1) = -1*fn;
-        Gint(A) = Gint(A) + (fn)*W(k_in)*det(JO)*Nmat'*nv';
-        Kglobal(A,A) = Kglobal(A,A) + 2*(Cm1(1,1)/mT)*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
-        if mel_tan
-          gt = mv*Nmat*2*u(A);
-          ft = Cm1(1,2)*(gt/mT);
-          elem_force(seg,iel,2*k_in) = -1*ft;
-          Gint(A) = Gint(A) + (ft)*W(k_in)*det(JO)*Nmat'*mv';
-          Kglobal(A,A) = Kglobal(A,A) + 2*(Cm1(1,2)/mT)*W(k_in)*Nmat'*mmt*Nmat*det(JO) ;
+      if ~ismember(iel,tip_elem)
+        for k_in = 1:length(Q)
+          [N1,dNdx1]=lagrange_basis('L2',Q(k_in));
+          gpt = N1'*p;
+          [N,dNdxi] = lagrange_basis(elemType,gpt) ;
+          Nmat = enrNmat(N,iel,type_elem,enr_node(:,kk),elem_crk,xVertex,xTip,kk,modpen);
+          gn = nv*Nmat*2*u(A);
+          
+          fn = Cm1(1,1)*(gn/mT);
+          elem_force(seg,iel,2*k_in-1) = -1*fn;
+          Gint(A) = Gint(A) + (fn)*W(k_in)*det(JO)*Nmat'*nv';
+          Kglobal(A,A) = Kglobal(A,A) + 2*(Cm1(1,1)/mT)*W(k_in)*Nmat'*nnt*Nmat*det(JO) ;
+          if mel_tan
+            gt = mv*Nmat*2*u(A);
+            ft = Cm1(1,2)*(gt/mT);
+            elem_force(seg,iel,2*k_in) = -1*ft;
+            Gint(A) = Gint(A) + (ft)*W(k_in)*det(JO)*Nmat'*mv';
+            Kglobal(A,A) = Kglobal(A,A) + 2*(Cm1(1,2)/mT)*W(k_in)*Nmat'*mmt*Nmat*det(JO) ;
+          end
         end
       end
       %disp(['iel is ',num2str(iel)]);

@@ -66,7 +66,7 @@ Tfact = 1;
 %problem flags
 elemType = 'T3' ;
 typeCrack = 'Static' ;
-stressState = 'PlaneStrain' ;
+stressState = 'PlaneStress' ;
 %typeProblem = 'eCrkTen' ; %choose type of problem
 typeProblem = 'ISSM' ; %choose type of problem
 %typeProblem = 'yTraction' ; %choose type of problem
@@ -87,7 +87,7 @@ xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
 xCr(1).width = [min_gap 10 30 150 200 30 min_gap ] ;
-results_path = './FINAL/M2_OP_tip1_10km';
+results_path = './PLSTRESS/M2_OP_tip1_10km';
 mkdir(results_path);
 copyfile('testcase_op_m2.m',[results_path,'/']);
 path(path,'/home/antarctica/Softs/ameshref/refinement/')
@@ -145,3 +145,136 @@ zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
 %KAnalytical000 = C*P*sqrt(pi*a) 
 save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
 make_knum
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './PLSTRESS/M2_OP_tip1_20km';
+mkdir(results_path);
+copyfile('testcase_op_m1.m',[results_path,'/']);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
+
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+xCr(1).tip = [0,1];
+results_path = './PLSTRESS/M2_OP_tip2_10km';
+mkdir(results_path);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
+
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './PLSTRESS/M2_OP_tip2_15km';
+numstep = 4
+mkdir(results_path);
+copyfile('testcase_op_m1.m',[results_path,'/']);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
+
+xCr(1).tip = [1,1];
+close all;
+clf;
+if Hidden
+  fmesh = figure('visible','off');
+else
+  fmesh = figure();
+end
+
+if( strcmp(plotmesh,'YES') )
+    plotMesh(node,element,elemType,'b-',plotNode,fmesh)
+    
+    %crack plot
+    for k=1:size(xCr,2)
+        for kj = 1:size(xCr(k).coor,1)-1
+            cr = plot(xCr(k).coor(kj:kj+1,1),xCr(k).coor(kj:kj+1,2),'r-') ;
+            set(cr,'LineWidth',3);
+        end
+        for kj = 1:size(xCr(k).coor,1)
+            %plot(xCr(k).coor(kj,1),xCr(k).coor(kj,2),'ro',...
+                %'MarkerFaceColor',[.49 1 .63],'MarkerSize',5);
+        end
+    end
+end
+results_path = './PLSTRESS/M2_OP_tip3_5km';
+mkdir(results_path);
+copyfile('testcase_op_m1.m',[results_path,'/']);
+run_mesh_prep
+zoom_dim(1,:) = [min(xCr.coor(:,1))-20000,max(xCr.coor(:,1))+20000];
+zoom_dim(2,:) = [min(xCr.coor(:,2))-10000,max(xCr.coor(:,2))+10000];
+[Knumerical,ThetaInc,xCr] = mainXFEM(xCr,numstep,deltaInc);
+save([results_path,'/crack.mat'],'xCr','ThetaInc','Knumerical');
+make_knum
+
+close all;

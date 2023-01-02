@@ -1,4 +1,4 @@
-function [inters,gn_inters,ylg,yls,gc,gn,gt] = f_plot_wf( u,xCrk,enrDomain,typeElem,elem_force,elem_gap,elem_crk,split_elem,vertex_elem,xVertex,tip_elem,xTip,crack_node,type_elem,enrich_node,pos,stepnum,varargin)
+function [inters,gn_inters,ylg,yls,gc,gn,gt] = f_plot_wf( u,xCrk,enrDomain,type_elem,elem_force,elem_gap,elem_crk,split_elem,vertex_elem,xVertex,tip_elem,xTip,crack_node,enrich_node,pos,stepnum,varargin)
 % This MATLAB function was created by Martin Forbes (martin.forbes@postgrad.otago.ac.nz)
 % The date of creation: Fri Mar 18 18:39:27 NZDT 2022
 
@@ -30,7 +30,7 @@ else
   mel_b = 1
 end
 
-if nargin == 19
+if nargin == 18
   ylg = varargin{1}; 
   yls = varargin{2}; 
 else
@@ -38,7 +38,7 @@ else
   yls = []; 
 end
 
-
+%keyboard
 
 [W,Q] = quadrature(wall_int,'GAUSS',1) ;
 
@@ -344,6 +344,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   else
     f = figure();
   end
+  f.Position = [0 0 900 400 ]
   plot(cc/1000,ss,'color',[0.04,0.04,0.04],'linewidth',3,'DisplayName','normal sym force')
   yl = ylim();
   hold on
@@ -362,6 +363,7 @@ for kk = 1:size(xCrk,2) %what's the crack?
   else
     f = figure();
   end
+  f.Position = [0 0 900 400 ]
   pg = plot(gc/1000,gn,'color',[0.04,0.04,0.04],'linewidth',2,'DisplayName','normal gap')
   yl = ylim();
   hold on
@@ -386,7 +388,8 @@ for kk = 1:size(xCrk,2) %what's the crack?
   if stepnum == 1
     delete(pi)
     pi = []
-    yl = [-.55,.55];
+    %yl = [-.55,.55];
+    yl = [-.1,1.1];
     for i = 1: length(inters)
       pi(i) = plot([inters(i),inters(i)]/1000,yl,'c-','linewidth',2,'Color',[0.6,0.3,0.5,0.2]);
     end

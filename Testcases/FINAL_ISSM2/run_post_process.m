@@ -3,15 +3,16 @@ path(path,'../../Crackprocessing')
 path(path,'../../Mesh')
 path(path,'../../Routines_XFEM')
 path(path,'../../Routines_ICEM')
+path(path,'../../Postprocess')
 path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
 mag       = 4000;
-plotfields = 1
+plotfields = 0
 
-ld = dir('./CLEAN/ISSM2_xmas_tip*');
-pre = './CLEAN/';
-results_path = './FINAL/ISSM2_PP';
+ld = dir('./PLSTRESS/ISSM2_xmas_tip*');
+pre = './PLSTRESS/';
+results_path = './PLSTRESS/PPISSM';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -28,7 +29,7 @@ melangeforce = 0
 E = 9.6e9; nu = 0.3; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
-stressState = 'PlaneStrain' ;
+stressState = 'PlaneStress' ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 else
@@ -37,12 +38,20 @@ else
 end
 
 % the original crack geometry
-srift2 = shaperead('~/Work/Shapefiles/rift_2005.shp');
+srift2 = shaperead('./o_rift.shp');
+%srift2 = shaperead('../../Data/2013_14_crackb_open.shp');
+%srift = shaperead('./Data/cracka_short_2009-10.shp');
 xs = srift2.X
 ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
+xCr(1).coor = [xs',ys'] 
+%srift2 = shaperead('~/Work/Shapefiles/rift_2005.shp');
+%xs = srift2.X
+%ys = srift2.Y
+%xs(end) = []; %get rid of trailin NaN
+%ys(end) = [];
+%xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
 
 tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
 tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
@@ -94,7 +103,7 @@ xlim([1,length(knm2)]);
 xlabel('Step')
 ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
 %title('SIFs','FontSize',fontSize1)
-l = legend({'K1','K2'})
+l1 = legend({'K1','K2'})
 ax = gca();
 ax.FontSize = 14;
 
@@ -111,7 +120,7 @@ xlim([1,length(knm2)]);
 xlabel('Step')
 ylabel(['SIF ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',14)
 %title('SIFs','FontSize',fontSize1)
-l = legend({'K1','K2'})
+l2 = legend({'K1','K2'})
 ax = gca();
 ax.FontSize = 14;
 
@@ -148,6 +157,11 @@ legend({'cumulative angle','angle'})
 %plotMesh(node+dfa*[uxAna uyAna],element,elemType,'r-',plotNode)
 ax = gca();
 ax.FontSize = 14;
+set(l1,'Position',l1.Position - [0, 0.05 0 0 ])
+set(l2,'Position',l2.Position - [0, 0.05 0 0 ])
+
+%keyboard
+
 
 figure_name = ['Knum_results'];
 print([results_path,'/',figure_name],'-dpng','-r300')
@@ -164,7 +178,7 @@ shapewrite(srift_final,[results_path,'/',shapefile_name]);
 
 
 %plots of the last time-step
-if 0
+if 1
   dname = [pre,ld(end).name];
   lname = [dname,'/crack4.mat']; 
   load(lname)
@@ -211,7 +225,8 @@ if 0
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  [~,~,ylg,yls]=f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66);
+  %[~,~,ylg,yls]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,66);
+  [~,~,ylg,yls]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,enrichNode,pos,66);
   clf();
   f = figure();
   f.Position = [0 0 1200 500 ]
@@ -247,8 +262,10 @@ if 1
   lname = [dname,'/crack1.mat']; 
   load(lname)
   TR = triangulation(element,node);
+  if plotfields
   plotFieldXfemT3_pp(xCrk,pos,enrichNode,crackNode,u,...
     elemCrk,vertexElem,cornerElem,splitElem,tipElem,xVertex,xTip,typeElem,1,ca,cax,cay);
+  end
   fu = full(u);
   numnode = length(node);
   Stdux = fu(1:2:2*numnode) ;
@@ -269,9 +286,10 @@ if 1
   xlabel('Easting (km)');
   ax = gca();
   ax.FontSize = 16;
-  b = f_publish_fig(f,'t');
-  print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
-  delete(b);
+  %keyboard
+  %b = f_publish_fig(f,'t');
+  %print([results_path,'/crackwalls',num2str(mag),'_start'],'-dpng','-r300')
+  %delete(b);
   if ~isempty(zoom_dim2)
     xlim(zoom_dim2(1,:));
     ylim(zoom_dim2(2,:));
@@ -282,7 +300,7 @@ if 1
     print([results_path,'/',figure_name],'-dpng')
   end
   clf();
-  [~,~,ylg,yls] = f_plot_wall_forces(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,tipElem,1,ylg,yls)
+  [~,~,ylg,yls]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,enrichNode,pos,1,ylg,yls);
   clf();
   f = figure();
   f.Position = [0 0 1200 700 ];
