@@ -27,7 +27,7 @@ global epsilon
 global fixedF FintH
 global same_coords
 same_coords = 1
-results_path = './Tri_gmsh';
+results_path = './Tri_gmsh_force';
 mkdir(results_path);
 epsilon = 1e-6
 plothelp = 0

@@ -14,6 +14,7 @@ global wall_int skip_branch skip_vertex modpen modocean
 global melange_stab crack_load
 
 output_file = fopen([results_path,'/output.log'],'w')
+
 if ~isfield(xCrk,'tip')
   for i =1:size(xCrk,2)
     xCrk(i).tip = [1,1];
