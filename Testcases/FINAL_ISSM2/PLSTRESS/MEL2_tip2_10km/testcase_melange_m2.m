@@ -88,7 +88,8 @@ xCr(1).coor = [xs',ys']
 xCr(1).melange = ones(length(xCr(1).coor)-1,1);
 %xCr(1).melange(1) = 0;
 %xCr(1).melange(end) = 0;
-xCr(1).width = [min_gap 10 30 150 200 30 min_gap ] ;
+%xCr(1).width = [min_gap 10 30 150 200 30 min_gap ] ;
+xCr(1).width = [min_gap 10 60 150 200 80 min_gap ] ;
 results_path = './PLSTRESS/MEL2_tip1_10km';
 mkdir(results_path);
 copyfile('testcase_melange_m2.m',[results_path,'/']);

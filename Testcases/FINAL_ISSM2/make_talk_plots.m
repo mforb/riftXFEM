@@ -9,9 +9,9 @@ fontSize1 = 14;
 fontSize2 = 12; 
 mag       = 2000;
 
-ld = dir('../FINAL_ISSM/ISSM2_xmas_tip*');
-pre = '../FINAL_ISSM/';
-results_path = './Talk';
+ld = dir('./PLSTRESS/PRES_xmas_tip*');
+pre = './PLSTRESS/';
+results_path = './PLSTRESS/TalkPRES';
 mkdir(results_path);
 global results_path
 global zoom_dim
@@ -28,7 +28,7 @@ melangeforce = 0
 E = 9.6e9; nu = 0.33; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
-stressState = 'PlaneStrain' ;
+stressState = 'PlaneStress' ;
 if( strcmp(stressState,'PlaneStress') )
     C = E/(1-nu^2)*[1 nu 0; nu 1 0; 0 0 (1-nu)/2];
 else
@@ -38,28 +38,37 @@ end
 
 % the original crack geometry
 srift2 = shaperead('./o_rift.shp');
-xs = srift2.X;
-ys = srift2.Y;
+%srift2 = shaperead('../../Data/2013_14_crackb_open.shp');
+%srift = shaperead('./Data/cracka_short_2009-10.shp');
+xs = srift2.X
+ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
-xCr_original.coor = [fliplr(xs)',fliplr(ys)'];
+xCr(1).coor = [xs',ys'] 
+%srift2 = shaperead('~/Work/Shapefiles/rift_2005.shp');
+%xs = srift2.X
+%ys = srift2.Y
+%xs(end) = []; %get rid of trailin NaN
+%ys(end) = [];
+%xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
 
-tip1 = [ ones(1,8), zeros(1,6), ones(1,2)];
-tip2 = [ zeros(1,8), ones(1,6), ones(1,2)];
-f = figure(2);
+tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
+tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
+
+f2 = figure(2);
 clf
-f.Position = [ 0, 0, 1000, 700 ];
+f2.Position = [ 0, 0, 1000, 700 ];
 lb = -3
-ub = 33
-yticks(0:5:30);
+ub = 63 
+yticks(0:10:60);
 % tile 1
 hold on
 grid on
-fill([-1,-1,17,17],[.08,.4,.4,.08],'cyan','FaceAlpha',0.2,'LineStyle','none');
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+fill([-1,-1,33,33],[.08,.5,.5,.08],'cyan','FaceAlpha',0.2,'LineStyle','none');
+plot([16,16],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+plot([28,28],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
-xlim([0,16]);
+xlim([0,32]);
 xlabel('Steps','FontSize',20)
 ylabel(['SIFs ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',20)
 ax = gca();
@@ -69,20 +78,20 @@ ax.Color = 'none';
 ax.TickDir = 'out';
 ax.TickLength = [ 0.005 0.01 ];
 
-f = figure(3);
+f3 = figure(3);
 clf
-f.Position = [ 0, 0, 1000, 700 ];
+f3.Position = [ 0, 0, 1000, 700 ];
 lb = -3
-ub = 33
-yticks(0:5:30);
+ub = 63
+yticks(0:10:60);
 % tile 1
 hold on
 grid on
-fill([-1,-1,17,17],[.08,.4,.4,.08],'cyan','FaceAlpha',0.2,'LineStyle','none');
-plot([9,9],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
-plot([15,15],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+fill([-1,-1,33,33],[.08,.5,.5,.08],'cyan','FaceAlpha',0.2,'LineStyle','none');
+plot([16,16],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
+plot([28,28],[lb,ub],'color',[30,30,30,200]/255,'linewidth',1)
 ylim([lb,ub]);
-xlim([0,16]);
+xlim([0,32]);
 xlabel('Steps','FontSize',20)
 ylabel(['SIFs ($\frac{MPa}{\sqrt{m}}$)'],'interpreter','latex','FontSize',20)
 ax = gca();
@@ -143,7 +152,7 @@ for i = 1:length(ld)
     f_publish_fig(f,'r');
     figure_name = ['crack',num2str(cnt)];
     print([results_path,'/',figure_name],'-dpng')
-    figure(2)
+    figure(f2)
     figure_name = ['sifL',num2str(cnt)];
     pl1 = plot(stp,kl1/1e6,'color',c2(1,:),'linewidth',4)
     pl2 = plot(stp,kl2/1e6,'color',c2(2,:),'linewidth',4)
@@ -152,7 +161,7 @@ for i = 1:length(ld)
     end
     print([results_path,'/',figure_name],'-dpng')
     delete([pl1,pl2])
-    figure(3)
+    figure(f3)
     figure_name = ['sifR',num2str(cnt)];
     pl1 = plot(stp,kr1/1e6,'color',c2(1,:),'linewidth',4)
     pl2 = plot(stp,kr2/1e6,'color',c2(2,:),'linewidth',4)
@@ -164,129 +173,129 @@ for i = 1:length(ld)
   end
 end
 
-figure(2)
+figure(f2)
 figure_name = ['sifL',num2str(cnt)];
 plb1 = plot(stp,kl1/1e6,'color',[c2(1,:),0.1],'linewidth',3)
 plb2 = plot(stp,kl2/1e6,'color',[c2(2,:),0.1],'linewidth',3)
-figure(3)
+figure(f3)
 figure_name = ['sifR',num2str(cnt)];
 plc1 = plot(stp,kr1/1e6,'color',[c2(1,:),0.1],'linewidth',3)
 plc2 = plot(stp,kr2/1e6,'color',[c2(2,:),0.1],'linewidth',3)
 xb = xCrk.coor(:,1);
 yb = xCrk.coor(:,2);
-lname = './PRES_xmas_tip1_10km/crack1.mat'
-load(lname)
-kl1 = Knum{1}(1,end);
-kr1 = Knum{2}(1,end);
-kl2 = Knum{1}(2,end);
-kr2 = Knum{2}(2,end);
+%lname = './PRES_xmas_tip1_10km/crack1.mat'
+%load(lname)
+%kl1 = Knum{1}(1,end);
+%kr1 = Knum{2}(1,end);
+%kl2 = Knum{1}(2,end);
+%kr2 = Knum{2}(2,end);
 
-f = figure(1);
-clf
-f.Position = [ 0, 0, 1200, 700];
-hold on
-% the crack is saved after a propagation step, so we need to modify the crack to plot 
-%[crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-cb = plot(xb,yb);
-csol = plot(xCrk.coor(:,1),xCrk.coor(:,2))
-set(cb,'color',[171, 22, 45, 40]/255)
-set(csol,'color',[100, 80, 210]/255)
-set([cb,csol],'LineWidth',4)
-axis equal;
-xlim([0 9e4])
-ylim([-1.15,-1.12]*1e6)
-yticks(-1150000:10000:-1120000);
-ylabel('Northing (km)');
-xlabel('Easting (km)');
-f_publish_fig(f,'r');
-figure_name = ['crack_imbalance'];
-print([results_path,'/',figure_name],'-dpng')
-figure(2)
-figure_name = ['sifL_imb'];
-pl1 = plot(1,kl1/1e6,'color',c2(1,:),'linewidth',4)
-pl2 = plot(1,kl2/1e6,'color',c2(2,:),'linewidth',4)
-set([pl1,pl2],'Marker','o');
-print([results_path,'/',figure_name],'-dpng')
-delete([pl1,pl2])
-figure(3)
-figure_name = ['sifR_imb'];
-pl1 = plot(1,kl1/1e6,'color',c2(1,:),'linewidth',4)
-pl2 = plot(1,kl2/1e6,'color',c2(2,:),'linewidth',4)
-set([pl1,pl2],'Marker','o');
-print([results_path,'/',figure_name],'-dpng')
-delete([pl1,pl2])
+%f = figure(1);
+%clf
+%f.Position = [ 0, 0, 1200, 700];
+%hold on
+%% the crack is saved after a propagation step, so we need to modify the crack to plot 
+%%[crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+%cb = plot(xb,yb);
+%csol = plot(xCrk.coor(:,1),xCrk.coor(:,2))
+%set(cb,'color',[171, 22, 45, 40]/255)
+%set(csol,'color',[100, 80, 210]/255)
+%set([cb,csol],'LineWidth',4)
+%axis equal;
+%xlim([0 9e4])
+%ylim([-1.15,-1.12]*1e6)
+%yticks(-1150000:10000:-1120000);
+%ylabel('Northing (km)');
+%xlabel('Easting (km)');
+%f_publish_fig(f,'r');
+%figure_name = ['crack_imbalance'];
+%print([results_path,'/',figure_name],'-dpng')
+%figure(2)
+%figure_name = ['sifL_imb'];
+%pl1 = plot(1,kl1/1e6,'color',c2(1,:),'linewidth',4)
+%pl2 = plot(1,kl2/1e6,'color',c2(2,:),'linewidth',4)
+%set([pl1,pl2],'Marker','o');
+%print([results_path,'/',figure_name],'-dpng')
+%delete([pl1,pl2])
+%figure(3)
+%figure_name = ['sifR_imb'];
+%pl1 = plot(1,kl1/1e6,'color',c2(1,:),'linewidth',4)
+%pl2 = plot(1,kl2/1e6,'color',c2(2,:),'linewidth',4)
+%set([pl1,pl2],'Marker','o');
+%print([results_path,'/',figure_name],'-dpng')
+%delete([pl1,pl2])
 
-results_path = './Talk_Mel';
-mkdir(results_path);
+%results_path = './Talk_Mel';
+%mkdir(results_path);
 
-ld = dir('./MEL2ST_YES_*');
-kl1 = [];
-kl2 = [];
-kr1 = [];
-kr2 = [];
-stp = [];
-cnt = 0;
-% read all of the SIF values
-for i = 1:length(ld)
-  dname = [pre,ld(i).name];
-  strs = [dname,'/crack*.mat']; 
-  lns = dir(strs);
-  for i = 2:length(lns)
-    cnt = cnt+1;
-    cmat = lns(i).name
-    lname = [dname,'/',cmat]; 
-    load(lname)
-    kl1 = [kl1, Knum{1}(1,end)];
-    kr1 = [kr1, Knum{2}(1,end)];
-    kl2 = [kl2, Knum{1}(2,end)];
-    kr2 = [kr2, Knum{2}(2,end)];
-    stp = [stp,cnt]
-    f = figure(1);
-    clf
-    f.Position = [ 0, 0, 1200, 700];
-    hold on
-    % the crack is saved after a propagation step, so we need to modify the crack to plot 
-    %[crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
-    cb = plot(xb,yb);
-    cext = plot(xCrk.coor(:,1),xCrk.coor(:,2))
-    xCr = xCrk;
-    if xCrk.tip(1)
-      xCr.coor(1,:) = [];
-    end
-    if xCrk.tip(2)
-      xCr.coor(end,:) = [];
-    end
-    csol = plot(xCr.coor(:,1),xCr.coor(:,2))
-    set(cb,'color',[171, 22, 45, 30]/255)
-    set(cext,'color',[50, 80, 70, 150]/255)
-    set(csol,'color',[50, 80, 70]/255)
-    set([cext,csol,cb],'LineWidth',4)
-    axis equal;
-    xlim([0 9e4])
-    ylim([-1.15,-1.12]*1e6)
-    yticks(-1150000:10000:-1120000);
-    ylabel('Northing (km)');
-    xlabel('Easting (km)');
-    f_publish_fig(f,'r');
-    figure_name = ['crack',num2str(cnt)];
-    print([results_path,'/',figure_name],'-dpng')
-    figure(2)
-    figure_name = ['sifL',num2str(cnt)];
-    pl1 = plot(stp,kl1/1e6,'color',c2(3,:),'linewidth',4)
-    pl2 = plot(stp,kl2/1e6,'color',c2(4,:),'linewidth',4)
-    if cnt == 1
-      set([pl1,pl2],'Marker','o');
-    end
-    print([results_path,'/',figure_name],'-dpng')
-    delete([pl1,pl2])
-    figure(3)
-    figure_name = ['sifR',num2str(cnt)];
-    pl1 = plot(stp,kr1/1e6,'color',c2(3,:),'linewidth',4)
-    pl2 = plot(stp,kr2/1e6,'color',c2(4,:),'linewidth',4)
-    if cnt == 1
-      set([pl1,pl2],'Marker','o');
-    end
-    print([results_path,'/',figure_name],'-dpng')
-    delete([pl1,pl2])
-  end
-end
+%ld = dir('./MEL2ST_YES_*');
+%kl1 = [];
+%kl2 = [];
+%kr1 = [];
+%kr2 = [];
+%stp = [];
+%cnt = 0;
+%% read all of the SIF values
+%for i = 1:length(ld)
+  %dname = [pre,ld(i).name];
+  %strs = [dname,'/crack*.mat']; 
+  %lns = dir(strs);
+  %for i = 2:length(lns)
+    %cnt = cnt+1;
+    %cmat = lns(i).name
+    %lname = [dname,'/',cmat]; 
+    %load(lname)
+    %kl1 = [kl1, Knum{1}(1,end)];
+    %kr1 = [kr1, Knum{2}(1,end)];
+    %kl2 = [kl2, Knum{1}(2,end)];
+    %kr2 = [kr2, Knum{2}(2,end)];
+    %stp = [stp,cnt]
+    %f = figure(1);
+    %clf
+    %f.Position = [ 0, 0, 1200, 700];
+    %hold on
+    %% the crack is saved after a propagation step, so we need to modify the crack to plot 
+    %%[crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
+    %cb = plot(xb,yb);
+    %cext = plot(xCrk.coor(:,1),xCrk.coor(:,2))
+    %xCr = xCrk;
+    %if xCrk.tip(1)
+      %xCr.coor(1,:) = [];
+    %end
+    %if xCrk.tip(2)
+      %xCr.coor(end,:) = [];
+    %end
+    %csol = plot(xCr.coor(:,1),xCr.coor(:,2))
+    %set(cb,'color',[171, 22, 45, 30]/255)
+    %set(cext,'color',[50, 80, 70, 150]/255)
+    %set(csol,'color',[50, 80, 70]/255)
+    %set([cext,csol,cb],'LineWidth',4)
+    %axis equal;
+    %xlim([0 9e4])
+    %ylim([-1.15,-1.12]*1e6)
+    %yticks(-1150000:10000:-1120000);
+    %ylabel('Northing (km)');
+    %xlabel('Easting (km)');
+    %f_publish_fig(f,'r');
+    %figure_name = ['crack',num2str(cnt)];
+    %print([results_path,'/',figure_name],'-dpng')
+    %figure(2)
+    %figure_name = ['sifL',num2str(cnt)];
+    %pl1 = plot(stp,kl1/1e6,'color',c2(3,:),'linewidth',4)
+    %pl2 = plot(stp,kl2/1e6,'color',c2(4,:),'linewidth',4)
+    %if cnt == 1
+      %set([pl1,pl2],'Marker','o');
+    %end
+    %print([results_path,'/',figure_name],'-dpng')
+    %delete([pl1,pl2])
+    %figure(3)
+    %figure_name = ['sifR',num2str(cnt)];
+    %pl1 = plot(stp,kr1/1e6,'color',c2(3,:),'linewidth',4)
+    %pl2 = plot(stp,kr2/1e6,'color',c2(4,:),'linewidth',4)
+    %if cnt == 1
+      %set([pl1,pl2],'Marker','o');
+    %end
+    %print([results_path,'/',figure_name],'-dpng')
+    %delete([pl1,pl2])
+  %end
+%end

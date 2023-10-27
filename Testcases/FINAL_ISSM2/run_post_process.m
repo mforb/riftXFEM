@@ -8,7 +8,7 @@ path(path,genpath('~/Softs/MATLAB/TOOLS/'));
 fontSize1 = 14; 
 fontSize2 = 12; 
 mag       = 4000;
-plotfields = 0
+plotfields = 1
 
 ld = dir('./PLSTRESS/ISSM2_xmas_tip*');
 pre = './PLSTRESS/';
@@ -26,7 +26,7 @@ global wall_int
 wall_int = 1
 melange = 0
 melangeforce = 0
-E = 9.6e9; nu = 0.3; P = 1 ;
+E = 9.6e9; nu = 0.33; P = 1 ;
 elemType = 'T3';
 sigmato = P ;
 stressState = 'PlaneStress' ;
@@ -46,12 +46,13 @@ ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
 xCr(1).coor = [xs',ys'] 
+% the original crack geometry
+xCr_original.coor = [xs',ys'] 
+xCr_original.melange = ones(length(xCr_original.coor)-1,1);
+%xCr(1).melange(1) = 0;
+%xCr(1).melange(end) = 0;
+xCr_original.width = [0 10 60 150 200 80 0 ] ;
 %srift2 = shaperead('~/Work/Shapefiles/rift_2005.shp');
-%xs = srift2.X
-%ys = srift2.Y
-%xs(end) = []; %get rid of trailin NaN
-%ys(end) = [];
-%xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
 
 tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
 tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
@@ -232,7 +233,7 @@ if 1
   f.Position = [0 0 1200 500 ]
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
-  cb.Label.String = "displacement";
+  cb.Label.String = "displacement (m)";
   cb.FontSize = 16;
   ax = gca();
   ax.FontSize = 16;
@@ -303,11 +304,11 @@ if 1
   [~,~,ylg,yls]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,enrichNode,pos,1,ylg,yls);
   clf();
   f = figure();
+  clf();
   f.Position = [0 0 1200 700 ];
   trisurf(element,node(:,1),node(:,2),Stduy)
-  trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
-  cb.Label.String = "displacement";
+  cb.Label.String = "displacement (m)";
   cm = flipud(cbrewer2('RdBu', 256));
   colormap(cm);
   cb.FontSize = 16;

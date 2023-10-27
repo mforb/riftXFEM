@@ -23,6 +23,8 @@ IM_yy = 2*ISSM_yy+ISSM_xx;
 p1 = (IM_xx+IM_yy)/2 + sqrt( (IM_xx - IM_yy).*(IM_xx - IM_yy)/4 + ISSM_xy.*ISSM_xy);
 p2 = (IM_xx+IM_yy)/2 - sqrt( (IM_xx - IM_yy).*(IM_xx - IM_yy)/4 + ISSM_xy.*ISSM_xy);
 
+vonmises  = sqrt( (IM_xx).^2 +(IM_yy).^2 -(IM_xx).*(IM_yy) + 3*(ISSM_xy).^2) ;
+
 for i = 1:length(IM_xx);
   fl = mean(flow(element(i,:),:),1);
   alpha = atan2(fl(2),fl(1));
@@ -77,6 +79,14 @@ ys = srift2.Y
 xs(end) = []; %get rid of trailin NaN
 ys(end) = [];
 
+srift1 = shaperead('../o_rift.shp');
+%srift2 = shaperead('../../Data/2013_14_crackb_open.shp');
+%srift = shaperead('./Data/cracka_short_2009-10.shp');
+x = srift1.X
+y = srift1.Y
+x(end) = []; %get rid of trailin NaN
+y(end) = [];
+
 f = figure();
 patch('faces',element,'vertices',node,'facevertexcdata',(p1 + ISSM_GHI)/1000);
 cm = cbrewer2('RdBu', 256);
@@ -94,19 +104,43 @@ ylabel('Northing (km)');
 xlabel('Easting (km)');
 yticks(-1300000:100000:-500000);
 xticks(-600000:100000:400000);
-%b = f_publish_fig(f,'I');
-%figure_name = ['GHI_map'];
-%print(['./',figure_name],'-dpng','-r300')
-%clf()
+b = f_publish_fig(f,'I');
+figure_name = ['GHI_map'];
+print(['./',figure_name],'-dpng','-r300')
+clf()
 hold on
+f = figure(); 
+hold on
+
+patch('faces',element,'vertices',node,'facevertexcdata',(p1 + ISSM_GHI)/1000);
+cm = cbrewer2('RdBu', 256);
+colormap(flipud(cm));
+cax = [-80,80];
+cb = colorbar();
+cb.Label.String = 'Principal Stress + GHI Loading (KPa)';
+cb.FontSize = 16;
+ax = gca();
+ax.FontSize = 16;
+axis equal;
+shading flat;
+caxis(cax);
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+yticks(-1300000:100000:-500000);
+xticks(-600000:100000:400000);
+
+
 plr = plot(xs,ys,'-');
-set(plr,'linewidth',4);
+set(plr,'linewidth',2);
 set(plr,'color',[0,0,0]);
+pl = plot(x,y,'-');
+set(pl,'linewidth',2);
+set(pl,'color',[0,0,0]);
 b = f_publish_fig(f,'I');
 figure_name = ['GHI_rift'];
 print(['./',figure_name],'-dpng','-r300')
 %clf()
-keyboard
+%keyboard
 
 f = figure();
 patch('faces',element,'vertices',node,'facevertexcdata',(p1)/1000);
@@ -169,4 +203,88 @@ yticks(-1300000:100000:-500000);
 xticks(-600000:100000:400000);
 b = f_publish_fig(f,'I');
 figure_name = ['STF2'];
+print(['./',figure_name],'-dpng','-r300')
+
+f = figure();
+patch('faces',element,'vertices',node,'facevertexcdata',(vonmises)/1000);
+cm = cbrewer2('BuPu', 256);
+colormap(cm);
+cax = [0,200];
+cb = colorbar();
+cb.Label.String = 'vonmises KPa';
+cb.FontSize = 16;
+ax = gca();
+ax.FontSize = 16;
+axis equal;
+shading flat;
+caxis(cax);
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+yticks(-1300000:100000:-500000);
+xticks(-600000:100000:400000);
+b = f_publish_fig(f,'I');
+figure_name = ['VM'];
+print(['./',figure_name],'-dpng','-r300')
+
+f = figure();
+patch('faces',element,'vertices',node,'facevertexcdata',(IM_xx)/1000);
+cm = cbrewer2('BuPu', 256);
+colormap(cm);
+cax = [0,200];
+cb = colorbar();
+cb.Label.String = 'S_xx KPa';
+cb.FontSize = 16;
+ax = gca();
+ax.FontSize = 16;
+axis equal;
+shading flat;
+caxis(cax);
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+yticks(-1300000:100000:-500000);
+xticks(-600000:100000:400000);
+b = f_publish_fig(f,'I');
+figure_name = ['Sxx'];
+print(['./',figure_name],'-dpng','-r300')
+
+f = figure();
+patch('faces',element,'vertices',node,'facevertexcdata',(ISSM_yy)/1000);
+cm = cbrewer2('BuPu', 256);
+colormap(cm);
+cax = [0,200];
+cb = colorbar();
+cb.Label.String = 'S_yy KPa';
+cb.FontSize = 16;
+ax = gca();
+ax.FontSize = 16;
+axis equal;
+shading flat;
+caxis(cax);
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+yticks(-1300000:100000:-500000);
+xticks(-600000:100000:400000);
+b = f_publish_fig(f,'I');
+figure_name = ['Syy'];
+print(['./',figure_name],'-dpng','-r300')
+
+f = figure();
+patch('faces',element,'vertices',node,'facevertexcdata',(ISSM_H'));
+cm = cbrewer2('BuPu', 256);
+colormap(cm);
+cax = [150,600];
+cb = colorbar();
+cb.Label.String = 'Thickness m';
+cb.FontSize = 16;
+ax = gca();
+ax.FontSize = 16;
+axis equal;
+shading flat;
+caxis(cax);
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+yticks(-1300000:100000:-500000);
+xticks(-600000:100000:400000);
+b = f_publish_fig(f,'I');
+figure_name = ['thick'];
 print(['./',figure_name],'-dpng','-r300')

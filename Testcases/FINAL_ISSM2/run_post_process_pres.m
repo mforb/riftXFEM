@@ -19,7 +19,7 @@ global Hidden
 global fontSize2 fontSize1
 global elemType 
 Hidden = 0;
-global E Cm1 nu P
+global E C Cm1 nu P
 global melange epsilon
 epsilon = 5
 melange = 0
@@ -50,6 +50,11 @@ xCr(1).coor = [xs',ys']
 %xs(end) = []; %get rid of trailin NaN
 %ys(end) = [];
 %xCr_original.coor = [fliplr(xs)',fliplr(ys)'] 
+xCr_original.coor = [xs',ys'] 
+xCr_original.melange = ones(length(xCr_original.coor)-1,1);
+%xCr(1).melange(1) = 0;
+%xCr(1).melange(end) = 0;
+xCr_original.width = [0 10 60 150 200 80 0 ] ;
 
 tip1 = [ ones(1,16), zeros(1,12), ones(1,4)];
 tip2 = [ zeros(1,16), ones(1,12), ones(1,4)];
@@ -200,6 +205,7 @@ if 1
   xCrk(1).coor(1,:)=[];
   xCrk(1).coor(end,:)=[];
   f = figure();
+  clf();
   f.Position = [0 0 1200 700 ]
   hold on
   [crackLips,flagP,elemGap] = f_find_cracklips( u, xCrk, 1, [], typeElem, elemCrk, xTip,xVertex,enrichNode,crackNode,pos,splitElem, vertexElem, tipElem);
@@ -232,7 +238,7 @@ if 1
   f.Position = [0 0 1200 500 ]
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
-  cb.Label.String = "displacement";
+  cb.Label.String = "displacement (m)";
   cb.FontSize = 16;
   ax = gca();
   ax.FontSize = 16;
@@ -272,6 +278,7 @@ if 1
   Stduy = fu(2:2:2*numnode) ;
 
   f = figure();
+  clf();
   f.Position = [ 0, 0, 1200, 700];
   hold on
   % the crack is saved after a propagation step, so we need to modify the crack to plot 
@@ -307,7 +314,7 @@ if 1
   trisurf(element,node(:,1),node(:,2),Stduy)
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
-  cb.Label.String = "displacement";
+  cb.Label.String = "displacement (m)";
   cm = flipud(cbrewer2('RdBu', 256));
   colormap(cm);
   cb.FontSize = 16;

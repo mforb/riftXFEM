@@ -1,11 +1,11 @@
-9994.2832    Crack growth number     1
+8199.4247    Crack growth number     1
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 26759
  CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
 The ratio of elements stabilized: 0
-L2 norm of residual is 1268585434.1004 ; relative to R0 1. The contact ratio is: NaN
-L2 norm of residual is 0.00165 ; relative to R0 1.3007e-12. The contact ratio is: NaN
+L2 norm of residual is 1268585434.1003 ; relative to R0 1. The contact ratio is: NaN
+L2 norm of residual is 0.0016601 ; relative to R0 1.3087e-12. The contact ratio is: NaN
 Tip1: stress-strain contribution K1 is 8212955.1937   K2 is -90266.0532
 Tip1: stress-strain contribution T is -177036.4496
 Tip1:  body forces contribution K1 is 4584.5407   K2 is 3534.8356 
@@ -26,14 +26,14 @@ Tip2: wall forces contribution T is -172336.8995
 Tip2: K1 is 4115026.2061   K2 is 22588.2244   T is -169758.5333  and theta is -0.0057963
 Tip2: theta MTS is -0.010978   theta MTSM is -0.0057963
 Tip 1 modified: K1 is 6073222.1775   K2 is -86731.2176  and theta is -0.014204
-10437.4422    Crack growth number     2
+8563.6372    Crack growth number     2
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 26759
  CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
 The ratio of elements stabilized: 0
 L2 norm of residual is 1177246795.3084 ; relative to R0 1. The contact ratio is: NaN
-L2 norm of residual is 0.0016377 ; relative to R0 1.3911e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0016353 ; relative to R0 1.3891e-12. The contact ratio is: NaN
 Tip1: stress-strain contribution K1 is 8521525.8698   K2 is 153768.8078
 Tip1: stress-strain contribution T is -174662.3844
 Tip1:  body forces contribution K1 is 5297.7529   K2 is 3476.5193 
@@ -54,14 +54,14 @@ Tip2: wall forces contribution T is -177978.4327
 Tip2: K1 is 3923454.0841   K2 is -29461.6106   T is -177924.8082  and theta is 0.0042037
 Tip2: theta MTS is 0.015016   theta MTSM is 0.0042037
 Tip 1 modified: K1 is 6082730.6946   K2 is 157245.3272  and theta is 0.025796
-10889.6961    Crack growth number     3
+8934.9899    Crack growth number     3
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 26759
  CRACK NODES :  3 crack nodes, 12 tangent elements, requiring 6 fixed nodes
 The ratio of elements stabilized: 0
 L2 norm of residual is 1367569078.5566 ; relative to R0 1. The contact ratio is: NaN
-L2 norm of residual is 0.0016313 ; relative to R0 1.1929e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0016293 ; relative to R0 1.1914e-12. The contact ratio is: NaN
 Tip1: stress-strain contribution K1 is 8622313.7992   K2 is -52791.7077
 Tip1: stress-strain contribution T is -173021.9291
 Tip1:  body forces contribution K1 is 4645.2625   K2 is -5100.1421 
@@ -82,14 +82,14 @@ Tip2: wall forces contribution T is -178657.6681
 Tip2: K1 is 4280147.0168   K2 is -34273.6639   T is -178850.2053  and theta is 0.0042037
 Tip2: theta MTS is 0.016013   theta MTSM is 0.0042037
 Tip 1 modified: K1 is 5492864.3267   K2 is -57891.8498  and theta is -0.0092037
-11348.7456    Crack growth number     4
+9341.2586    Crack growth number     4
 ---------------------------------------------------
 ---------------------------------------------------
 Number of elements: 26759
  CRACK NODES :  4 crack nodes, 16 tangent elements, requiring 8 fixed nodes
 The ratio of elements stabilized: 0
 L2 norm of residual is 1189166855.3884 ; relative to R0 1. The contact ratio is: NaN
-L2 norm of residual is 0.0016571 ; relative to R0 1.3935e-12. The contact ratio is: NaN
+L2 norm of residual is 0.0016101 ; relative to R0 1.354e-12. The contact ratio is: NaN
 Tip1: stress-strain contribution K1 is 8484917.1685   K2 is -118802.3044
 Tip1: stress-strain contribution T is -171318.6138
 Tip1:  body forces contribution K1 is 3690.1475   K2 is -7900.533 

@@ -18,6 +18,8 @@ flow = [Vx,Vy]./sqrt(Vx.*Vx+Vy.*Vy);
 p1 = (ISSM_xx+ISSM_yy)/2 + sqrt( (ISSM_xx - ISSM_yy).*(ISSM_xx - ISSM_yy)/4 + ISSM_xy.*ISSM_xy);
 p2 = (ISSM_xx+ISSM_yy)/2 - sqrt( (ISSM_xx - ISSM_yy).*(ISSM_xx - ISSM_yy)/4 + ISSM_xy.*ISSM_xy);
 
+vonmises  = sqrt( (ISSM_xx).^2 +(ISSM_yy).^2 -(ISSM_xx).*(ISSM_yy) + 3*(ISSM_xy).^2) );
+
 for i = 1:length(ISSM_xx);
   fl = mean(flow(element(i,:),:),1);
   alpha = atan2(fl(2),fl(1));
@@ -93,7 +95,7 @@ cm = cbrewer2('BuPu', 256);
 colormap(cm);
 cax = [0,200];
 cb = colorbar();
-cb.Label.String = 'Principal Stress + GHI Loading (KPa)';
+cb.Label.String = 'Principal Stress (KPa)';
 cb.FontSize = 16;
 ax = gca();
 ax.FontSize = 16;
@@ -148,4 +150,25 @@ yticks(-1300000:100000:-500000);
 xticks(-600000:100000:400000);
 b = f_publish_fig(f,'I');
 figure_name = ['STF2'];
+print(['./',figure_name],'-dpng','-r300')
+
+f = figure();
+patch('faces',element,'vertices',node,'facevertexcdata',(vonmises)/1000);
+cm = cbrewer2('BuPu', 256);
+colormap(cm);
+cax = [0,200];
+cb = colorbar();
+cb.Label.String = 'vonmises KPa';
+cb.FontSize = 16;
+ax = gca();
+ax.FontSize = 16;
+axis equal;
+shading flat;
+caxis(cax);
+ylabel('Northing (km)');
+xlabel('Easting (km)');
+yticks(-1300000:100000:-500000);
+xticks(-600000:100000:400000);
+b = f_publish_fig(f,'I');
+figure_name = ['VM'];
 print(['./',figure_name],'-dpng','-r300')

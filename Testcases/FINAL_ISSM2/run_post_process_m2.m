@@ -227,7 +227,7 @@ if 1
   f.Position = [0 0 1200 500 ]
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
-  cb.Label.String = "displacement";
+  cb.Label.String = "displacement (m)";
   cb.FontSize = 16;
   ax = gca();
   ax.FontSize = 16;
@@ -301,7 +301,7 @@ if 1
   trisurf(element,node(:,1),node(:,2),Stduy)
   trisurf(element,node(:,1),node(:,2),Stduy)
   axis equal; view(2); shading interp; cb = colorbar();
-  cb.Label.String = "displacement";
+  cb.Label.String = "displacement (m)";
   cm = flipud(cbrewer2('RdBu', 256));
   colormap(cm);
   cb.FontSize = 16;

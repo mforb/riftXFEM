@@ -25,6 +25,7 @@ stress_val = [ ] ;
 stress_val2 = [ ] ;
 strain_pnt = [ ] ;
 strain_val = [ ] ;
+stress_issm = [];
 anaStress_val = [ ] ;
 fac = 0 ;
 
@@ -60,12 +61,19 @@ for iel=1:size(element,1)
         stress(iel,kk,:) = C*eps_sub ;
         strain(iel,kk,:) = eps_sub ;
     end
+    % going to get modelled stress as well (for comparisons)
+    sigma = f_getstress(iel);
+    stress_issm(iel,:) = [sigma(1,1),sigma(2,2),(simga(1,2)+sigma(2,1))/2]
+
+
 end
 tri = element;
 
 mstress = mean(stress,2);
+mstress2 = mstress(:,1,:) - stress_issm;
 vonmises  = sqrt( (mstress(:,1,1)).^2 +(mstress(:,1,2)).^2 -(mstress(:,1,1)).*(mstress(:,1,2)) + 3*(mstress(:,1,3).^2) );
 
+vonmises2  = sqrt( (mstress2(:,1)).^2 +(mstress2(:,2)).^2 -(mstress2(:,1)).*(mstress2(:,2)) + 3*(mstress2(:,3).^2) );
 %figure('visible','off');
 if Hidden
   f = figure('visible','off');
@@ -98,6 +106,33 @@ if ~isempty(zoom_dim)
 end
 clf(f)
 % pause
+
+figure(f);
+hold on
+patch('faces',tri,'vertices',node,'facevertexcdata',vonmises);
+title('Stress difference: Vonmises')
+shading flat 
+colorbar
+try 
+  caxis([min(0,quantile(vonmises2,0.1)) round(quantile(vonmises2,0.995))])
+catch 
+  mi = min(vonmises2(:,1,1));
+  ma = max(vonmises2(:,1,1));
+  sl = (ma-mi);
+  if sl == 0
+    sl = 1;
+  end
+  caxis([mi+0.2*sl,ma-0.2*sl])
+end
+figure_name = ['Vonmises_diff_',num2str(ipas)];
+print([results_path,'/',figure_name],'-dpng','-r300')
+if ~isempty(zoom_dim)
+  xlim(zoom_dim(1,:))
+  ylim(zoom_dim(2,:))
+  figure_name = ['VonmisesZoom_diff_',num2str(ipas)];
+  print([results_path,'/',figure_name],'-dpng','-r300')
+end
+clf(f)
 
 figure(f);
 hold on
