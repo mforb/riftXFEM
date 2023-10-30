@@ -54,7 +54,9 @@ if isempty(melange_stab)
 end
 nitsche = 0;
 plot_stresses = 0;
-TR = triangulation(element,node);
+if strcmp(elemType,'T3')
+  TR = triangulation(element,node);
+end
 
 Knum = [ ] ; Theta = [ ] ;
 enrDomain = [ ] ; tipElem = [ ] ; splitElem = [ ] ; vertexElem = [ ] ; cornerElem = [];
@@ -310,7 +312,11 @@ for ipas = 1:npas
     end
     figure(f);
     dfac = 1 ;
-    triplot(TR);
+    if strcmp(elemType,'Q4')
+      plotMesh(node,element,elemType,'b-',plotNode,f)
+    else
+      triplot(TR);
+    end
     hold on
     f_plotCrack(f,crackLips,2000,'r-','k-','c--')
     print([results_path,'/crack_walls_before',num2str(ipas)],'-dpng','-r500')
@@ -533,12 +539,20 @@ for ipas = 1:npas
     figure_name = ['Disp_fact_',num2str(dfac),'_',num2str(ipas)];
     print([results_path,'/',figure_name],'-dpng','-r300')
     clf(f)
+    
 
     if ~exist('gn_inters')
-  [inters,gn_inters,ylg,yls,gc,gn,gt]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,enrichNode,pos,66);
+      if any(enrichNode)
+        [inters,gn_inters,ylg,yls,gc,gn,gt]=f_plot_wf(u,xCrk,[],typeElem,elemForce,elemGap,elemCrk,splitElem,vertexElem,xVertex,tipElem,xTip,crackNode,enrichNode,pos,66);
+      end
+      dummy = [];
+      save('restart_test','xCrk','enrDomain','pos','F','ipas','Knum','Theta','tangentElem','elemForce','dummy','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap');
+      gn_inters = [];
+    else
+      save('restart_test','xCrk','enrDomain','pos','F','ipas','Knum','Theta','tangentElem','elemForce','gn_inters','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap');
+
     end
    
-    save('restart_test','xCrk','enrDomain','pos','F','ipas','Knum','Theta','tangentElem','elemForce','gn_inters','u','element','node','pos','enrichNode','crackNode','elemCrk','vertexElem','cornerElem','splitElem','tipElem','xVertex','xTip','typeElem','bcNodes','elemForce','elemGap');
     [Knum,Theta,xCrk,stop] = KcalJint(xCrk,...
         typeElem,enrDomain,elemCrk,enrichNode,crackNode,xVertex,...
         vertexElem,pos,u,F,ipas,delta_inc,Knum,Theta,...

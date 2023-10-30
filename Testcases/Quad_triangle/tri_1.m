@@ -27,28 +27,22 @@ global fmesh Hidden
 
 Hidden = false;
 
-results_path = './quad_1';
+results_path = './tri_1';
 mkdir(results_path);
 
 plothelp = 0
 
 %problem flags
-elemType = 'Q4' ;
+elemType = 'T3' ;
 typeCrack = 'Static' ;
 stressState = 'PlaneStress' ;
 typeProblem = 'eCrkTen' ; %choose type of problem
 
 %geometry and mesh generation
-L = 1; D = 1 ;
-rd = 0.0 ;
-%ndiv(1) = 2 ;
-%ndiv(2) = 2 ;
-ndiv(1) = 20 ;
-ndiv(2) = 20 ;
-[node,element,bcNodes,edgNodes] = createmesh(ndiv,rd) ;
-node = [node; node(end,:)];
+read_gmesh
 %keyboard
 %element = [ 1 2 4 3 ]
+element = tricheck(node,element);
 numnode = size(node,1) ;
 numelem = size(element,1) ;
 
