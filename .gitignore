@@ -1,0 +1,9 @@
+#vim swap files
+*.swp
+*.swo
+*.swn
+*~
+.*.sw?
+
+#temp results
+tempresults/
